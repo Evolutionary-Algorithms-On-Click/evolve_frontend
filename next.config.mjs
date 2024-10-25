@@ -1,6 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    // TODO: Add github url for images
+    images: {
+        domains: ['github.com'],
+    },
 };
 
 export default nextConfig;
