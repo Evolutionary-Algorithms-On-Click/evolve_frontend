@@ -7,6 +7,7 @@ import { populationFunctionData } from "../_data/populationFunction";
 import { mateData } from "../_data/mate";
 import { mutationData } from "../_data/mutation";
 import { selectionData } from "../_data/selection";
+import { useRouter } from "next/navigation";
 
 export default function CreateInstance() {
     const [currentStep, setCurrentStep] = useState(1)
@@ -43,6 +44,8 @@ export default function CreateInstance() {
     const [cxpb, setCxpb] = useState(0.5)
     const [mutpb, setMutpb] = useState(0.2)
 
+    const router = useRouter();
+
     /*
     class RunAlgoModel(BaseModel):
         algorithm: str
@@ -59,31 +62,50 @@ export default function CreateInstance() {
     */
 
     const runAlgorithm = async () => {
+        const inputData = {
+            "algorithm": algo.toString(),
+            "individual": indGen.toString(),
+            "populationFunction": popFunc.toString(),
+            "populationSize": parseInt(populationSize),
+            "generations": parseInt(generations),
+            "cxpb": parseFloat(cxpb),
+            "mutpb": parseFloat(mutpb),
+            "weights": parameters,
+            "individualSize": parseInt(indSize),
+            "indpb": 0.05,
+            "randomRange": [parseInt(randomRangeStart), parseInt(randomRangeEnd)]
+        }
+
         const response = await fetch("http://localhost:8000/api/runAlgo", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({
-                "algorithm": algo.toString(),
-                "individual": indGen.toString(),
-                "populationFunction": popFunc.toString(),
-                "populationSize": parseInt(populationSize),
-                "generations": parseInt(generations),
-                "cxpb": parseFloat(cxpb),
-                "mutpb": parseFloat(mutpb),
-                "weights": parameters,
-                "individualSize": parseInt(indSize),
-                "indpb": 0.05,
-                "randomRange": [parseInt(randomRangeStart), parseInt(randomRangeEnd)]
-            })
+            body: JSON.stringify(inputData)
         });
 
 
         switch (response.status) {
             case 200:
-                const data = await response.json()
-                console.log(data)
+                let data = await response.json()
+                data = data.data
+
+                const executionId = data.population.split("/")[5]
+                data.executionId = executionId
+                data.inputData = inputData
+
+                let executionHistory = await localStorage.getItem("executionHistory");
+
+                if (executionHistory) {
+                    executionHistory = JSON.parse(executionHistory)
+                    executionHistory.push(data)
+                }
+
+                await localStorage.setItem("executionHistory", JSON.stringify([data]))
+                await localStorage.setItem(executionId, JSON.stringify(data))
+
+                router.push(`/bin/${executionId}`)
+
                 break;
             default:
                 alert("Error running algorithm.")
