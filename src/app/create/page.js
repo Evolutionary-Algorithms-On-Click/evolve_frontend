@@ -4,6 +4,7 @@ import { useState } from "react";
 import { algorithmData } from "../_data/algorithms"
 import { individualData } from "../_data/individual";
 import { populationFunctionData } from "../_data/populationFunction";
+import { mateData } from "../_data/mate";
 
 export default function CreateInstance() {
     const [currentStep, setCurrentStep] = useState(1)
@@ -21,6 +22,8 @@ export default function CreateInstance() {
     const [indSize, setIndSize] = useState(null)
 
     const [popFunc, setPopFunc] = useState(null)
+
+    const [mateFunc, setMateFunc] = useState(null)
 
     return (
         <main className="items-center justify-items-center min-h-screen font-[family-name:var(--font-geist-mono)] p-8">
@@ -91,6 +94,15 @@ export default function CreateInstance() {
                             <div className="mt-4">
                                 <h4 className="text-lg font-semibold">Population Function</h4>
                                 <code className="bg-foreground p-1 rounded-lg text-background">{popFunc}</code>
+                            </div>
+                        )}
+
+                        {mateFunc ? <hr className="mt-4" /> : null}
+
+                        {mateFunc && (
+                            <div className="mt-4">
+                                <h4 className="text-lg font-semibold">Mating Function</h4>
+                                <code className="bg-foreground p-1 rounded-lg text-background">{mateFunc}</code>
                             </div>
                         )}
 
@@ -269,6 +281,31 @@ export default function CreateInstance() {
                                         </button>
                                     ))}
                                 </div>
+                            </div>
+                        )}
+
+                        {currentStep >= 4 && (
+                            <div className="mt-16">
+                                <h4 className="text-lg font-bold mb-4">Step 6: Choose a mating function.</h4>
+                                {/* grid: each element has a name and description */}
+                                <div className="grid grid-cols-2 gap-4 align-top">
+                                {mateData.map((mate, index) => (
+                                    <button onClick={(e) => {
+                                        e.preventDefault()
+                                        setMateFunc(mate.name)
+                                        setCurrentStep(currentStep < 5 ? 5 : currentStep)
+                                    }} key={index} className={"border border-gray-300 p-4 rounded-lg max-w-xl text-left items-start min-w-2/3" + (mateFunc && (mateFunc === mate.name) ? " bg-foreground text-background" : "")}>
+                                        <h5 className="text-lg font-bold">{mate.name}</h5>
+                                        <p>{mate.description}</p>
+                                    </button>
+                                ))}
+                                </div>
+                            </div>
+                        )}
+
+                        {currentStep >= 5 && (
+                            <div className="mt-16">
+                                <h4 className="text-lg font-bold mb-4">Step 7: Choose a mutation function.</h4>
                             </div>
                         )}
                     </form>
