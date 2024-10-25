@@ -76,7 +76,7 @@ export default function CreateInstance() {
             "randomRange": [parseInt(randomRangeStart), parseInt(randomRangeEnd)]
         }
 
-        const response = await fetch("http://localhost:8000/api/runAlgo", {
+        const response = await fetch((process.env.NEXT_PUBLIC_BACKEND_BASE_URL ?? "http://localhost:8000") +"/api/runAlgo", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
