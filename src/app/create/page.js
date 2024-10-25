@@ -6,6 +6,7 @@ import { individualData } from "../_data/individual";
 import { populationFunctionData } from "../_data/populationFunction";
 import { mateData } from "../_data/mate";
 import { mutationData } from "../_data/mutation";
+import { selectionData } from "../_data/selection";
 
 export default function CreateInstance() {
     const [currentStep, setCurrentStep] = useState(1)
@@ -27,6 +28,21 @@ export default function CreateInstance() {
     const [mateFunc, setMateFunc] = useState(null)
 
     const [mutateFunc, setMutateFunc] = useState(null)
+
+    const [selectFunc, setSelectFunc] = useState(null)
+    const [k, setK] = useState(null)
+    const [tempTourSize, setTempTourSize] = useState(null)
+    const isValidSelectFunc = () => {
+        if (selectFunc === "selTournament") {
+            return k && tempTourSize
+        }
+        return selectFunc && k
+    }
+
+    const [populationSize, setPopulationSize] = useState(5000)
+    const [generations, setGenerations] = useState(10)
+    const [cxpb, setCxpb] = useState(0.5)
+    const [mutpb, setMutpb] = useState(0.2)
 
     return (
         <main className="items-center justify-items-center min-h-screen font-[family-name:var(--font-geist-mono)] p-8">
@@ -115,6 +131,17 @@ export default function CreateInstance() {
                             <div className="mt-4">
                                 <h4 className="text-lg font-semibold">Mutation Function</h4>
                                 <code className="bg-foreground p-1 rounded-lg text-background">{mutateFunc}</code>
+                            </div>
+                        )}
+
+                        {selectFunc ? <hr className="mt-4" /> : null}
+
+                        {selectFunc && (
+                            <div className="mt-4">
+                                <h4 className="text-lg font-semibold">Selection Function</h4>
+                                <code className="bg-foreground p-1 rounded-lg text-background">{selectFunc}</code>
+                                <p className="font-extralight">K = {k}</p>
+                                {selectFunc === "selTournament" && <p className="font-extralight">Tournament Size = {tempTourSize}</p>}
                             </div>
                         )}
 
@@ -337,8 +364,86 @@ export default function CreateInstance() {
                         {currentStep >= 6 && (
                             <div className="mt-16">
                                 <h4 className="text-lg font-bold mb-4">Step 8: Choose a selection function.</h4>
+
+                                <div className="grid grid-cols-2 gap-4 align-top">
+                                    {selectionData.map((sel, index) => (
+                                        <button onClick={(e) => {
+                                            e.preventDefault()
+                                            setSelectFunc(sel.name)
+                                            setCurrentStep(currentStep < 7 ? 7 : currentStep)
+                                        }} key={index} className={"border border-gray-300 p-4 rounded-lg max-w-xl text-left items-start min-w-2/3" + (selectFunc && (selectFunc === sel.name) ? " bg-foreground text-background" : "")}>
+                                            <h5 className="text-lg font-bold">{sel.name}</h5>
+                                            <p>{sel.description}</p>
+                                        </button>
+                                    ))}
+                                </div>
+
+                                <div className="mt-4">
+                                    <h5 className="text-lg font-bold mb-4">K</h5>
+                                    <input type="number" value={k} className="border border-gray-300 p-2 rounded-lg" placeholder="Enter a number" onChange={(e) => {
+                                        setK(e.target.value)
+                                    }} />
+                                </div>
+
+                                {selectFunc === "selTournament" && (
+                                    <div className="mt-4">
+                                        <h5 className="text-lg font-bold mb-4">Tournament Size</h5>
+                                        <input type="number" value={tempTourSize} className="border border-gray-300 p-2 rounded-lg" placeholder="Enter a number" onChange={(e) => {
+                                            setTempTourSize(e.target.value)
+                                        }} />
+                                    </div>
+                                )}
                             </div>
                         )}
+
+                        {isValidSelectFunc() && (
+                            <div className="mt-16">
+                                {/* 
+                                poputlationSize=5000,
+                                generations=10,
+                                cxpb=0.5,
+                                mutpb=0.2 
+                                */}
+
+                                <h4 className="text-lg font-bold mb-4">Step 9: Configure Genetic Algorithm</h4>
+
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <h5 className="text-lg font-bold mb-4">Population Size</h5>
+                                        <input type="number" value={populationSize} className="border border-gray-300 p-2 rounded-lg" placeholder="Enter a number" onChange={(e) => {
+                                            setPopulationSize(e.target.value)
+                                        }} />
+                                    </div>
+                                    <div>
+                                        <h5 className="text-lg font-bold mb-4">Generations</h5>
+                                        <input type="number" value={generations} className="border border-gray-300 p-2 rounded-lg" placeholder="Enter a number" onChange={(e) => {
+                                            setGenerations(e.target.value)
+                                        }} />
+                                    </div>
+                                    <div>
+                                        <h5 className="text-lg font-bold mb-4">Crossover Probability</h5>
+                                        <input type="number" value={cxpb} className="border border-gray-300 p-2 rounded-lg" placeholder="Enter a number" onChange={(e) => {
+                                            setCxpb(e.target.value)
+                                        }} />
+                                    </div>
+                                    <div>
+                                        <h5 className="text-lg font-bold mb-4">Mutation Probability</h5>
+                                        <input type="number" value={mutpb} className="border border-gray-300 p-2 rounded-lg" placeholder="Enter a number" onChange={(e) => {
+                                            setMutpb(e.target.value)
+                                        }} />
+                                    </div>
+                                </div>
+
+                                <div className="mt-4">
+                                    <button className="bg-foreground text-background p-2 rounded-lg" onClick={(e) => {
+                                        e.preventDefault()
+                                        alert("Run Algorithm")
+                                    }}>Execute Algorithm</button>
+                                </div>
+                            </div>
+                        )}
+
+                        
                     </form>
                 </div>
             </div>
