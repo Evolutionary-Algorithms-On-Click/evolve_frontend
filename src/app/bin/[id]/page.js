@@ -1,16 +1,20 @@
 "use client";
 
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function Execution() {
     const [data, setData] = useState(null)
     const { id } = useParams()
 
+    const router = useRouter();
+
     useEffect(() => {
         const cacheData = localStorage.getItem(id)
         if (cacheData) {
             setData(JSON.parse(cacheData))
+        } else {
+            router.replace("/")
         }
     }, [data])
 
