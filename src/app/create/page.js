@@ -14,6 +14,8 @@ export default function CreateInstance() {
     const [tempParamWeight, setTempParamWeight] = useState(null)
 
     const [indGen, setIndGen] = useState(null)
+    
+    const [indSize, setIndSize] = useState(null)
 
     return (
         <main className="items-center justify-items-center min-h-screen font-[family-name:var(--font-geist-mono)] p-8">
@@ -28,18 +30,20 @@ export default function CreateInstance() {
                 {/* 
                     Section will have a div representing selected values.
                 */}
-                <div className="flex flex-col items-start border border-gray-400 rounded-2xl p-4 min-w-16 h-fit">
+                <div className="flex flex-col items-start border border-gray-400 rounded-2xl p-4 min-w-16 h-fit sticky top-4">
                     <h3 className="text-xl font-bold">Config Summary</h3>
                     <div className="flex flex-col">
                         <div className="mt-4">
-                            <h4 className="text-lg font-bold">Algorithm</h4>
+                            <h4 className="text-lg font-semibold">Algorithm</h4>
                             <code className="bg-foreground p-1 rounded-lg text-background">{algo || "None"}</code>
                         </div>
+
+                        {currentStep >= 2 ? <hr className="my-4" /> : null}
 
 
                         {currentStep >= 2 && (
                             <div className="mt-4">
-                                <h4 className="text-lg font-bold">Weights</h4>
+                                <h4 className="text-lg font-semibold">Weights</h4>
                                 {parameters.length > 0 ? (
                                     <table className="w-full text-center">
                                         <tbody>
@@ -54,6 +58,25 @@ export default function CreateInstance() {
                                         </tbody>
                                     </table>
                                 ) : (<p>None</p>)}
+                            </div>
+                        )}
+
+                        {indGen ? <hr className="mt-4" /> : null}
+
+                        
+                        {indGen && (
+                            <div className="mt-4">
+                                <h4 className="text-lg font-semibold">Individual Generator</h4>
+                                <code className="bg-foreground p-1 rounded-lg text-background">{indGen}</code>
+                            </div>
+                        )}
+
+                        {indSize ? <hr className="mt-4" /> : null}
+
+                        {indSize && (
+                            <div className="mt-4">
+                                <h4 className="text-lg font-semibold">Individual Size</h4>
+                                <code className="bg-foreground p-1 rounded-lg text-background">{indSize}</code>
                             </div>
                         )}
 
@@ -94,7 +117,7 @@ export default function CreateInstance() {
                                 */}
 
                                 <div className="grid grid-cols-2 gap-8 justify-items-stretch align-top">
-                                    <div className="flex flex-col border border-foreground border-solid p-4 rounded-3xl w-full h-fit">
+                                    <div className="flex flex-col border border-foreground border-solid p-3 rounded-3xl w-full h-fit">
                                         <h5 className="text-lg font-bold mb-3">Add Parameter</h5>
 
                                         <div className="flex gap-0 items-center my-2">
@@ -122,7 +145,7 @@ export default function CreateInstance() {
                                             }
                                             setParameters([...parameters, tempParamWeight])
                                             setTempParamWeight(null)
-                                        }} className="bg-foreground text-background p-1 rounded-xl">Add</button>
+                                        }} className="bg-foreground text-background p-1 rounded-2xl">Add</button>
                                     </div>
                                     <div className="flex flex-col">
                                         <h5 className="text-lg font-bold">Optimization Parameters</h5>
@@ -145,8 +168,8 @@ export default function CreateInstance() {
                                                             <button onClick={(e) => {
                                                                 e.preventDefault()
                                                                 setParameters(parameters.filter((_, i) => i !== index))
+                                                                setCurrentStep(currentStep > 2 ? 2 : currentStep)
                                                             }} className="bg-foreground text-background p-1 rounded-lg">Remove</button>
-
                                                         </td>
                                                     </tr>
                                                 ))}
@@ -158,9 +181,36 @@ export default function CreateInstance() {
                         )}
 
                         {parameters.length > 0 && (
-                            <div className="mt-4">
+                            <div className="mt-16">
                                 <h4 className="text-lg font-bold mb-8">Step 3: Choose an individual generator function.</h4>
                                 {/* grid: each element has a name and description */}
+                                <div className="grid grid-cols-2 gap-4 align-top">
+                                    {individualData.map((ind, index) => (
+                                        <button onClick={(e) => {
+                                            e.preventDefault()
+                                            setIndGen(ind.name)
+                                            setCurrentStep(currentStep < 3 ? 3 : currentStep)
+                                        }} key={index} className={"border border-gray-300 p-4 rounded-lg max-w-xl text-left items-start min-w-2/3" + (indGen && (indGen === ind.name) ? " bg-foreground text-background" : "")}>
+                                            <h5 className="text-lg font-bold">{ind.name}</h5>
+                                            <p>{ind.description}</p>
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
+                        {currentStep >= 3 && (
+                            <div className="mt-16">
+                                <h4 className="text-lg font-bold mb-4">Step 4: Size of the Individual list?</h4>
+                                <input type="number" className="border border-gray-300 p-2 rounded-lg" placeholder="Enter a number" onChange={(e) => {
+                                    setIndSize(e.target.value)
+                                }} />
+                            </div>
+                        )}
+
+                        {indSize > 0 && (
+                            <div className="mt-16">
+                                <h4 className="text-lg font-bold mb-4">Step 5: Choose a population function.</h4>
                             </div>
                         )}
                     </form>
