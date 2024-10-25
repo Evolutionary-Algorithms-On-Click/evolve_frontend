@@ -11,7 +11,6 @@ import { selectionData } from "../_data/selection";
 export default function CreateInstance() {
     const [currentStep, setCurrentStep] = useState(1)
 
-
     const [algo, setAlgo] = useState(null)
 
     const [parameters, setParameters] = useState([])
@@ -43,6 +42,53 @@ export default function CreateInstance() {
     const [generations, setGenerations] = useState(10)
     const [cxpb, setCxpb] = useState(0.5)
     const [mutpb, setMutpb] = useState(0.2)
+
+    /*
+    class RunAlgoModel(BaseModel):
+        algorithm: str
+        individual: str
+        populationFunction: str
+        populationSize: int
+        generations: int
+        cxpb: float
+        mutpb: float
+        weights: tuple
+        individualSize: int
+        indpb: float
+        randomRange: list
+    */
+
+    const runAlgorithm = async () => {
+        const response = await fetch("http://localhost:8000/api/runAlgo", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                "algorithm": algo.toString(),
+                "individual": indGen.toString(),
+                "populationFunction": popFunc.toString(),
+                "populationSize": parseInt(populationSize),
+                "generations": parseInt(generations),
+                "cxpb": parseFloat(cxpb),
+                "mutpb": parseFloat(mutpb),
+                "weights": parameters,
+                "individualSize": parseInt(indSize),
+                "indpb": 0.05,
+                "randomRange": [parseInt(randomRangeStart), parseInt(randomRangeEnd)]
+            })
+        });
+
+
+        switch (response.status) {
+            case 200:
+                const data = await response.json()
+                console.log(data)
+                break;
+            default:
+                alert("Error running algorithm.")
+        }
+    }
 
     return (
         <main className="items-center justify-items-center min-h-screen font-[family-name:var(--font-geist-mono)] p-8">
@@ -437,13 +483,13 @@ export default function CreateInstance() {
                                 <div className="mt-4">
                                     <button className="bg-foreground text-background p-2 rounded-lg" onClick={(e) => {
                                         e.preventDefault()
-                                        alert("Run Algorithm")
+                                        runAlgorithm().then(() => {
+                                            console.log("Algorithm executed.")
+                                        })
                                     }}>Execute Algorithm</button>
                                 </div>
                             </div>
                         )}
-
-                        
                     </form>
                 </div>
             </div>
