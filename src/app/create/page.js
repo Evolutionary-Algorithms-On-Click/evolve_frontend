@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { algorithmData } from "../_data/algorithms"
 import { individualData } from "../_data/individual";
+import { populationFunctionData } from "../_data/populationFunction";
 
 export default function CreateInstance() {
     const [currentStep, setCurrentStep] = useState(1)
@@ -17,6 +18,8 @@ export default function CreateInstance() {
     
     const [indSize, setIndSize] = useState(null)
 
+    const [popFunc, setPopFunc] = useState(null)
+
     return (
         <main className="items-center justify-items-center min-h-screen font-[family-name:var(--font-geist-mono)] p-8">
             <div>
@@ -30,7 +33,7 @@ export default function CreateInstance() {
                 {/* 
                     Section will have a div representing selected values.
                 */}
-                <div className="flex flex-col items-start border border-gray-400 rounded-2xl p-4 min-w-16 h-fit sticky top-4">
+                <div className="flex flex-col items-start border border-gray-400 rounded-2xl p-4 min-w-16 h-fit md:sticky top-4">
                     <h3 className="text-xl font-bold">Config Summary</h3>
                     <div className="flex flex-col">
                         <div className="mt-4">
@@ -80,11 +83,20 @@ export default function CreateInstance() {
                             </div>
                         )}
 
+                        {popFunc ? <hr className="mt-4" /> : null}
+
+                        {popFunc && (
+                            <div className="mt-4">
+                                <h4 className="text-lg font-semibold">Population Function</h4>
+                                <code className="bg-foreground p-1 rounded-lg text-background">{popFunc}</code>
+                            </div>
+                        )}
+
                     </div>
                 </div>
 
                 {/* Section will have the dynamic form */}
-                <div className="border border-gray-400 rounded-2xl p-4 min-w-[40%]">
+                <div className="border border-gray-400 rounded-2xl p-4 min-w-[40%] max-w-[70%]">
                     <form className="flex flex-col">
                         <h3 className="text-xl font-bold">Create Instance</h3>
 
@@ -211,6 +223,19 @@ export default function CreateInstance() {
                         {indSize > 0 && (
                             <div className="mt-16">
                                 <h4 className="text-lg font-bold mb-4">Step 5: Choose a population function.</h4>
+                                {/* grid: each element has a name and description */}
+                                <div className="grid grid-cols-2 gap-4 align-top">
+                                    {populationFunctionData.map((pop, index) => (
+                                        <button onClick={(e) => {
+                                            e.preventDefault()
+                                            setPopFunc(pop.name)
+                                            setCurrentStep(currentStep < 4 ? 4 : currentStep)
+                                        }} key={index} className={"border border-gray-300 p-4 rounded-lg max-w-xl text-left items-start min-w-2/3" + (popFunc && (popFunc === pop.name) ? " bg-foreground text-background" : "")}>
+                                            <h5 className="text-lg font-bold">{pop.name}</h5>
+                                            <p>{pop.description}</p>
+                                        </button>
+                                    ))}
+                                </div>
                             </div>
                         )}
                     </form>
