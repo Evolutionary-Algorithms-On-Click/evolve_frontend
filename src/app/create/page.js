@@ -15,7 +15,9 @@ export default function CreateInstance() {
     const [tempParamWeight, setTempParamWeight] = useState(null)
 
     const [indGen, setIndGen] = useState(null)
-    
+    const [randomRangeStart, setRandomRangeStart] = useState(null)
+    const [randomRangeEnd, setRandomRangeEnd] = useState(null)
+
     const [indSize, setIndSize] = useState(null)
 
     const [popFunc, setPopFunc] = useState(null)
@@ -201,20 +203,51 @@ export default function CreateInstance() {
                                         <button onClick={(e) => {
                                             e.preventDefault()
                                             setIndGen(ind.name)
-                                            setCurrentStep(currentStep < 3 ? 3 : currentStep)
+
+                                            if (["float", "int"].includes(ind.name)) {
+                                                setRandomRangeStart(null)
+                                                setRandomRangeEnd(null)
+                                            } else {
+                                                setRandomRangeStart("0")
+                                                setRandomRangeEnd("0")
+                                                setCurrentStep(currentStep < 3 ? 3 : currentStep)
+                                            }
+
                                         }} key={index} className={"border border-gray-300 p-4 rounded-lg max-w-xl text-left items-start min-w-2/3" + (indGen && (indGen === ind.name) ? " bg-foreground text-background" : "")}>
                                             <h5 className="text-lg font-bold">{ind.name}</h5>
                                             <p>{ind.description}</p>
                                         </button>
                                     ))}
                                 </div>
+
+                                {indGen && ["float", "int"].includes(indGen) && (
+                                    <div className="mt-4">
+                                        <h5 className="text-lg font-bold mb-4">Step 3.1: Random Range</h5>
+                                        <div className="flex gap-4">
+                                            <input type="number" className="border border-gray-300 p-2 rounded-lg" placeholder="Start" onChange={(e) => {
+                                                setRandomRangeStart(e.target.value)
+
+                                                if (randomRangeEnd && e.target.value) {
+                                                    setCurrentStep(currentStep < 3 ? 3 : currentStep)
+                                                }
+                                            }} />
+                                            <input type="number" className="border border-gray-300 p-2 rounded-lg" placeholder="End" onChange={(e) => {
+                                                setRandomRangeEnd(e.target.value)
+
+                                                if (randomRangeStart && e.target.value) {
+                                                    setCurrentStep(currentStep < 3 ? 3 : currentStep)
+                                                }
+                                            }} />
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                         )}
 
-                        {currentStep >= 3 && (
+                        {currentStep >= 3 && randomRangeEnd && randomRangeStart && (
                             <div className="mt-16">
                                 <h4 className="text-lg font-bold mb-4">Step 4: Size of the Individual list?</h4>
-                                <input type="number" className="border border-gray-300 p-2 rounded-lg" placeholder="Enter a number" onChange={(e) => {
+                                <input type="number" value={indSize} className="border border-gray-300 p-2 rounded-lg" placeholder="Enter a number" onChange={(e) => {
                                     setIndSize(e.target.value)
                                 }} />
                             </div>
