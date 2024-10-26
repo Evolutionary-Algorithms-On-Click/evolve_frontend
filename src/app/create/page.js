@@ -364,7 +364,7 @@ export default function CreateInstance() {
                                                 e.preventDefault()
                                                 setTempParamWeight(-1.0)
                                             }} className={"p-1 rounded-r-xl w-full border border-foreground" + (tempParamWeight === -1.0 ? " bg-foreground text-background" : "")}>
-                                                <p>Maximize</p>
+                                                <p>Minimize</p>
                                                 <p className="font-extralight">(weight = -1.0)</p>
                                             </button>
                                         </div>
