@@ -14,6 +14,8 @@ export default function CreateInstance() {
     const [currentStep, setCurrentStep] = useState(1)
 
     const [algo, setAlgo] = useState(null)
+    const [mu, setMu] = useState(null)
+    const [lambda, setLambda] = useState(null)
 
     const [parameters, setParameters] = useState([])
     const [tempParamWeight, setTempParamWeight] = useState(null)
@@ -76,20 +78,20 @@ export default function CreateInstance() {
             "individual": indGen.toString(),
             "populationFunction": popFunc.toString(),
             "evaluationFunction": evalFunc.toString(),
-            "populationSize": parseInt(populationSize),
-            "generations": parseInt(generations),
-            "cxpb": parseFloat(cxpb),
-            "mutpb": parseFloat(mutpb),
-            "weights": parameters,
-            "individualSize": parseInt(indSize),
+            "populationSize": parseInt(populationSize ?? 5000),
+            "generations": parseInt(generations ?? 10),
+            "cxpb": parseFloat(cxpb ?? 0.5),
+            "mutpb": parseFloat(mutpb ?? 0.2),
+            "weights": parameters.map((param) => parseFloat(param)),
+            "individualSize": parseInt(indSize ?? 10),
             "indpb": 0.05,
-            "randomRange": [parseInt(randomRangeStart), parseInt(randomRangeEnd)],
-            "crossoverFunction": mateFunc.toString(),
-            "mutationFunction": mutateFunc.toString(),
-            "selectionFunction": selectFunc.toString(),
-            "tournamentSize": parseInt(tempTourSize),
-            "mu": 2,
-            "lambda_": 2
+            "randomRange": [parseInt(randomRangeStart ?? 0), parseInt(randomRangeEnd ?? 100)],
+            "crossoverFunction": mateFunc ? mateFunc.toString() : "cxOnePoint",
+            "mutationFunction": mutateFunc ? mutateFunc.toString() : "mutFlipBit",
+            "selectionFunction": selectFunc ? selectFunc.toString() : "selRoulette",
+            "tournamentSize": parseInt(tempTourSize ?? 2),
+            "mu": parseInt(mu ?? 1),
+            "lambda_": parseInt(lambda ?? 1)
         }
 
         const response = await fetch((process.env.NEXT_PUBLIC_BACKEND_BASE_URL ?? "http://localhost:8000") +"/api/runAlgo", {
@@ -229,6 +231,15 @@ export default function CreateInstance() {
                             </div>
                         )}
 
+                        {evalFunc ? <hr className="mt-4" /> : null}
+
+                        {evalFunc && (
+                            <div className="mt-4">
+                                <h4 className="text-lg font-semibold">Evaluation Function</h4>
+                                <code className="bg-foreground p-1 rounded-lg text-background">{evalFunc}</code>
+                            </div>
+                        )}
+
                     </div>
                 </div>
 
@@ -248,13 +259,47 @@ export default function CreateInstance() {
                                         <button onClick={(e) => {
                                             e.preventDefault()
                                             setAlgo(algorithm.name)
-                                            setCurrentStep(currentStep < 2 ? 2 : currentStep)
+
+                                            if (["eaMuPlusLambda", "eaMuCommaLambda"].includes(algorithm.name) && mu && lambda) {
+                                                setCurrentStep(currentStep < 2 ? 2 : currentStep)
+                                            }
                                         }} key={index} className={"border border-gray-300 p-4 rounded-lg max-w-xl text-left items-start min-w-2/3" + (algo && (algo === algorithm.name) ? " bg-foreground text-background" : "")}>
                                             <h5 className="text-lg font-bold">{algorithm.name}</h5>
                                             <p>{algorithm.description}</p>
                                         </button>
                                     ))}
                                 </div>
+
+
+                                {algo && (algo === "eaMuPlusLambda" || algo === "eaMuCommaLambda") && (
+                                    <div className="mt-4">
+                                        <h5 className="text-lg font-bold mb-4">Step 1.1: Configure Mu and Lambda</h5>
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <div>
+                                                <h6 className="text-lg font-bold mb-4">Mu</h6>
+                                                <input type="number" value={mu} className="border border-gray-300 p-2 rounded-lg" placeholder="Enter a number" onChange={(e) => {
+                                                    setMu(e.target.value)
+
+                                                    if (lambda && e.target.value) {
+                                                        setCurrentStep(currentStep < 2 ? 2 : currentStep)
+                                                    }
+
+                                                }} />
+                                            </div>
+                                            <div>
+                                                <h6 className="text-lg font-bold mb-4">Lambda</h6>
+                                                <input type="number" value={lambda} className="border border-gray-300 p-2 rounded-lg" placeholder="Enter a number" onChange={(e) => {
+                                                    setLambda(e.target.value)
+
+                                                    if (mu && e.target.value) {
+                                                        setCurrentStep(currentStep < 2 ? 2 : currentStep)
+                                                    }
+
+                                                }} />
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                         )}
 
