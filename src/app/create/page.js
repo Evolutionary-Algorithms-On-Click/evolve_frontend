@@ -8,6 +8,7 @@ import { mateData } from "../_data/mate";
 import { mutationData } from "../_data/mutation";
 import { selectionData } from "../_data/selection";
 import { useRouter } from "next/navigation";
+import { evalFuncData } from "../_data/evaluation";
 
 export default function CreateInstance() {
     const [currentStep, setCurrentStep] = useState(1)
@@ -39,6 +40,8 @@ export default function CreateInstance() {
         return selectFunc && k
     }
 
+    const [evalFunc, setEvalFunc] = useState(null)
+
     const [populationSize, setPopulationSize] = useState(5000)
     const [generations, setGenerations] = useState(10)
     const [cxpb, setCxpb] = useState(0.5)
@@ -47,10 +50,10 @@ export default function CreateInstance() {
     const router = useRouter();
 
     /*
-    class RunAlgoModel(BaseModel):
         algorithm: str
         individual: str
         populationFunction: str
+        evaluationFunction: str
         populationSize: int
         generations: int
         cxpb: float
@@ -59,6 +62,12 @@ export default function CreateInstance() {
         individualSize: int
         indpb: float
         randomRange: list
+        crossoverFunction: str
+        mutationFunction: str
+        selectionFunction: str
+        tournamentSize: Optional[int] = None
+        mu: Optional[int] = None
+        lambda_: Optional[int] = None
     */
 
     const runAlgorithm = async () => {
@@ -66,6 +75,7 @@ export default function CreateInstance() {
             "algorithm": algo.toString(),
             "individual": indGen.toString(),
             "populationFunction": popFunc.toString(),
+            "evaluationFunction": evalFunc.toString(),
             "populationSize": parseInt(populationSize),
             "generations": parseInt(generations),
             "cxpb": parseFloat(cxpb),
@@ -73,7 +83,13 @@ export default function CreateInstance() {
             "weights": parameters,
             "individualSize": parseInt(indSize),
             "indpb": 0.05,
-            "randomRange": [parseInt(randomRangeStart), parseInt(randomRangeEnd)]
+            "randomRange": [parseInt(randomRangeStart), parseInt(randomRangeEnd)],
+            "crossoverFunction": mateFunc.toString(),
+            "mutationFunction": mutateFunc.toString(),
+            "selectionFunction": selectFunc.toString(),
+            "tournamentSize": parseInt(tempTourSize),
+            "mu": 2,
+            "lambda_": 2
         }
 
         const response = await fetch((process.env.NEXT_PUBLIC_BACKEND_BASE_URL ?? "http://localhost:8000") +"/api/runAlgo", {
@@ -466,6 +482,24 @@ export default function CreateInstance() {
 
                         {isValidSelectFunc() && (
                             <div className="mt-16">
+                                <h4 className="text-lg font-bold mb-4">Step 9: Choose an evaluation function</h4>
+                                <div className="grid grid-cols-2 gap-4 align-top">
+                                    {evalFuncData.map((evalF, index) => (
+                                        <button onClick={(e) => {
+                                            e.preventDefault()
+                                            setEvalFunc(evalF.name)
+                                            setCurrentStep(currentStep < 8 ? 8 : currentStep)
+                                        }} key={index} className={"border border-gray-300 p-4 rounded-lg max-w-xl text-left items-start min-w-2/3" + (evalFunc && (evalFunc === evalF.name) ? " bg-foreground text-background" : "")}>
+                                            <h5 className="text-lg font-bold">{evalF.name}</h5>
+                                            <p>{evalF.description}</p>
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
+                        {currentStep >= 8 && (
+                            <div className="mt-16">
                                 {/* 
                                 poputlationSize=5000,
                                 generations=10,
@@ -473,7 +507,7 @@ export default function CreateInstance() {
                                 mutpb=0.2 
                                 */}
 
-                                <h4 className="text-lg font-bold mb-4">Step 9: Configure Genetic Algorithm</h4>
+                                <h4 className="text-lg font-bold mb-4">Step 10: Configure Genetic Algorithm</h4>
 
                                 <div className="grid grid-cols-2 gap-4">
                                     <div>
