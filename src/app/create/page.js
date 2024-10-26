@@ -142,6 +142,8 @@ export default function CreateInstance() {
                 let data = await response.json()
                 let executionHistory = await localStorage.getItem("executionHistory");
 
+                data.inputData = inputData
+
                 if (executionHistory) {
                     executionHistory = JSON.parse(executionHistory)
                     executionHistory.push(data)
