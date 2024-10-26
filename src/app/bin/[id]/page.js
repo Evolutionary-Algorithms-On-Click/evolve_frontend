@@ -34,15 +34,31 @@ export default function Execution() {
                     <p className="text-gray-600">Loading...</p>
                 ) : (
                 <div className="flex flex-col items-start border border-gray-400 rounded-2xl p-4 bg-white shadow-lg">
+                    {/* Best Individual */}
                     <div className="mt-4">
-                        <h3 className="text-lg font-bold text-gray-800">Hall Of Fame</h3>
-                        {data && data.hallOfFame.map((hof, index) => (
-                            <div key={hof} className="flex flex-col mt-2">
-                                <p className="text-gray-800">Individual: {hof.individual.toString()}</p>
-                                <p className="text-gray-800">Fitness: {hof.fitness.toString()}</p>
+                        <h3 className="text-lg font-bold text-gray-800">Best Individual</h3>
+                        {data && data.hallOfFame.length > 0 && (
+                            <div className="flex flex-col mt-2">
+                                <p className="text-gray-800">Individual: {data.hallOfFame[0].individual.toString()}</p>
+                                <p className="text-gray-800">Fitness: {data.hallOfFame[0].fitness.toString()}</p>
                             </div>
-                        ))}
+                        )}
                     </div>
+
+                    {/* Hall Of Fame */}
+                    {data && data.hallOfFame.length > 1 ? 
+                        (
+                            <div className="mt-4">
+                                <h3 className="text-lg font-bold text-gray-800">Hall Of Fame</h3>
+                                {data.hallOfFame.map((hof, index) => (
+                                    <div key={hof} className="flex flex-col mt-2">
+                                        <p className="text-gray-800">Individual: {hof.individual.toString()}</p>
+                                        <p className="text-gray-800">Fitness: {hof.fitness.toString()}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        ) : null
+                    }
 
                     <div className="mt-4">
                         <h3 className="text-lg font-bold text-gray-800">Plot</h3>
@@ -54,7 +70,10 @@ export default function Execution() {
 
                     <div className="mt-4">
                         <h3 className="text-lg font-bold text-gray-800">Population</h3>
-                        <a href={data && data.population} target="_blank" rel="noreferrer" className="text-blue-500 hover:underline">Download Population</a>
+                        <button className="bg-black flex space-x-0 py-1 px-2 rounded-lg hover:scale-105 transition-all">
+                            <a href={data && data.population} target="_blank" rel="noreferrer" className="text-white">Download</a>
+                            <img src="/download.svg" alt="Download" width={20} height={20} />
+                        </button>
                     </div>
 
                     {/* table with avg, min, max */}

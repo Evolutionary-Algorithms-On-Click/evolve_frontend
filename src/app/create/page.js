@@ -37,9 +37,9 @@ export default function CreateInstance() {
     const [tempTourSize, setTempTourSize] = useState(null)
     const isValidSelectFunc = () => {
         if (selectFunc === "selTournament") {
-            return k && tempTourSize
+            return tempTourSize ? true : false
         }
-        return selectFunc && k
+        return selectFunc ? true : false
     }
 
     const [evalFunc, setEvalFunc] = useState(null)
@@ -48,6 +48,7 @@ export default function CreateInstance() {
     const [generations, setGenerations] = useState(10)
     const [cxpb, setCxpb] = useState(0.5)
     const [mutpb, setMutpb] = useState(0.2)
+    const [hof, setHof] = useState(5)
 
     const router = useRouter();
 
@@ -70,6 +71,7 @@ export default function CreateInstance() {
         tournamentSize: Optional[int] = None
         mu: Optional[int] = None
         lambda_: Optional[int] = None
+        hofSize: Optional[int] = 1
     */
 
     const runAlgorithm = async () => {
@@ -91,7 +93,8 @@ export default function CreateInstance() {
             "selectionFunction": selectFunc ? selectFunc.toString() : "selRoulette",
             "tournamentSize": parseInt(tempTourSize ?? 2),
             "mu": parseInt(mu ?? 1),
-            "lambda_": parseInt(lambda ?? 1)
+            "lambda_": parseInt(lambda ?? 1),
+            "hofSize": parseInt(hof ?? 5)
         }
 
         const response = await fetch((process.env.NEXT_PUBLIC_BACKEND_BASE_URL ?? "http://localhost:8000") +"/api/runAlgo", {
@@ -532,12 +535,12 @@ export default function CreateInstance() {
                                     ))}
                                 </div>
 
-                                <div className="mt-4">
+                                {/* <div className="mt-4">
                                     <h5 className="text-lg font-bold mb-4">K</h5>
                                     <input type="number" value={k} className="border border-gray-300 p-2 rounded-lg" placeholder="Enter a number" onChange={(e) => {
                                         setK(e.target.value)
                                     }} />
-                                </div>
+                                </div> */}
 
                                 {selectFunc === "selTournament" && (
                                     <div className="mt-4">
@@ -602,6 +605,12 @@ export default function CreateInstance() {
                                         <h5 className="text-lg font-bold mb-4">Mutation Probability</h5>
                                         <input type="number" value={mutpb} className="border border-gray-300 p-2 rounded-lg" placeholder="Enter a number" onChange={(e) => {
                                             setMutpb(e.target.value)
+                                        }} />
+                                    </div>
+                                    <div>
+                                        <h5 className="text-lg font-bold mb-4">Hall of Fame Size</h5>
+                                        <input type="number" value={hof} className="border border-gray-300 p-2 rounded-lg" placeholder="Enter a number" onChange={(e) => {
+                                            setHof(e.target.value)
                                         }} />
                                     </div>
                                 </div>
