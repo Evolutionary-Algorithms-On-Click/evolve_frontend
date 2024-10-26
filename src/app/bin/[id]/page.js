@@ -70,14 +70,20 @@ export default function Execution() {
 
                     <div className="mt-4">
                         <h3 className="text-lg font-bold text-gray-800">Population</h3>
-                        <button className="bg-black flex space-x-0 py-1 px-2 rounded-lg hover:scale-105 transition-all">
+                        <div className="flex flex-row space-x-4 mt-4">
+                        <button className="bg-black flex space-x-0 py-1 px-2 rounded-lg hover:scale-105 transition-all h-fit">
                             <a href={data && data.population} target="_blank" rel="noreferrer" className="text-white">Download</a>
                             <img src="/download.svg" alt="Download" width={20} height={20} />
                         </button>
+                        <button className="bg-black flex space-x-1 py-1 px-2 rounded-lg hover:scale-105 transition-all">
+                            <a href="/uploadPopulation" target="_blank" rel="noreferrer" className="text-white">Unpickle</a>
+                            <img src="/unpickle.svg" alt="Download" width={20} height={20} />
+                        </button>
+                        </div>
                     </div>
 
                     {/* table with avg, min, max */}
-                    <table className="mt-4 text-center w-full">
+                    <table className="mt-8 text-center w-full">
                         <thead>
                             <tr>
                                 <th className="border-b-2 border-gray-300 p-2">Generation</th>
