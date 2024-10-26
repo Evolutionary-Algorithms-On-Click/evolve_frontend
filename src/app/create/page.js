@@ -102,16 +102,39 @@ export default function CreateInstance() {
             body: JSON.stringify(inputData)
         });
 
+        /*
+        {
+            "message": "Run Algorithm",
+            "runId": "614ae929-f585-4140-84f8-abaf41644661",
+            "data": {
+                "generation": [
+                ],
+                "average": [
+                ],
+                "minimum": [
+                ],
+                "maximum": [
+                ]
+            },
+            "plots": {
+                "fitnessPlot": "http://localhost:8000/api/plots/614ae929-f585-4140-84f8-abaf41644661/fitness_plot.png",
+                "mutationCrossoverEffectPlot": "http://localhost:8000/api/plots/614ae929-f585-4140-84f8-abaf41644661/mutation_crossover_effect.png"
+            },
+            "population": "http://localhost:8000/api/population/614ae929-f585-4140-84f8-abaf41644661/population.pkl",
+            "hallOfFame": [
+                {
+                    "individual": [
+                    ],
+                    "fitness": [
+                    ]
+                }
+            ]
+        }
+        */
 
         switch (response.status) {
             case 200:
                 let data = await response.json()
-                data = data.data
-
-                const executionId = data.population.split("/")[5]
-                data.executionId = executionId
-                data.inputData = inputData
-
                 let executionHistory = await localStorage.getItem("executionHistory");
 
                 if (executionHistory) {
@@ -120,9 +143,9 @@ export default function CreateInstance() {
                 }
 
                 await localStorage.setItem("executionHistory", JSON.stringify([data]))
-                await localStorage.setItem(executionId, JSON.stringify(data))
+                await localStorage.setItem(data.runId, JSON.stringify(data))
 
-                router.push(`/bin/${executionId}`)
+                router.push(`/bin/${data.runId}`)
 
                 break;
             default:
@@ -261,6 +284,8 @@ export default function CreateInstance() {
                                             setAlgo(algorithm.name)
 
                                             if (["eaMuPlusLambda", "eaMuCommaLambda"].includes(algorithm.name) && mu && lambda) {
+                                                setCurrentStep(currentStep < 2 ? 2 : currentStep)
+                                            } else if (!["eaMuPlusLambda", "eaMuCommaLambda"].includes(algorithm.name)) {
                                                 setCurrentStep(currentStep < 2 ? 2 : currentStep)
                                             }
                                         }} key={index} className={"border border-gray-300 p-4 rounded-lg max-w-xl text-left items-start min-w-2/3" + (algo && (algo === algorithm.name) ? " bg-foreground text-background" : "")}>

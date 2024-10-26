@@ -7,11 +7,8 @@ export const selectionList = [
     "selBest",
     "selWorst",
     "selStochasticUniversalSampling",
-    "selTournamentDCD",
     "selLexicase",
-    "selAutomaticEpsilonLexicase",
-    "sortNondominated",
-    "sortLogNondominated",
+    "selAutomaticEpsilonLexicase"
 ]
 
 export function validateSelection(selection) {
@@ -52,23 +49,11 @@ export const selectionData = [
         description: "Select by stochastic universal sampling. The selection probability of an individual is proportional to its fitness.",
     },
     {
-        name: "selTournamentDCD",
-        description: "Select the best individual among tournsize randomly chosen individuals, k times. This selection method is specifically designed for the NSGA-III algorithm.",
-    },
-    {
         name: "selLexicase",
         description: "Select the best individual according to the lexicase selection.",
     },
     {
         name: "selAutomaticEpsilonLexicase",
         description: "Select the best individual according to the automatic epsilon lexicase selection.",
-    },
-    {
-        name: "sortNondominated",
-        description: "Sort the population according to non-dominated sorting.",
-    },
-    {
-        name: "sortLogNondominated",
-        description: "Sort the population according to non-dominated sorting. This method logs the non-dominated fronts.",
     },
 ]

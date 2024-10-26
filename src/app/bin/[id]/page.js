@@ -16,7 +16,7 @@ export default function Execution() {
         } else {
             router.replace("/")
         }
-    }, [data])
+    }, [router])
 
     return (
         <main className="flex flex-col items-center justify-center min-h-screen font-[family-name:var(--font-geist-mono)] p-8 bg-gray-100">
@@ -35,17 +35,26 @@ export default function Execution() {
                 ) : (
                 <div className="flex flex-col items-start border border-gray-400 rounded-2xl p-4 bg-white shadow-lg">
                     <div className="mt-4">
-                        <h3 className="text-lg font-bold text-gray-800">Best Individual</h3>
-                        <p className="text-gray-600">{data.best.toString()}</p>
+                        <h3 className="text-lg font-bold text-gray-800">Hall Of Fame</h3>
+                        {data && data.hallOfFame.map((hof, index) => (
+                            <div key={hof} className="flex flex-col mt-2">
+                                <p className="text-gray-800">Individual: {hof.individual.toString()}</p>
+                                <p className="text-gray-800">Fitness: {hof.fitness.toString()}</p>
+                            </div>
+                        ))}
                     </div>
 
                     <div className="mt-4">
                         <h3 className="text-lg font-bold text-gray-800">Plot</h3>
-                        <img src={data.plot} alt="Fitness Plot" width={800} height={100} className="mt-2 rounded-lg shadow-md" />
+                        <h5 className="text-sm text-gray-600">Fitness Plot</h5>
+                        <img src={data && data.plots.fitnessPlot} alt="Fitness Plot" width={800} height={100} className="mt-2 rounded-lg shadow-md" />
+                        <h5 className="text-sm text-gray-600 mt-4">Mutation CrossOver Effect Plot</h5>
+                        <img src={data && data.plots.mutationCrossoverEffectPlot} alt="Mutation CrossOver Effect Plot" width={800} height={100} className="mt-2 rounded-lg shadow-md" />
                     </div>
+
                     <div className="mt-4">
                         <h3 className="text-lg font-bold text-gray-800">Population</h3>
-                        <a href={data.population} target="_blank" rel="noreferrer" className="text-blue-500 hover:underline">Download Population</a>
+                        <a href={data && data.population} target="_blank" rel="noreferrer" className="text-blue-500 hover:underline">Download Population</a>
                     </div>
 
                     {/* table with avg, min, max */}
@@ -59,12 +68,12 @@ export default function Execution() {
                             </tr>
                         </thead>
                         <tbody>
-                            {data.generation.map((gen, index) => (
+                            {data && data.data.generation.map((gen, index) => (
                                 <tr key={gen}>
                                     <td className="border-b border-gray-200 p-2">{gen}</td>
-                                    <td className="border-b border-gray-200 p-2">{data.average[index]}</td>
-                                    <td className="border-b border-gray-200 p-2">{data.minimum[index]}</td>
-                                    <td className="border-b border-gray-200 p-2">{data.maximum[index]}</td>
+                                    <td className="border-b border-gray-200 p-2">{data && data.data.average[index]}</td>
+                                    <td className="border-b border-gray-200 p-2">{data && data.data.minimum[index]}</td>
+                                    <td className="border-b border-gray-200 p-2">{data && data.data.maximum[index]}</td>
                                 </tr>
                             ))}
                         </tbody>
