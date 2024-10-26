@@ -424,7 +424,7 @@ export default function CreateInstance() {
                                             e.preventDefault()
                                             setIndGen(ind.name)
 
-                                            if (["float", "int"].includes(ind.name)) {
+                                            if (["floatingPoint", "integer"].includes(ind.name)) {
                                                 setRandomRangeStart(null)
                                                 setRandomRangeEnd(null)
                                             } else {
@@ -440,7 +440,7 @@ export default function CreateInstance() {
                                     ))}
                                 </div>
 
-                                {indGen && ["float", "int"].includes(indGen) && (
+                                {indGen && ["floatingPoint", "integer"].includes(indGen) && (
                                     <div className="mt-4">
                                         <h5 className="text-lg font-bold mb-4">Step 3.1: Random Range</h5>
                                         <div className="flex gap-4">
