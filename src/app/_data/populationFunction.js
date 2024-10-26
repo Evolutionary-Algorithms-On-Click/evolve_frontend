@@ -1,7 +1,7 @@
 export const populationFunctions = [
     "initRepeat",
-    "initIterate",
-    "initCycle"
+    // "initIterate",
+    // "initCycle"
 ];
 
 export function validatePopulationFunction(popFunction) {
@@ -14,16 +14,16 @@ export const populationFunctionData = [
         'description' : 'Creates a population by repeating an individual generator function.'
         
     },
-    {
-        'name' : 'initIterate',
-        'description': 'Initializes individuals in a population by iterating over an iterable.'
+    // {
+    //     'name' : 'initIterate',
+    //     'description': 'Initializes individuals in a population by iterating over an iterable.'
         
-    },
-    {
-        'name' : 'initCycle',
-        'description': 'Initializes individuals by cycling through values until the population is filled.'
+    // },
+    // {
+    //     'name' : 'initCycle',
+    //     'description': 'Initializes individuals by cycling through values until the population is filled.'
         
-    }
+    // }
 ]
 
 
