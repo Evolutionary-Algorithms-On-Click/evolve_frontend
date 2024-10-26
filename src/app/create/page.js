@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import CircularProgress from '@mui/material/CircularProgress';
 import { algorithmData } from "../_data/algorithms"
 import { individualData } from "../_data/individual";
 import { populationFunctionData } from "../_data/populationFunction";
@@ -12,6 +13,7 @@ import { evalFuncData } from "../_data/evaluation";
 
 export default function CreateInstance() {
     const [currentStep, setCurrentStep] = useState(1)
+    const [isLoading, setIsLoading] = useState(false)
 
     const [algo, setAlgo] = useState(null)
     const [mu, setMu] = useState(null)
@@ -156,7 +158,15 @@ export default function CreateInstance() {
         }
     }
 
-    return (
+    return isLoading ? 
+    (
+        <main className="flex flex-col items-center justify-center min-h-screen w-full">
+            <CircularProgress color="inherit" />
+            <p className="text-xs mt-4">Running Algorithm...</p>
+        </main>
+    )
+    :
+    (
         <main className="items-center justify-items-center min-h-screen font-[family-name:var(--font-geist-mono)] p-8">
             <div>
                 <h1 className="text-3xl sm:text-4xl font-bold">
@@ -618,8 +628,10 @@ export default function CreateInstance() {
                                 <div className="mt-4">
                                     <button className="bg-foreground text-background p-2 rounded-lg" onClick={(e) => {
                                         e.preventDefault()
+                                        setIsLoading(true)
                                         runAlgorithm().then(() => {
                                             console.log("Algorithm executed.")
+                                            setIsLoading(false)
                                         })
                                     }}>Execute Algorithm</button>
                                 </div>
