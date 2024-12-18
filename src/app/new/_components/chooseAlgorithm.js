@@ -1,5 +1,6 @@
+import { algorithmData } from "@/app/_data/algorithms";
+
 export const ChooseAlgo = ({
-    algoList,
     chosenAlgo,
     setChosenAlgo,
     nextStep,
@@ -14,7 +15,7 @@ export const ChooseAlgo = ({
         <div className="my-4">
             <h4 className="text-lg font-bold mb-8">Step 1: Choose Algorithm</h4>
             <div className="grid grid-cols-2 gap-4 align-top">
-                {algoList.map((algorithm, index) => (
+                {algorithmData.map((algorithm, index) => (
                     <button onClick={(e) => {
                         e.preventDefault();
                         setChosenAlgo(algorithm.name);

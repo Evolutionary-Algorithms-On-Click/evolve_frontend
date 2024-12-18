@@ -4,7 +4,6 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Loader from "../_components/Loader";
 import { ChooseAlgo } from "./_components/chooseAlgorithm";
-import { algorithmData } from "../_data/algorithms";
 import ChooseWeights from "./_components/chooseWeights";
 import ChooseGenerator from "./_components/chooseGenerator";
 
@@ -38,7 +37,6 @@ export default function NewRunner() {
 
                     {currentStep >= 1 && (
                         <ChooseAlgo
-                            algoList={algorithmData}
                             chosenAlgo={chosenAlgo}
                             setChosenAlgo={setChosenAlgo}
                             currentStep={currentStep}
