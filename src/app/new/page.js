@@ -1,11 +1,12 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Loader from "../_components/Loader";
 import { ChooseAlgo } from "./_components/chooseAlgorithm";
 import ChooseWeights from "./_components/chooseWeights";
 import ChooseGenerator from "./_components/chooseGenerator";
+import { GetIndividualSize } from "./_components/getIndividualSize";
 
 export default function NewRunner() {
     const [currentStep, setCurrentStep] = useState(1);
@@ -19,7 +20,20 @@ export default function NewRunner() {
     // Weights parameters.
     const [parameters, setParameters] = useState([]);
 
+    // Individual Generator.
+    const [indGen, setIndGen] = useState(null);
+    const [randomRangeStart, setRandomRangeStart] = useState("");
+    const [randomRangeEnd, setRandomRangeEnd] = useState("");
+
     const router = useRouter();
+
+    useEffect(() => {
+        if (chosenAlgo !== "eaMuPlusLambda" && chosenAlgo !== "eaMuCommaLambda") {
+            if (parameters.length > 0 && currentStep < 3) {
+                setCurrentStep(3);
+            }
+        }
+    }, [currentStep])
 
     return isLoading ? <Loader type={"full"} message={"Running Algorithm..."} /> : (
         <main className="items-center justify-items-center min-h-screen font-[family-name:var(--font-geist-mono)] p-8">
@@ -50,7 +64,7 @@ export default function NewRunner() {
                     )}
 
                     {currentStep >= 2 && (
-                        <ChooseWeights 
+                        <ChooseWeights
                             currentStep={currentStep}
                             nextStep={3}
                             setCurrentStep={setCurrentStep}
@@ -60,7 +74,21 @@ export default function NewRunner() {
                     )}
 
                     {parameters.length > 0 && currentStep >= 3 && (
-                        <ChooseGenerator />
+                        <ChooseGenerator
+                            indGen={indGen}
+                            setIndGen={setIndGen}
+                            randomRangeStart={randomRangeStart}
+                            setRandomRangeStart={setRandomRangeStart}
+                            randomRangeEnd={randomRangeEnd}
+                            setRandomRangeEnd={setRandomRangeEnd}
+                            currentStep={currentStep}
+                            setCurrentStep={setCurrentStep}
+                            nextStep={4}
+                        />
+                    )}
+
+                    {currentStep >= 4 && indGen && randomRangeStart && randomRangeEnd && (parseInt(randomRangeStart) <= parseInt(randomRangeEnd)) && (
+                        <GetIndividualSize />
                     )}
                 </form>
             </div>
