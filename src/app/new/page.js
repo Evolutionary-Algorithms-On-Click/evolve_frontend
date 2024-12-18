@@ -6,6 +6,7 @@ import Loader from "../_components/Loader";
 import { ChooseAlgo } from "./_components/chooseAlgorithm";
 import { algorithmData } from "../_data/algorithms";
 import ChooseWeights from "./_components/chooseWeights";
+import ChooseGenerator from "./_components/chooseGenerator";
 
 export default function NewRunner() {
     const [currentStep, setCurrentStep] = useState(1);
@@ -15,6 +16,9 @@ export default function NewRunner() {
     const [chosenAlgo, setChosenAlgo] = useState(null);
     const [mu, setMu] = useState(0);
     const [lambda, setLambda] = useState(0);
+
+    // Weights parameters.
+    const [parameters, setParameters] = useState([]);
 
     const router = useRouter();
 
@@ -48,7 +52,17 @@ export default function NewRunner() {
                     )}
 
                     {currentStep >= 2 && (
-                        <ChooseWeights />
+                        <ChooseWeights 
+                            currentStep={currentStep}
+                            nextStep={3}
+                            setCurrentStep={setCurrentStep}
+                            parameters={parameters}
+                            setParameters={setParameters}
+                        />
+                    )}
+
+                    {parameters.length > 0 && currentStep >= 3 && (
+                        <ChooseGenerator />
                     )}
                 </form>
             </div>
