@@ -10,6 +10,7 @@ import { GetIndividualSize } from "./_components/getIndividualSize";
 import ChoosePopulationFunction from "./_components/choosePopulationFunction";
 import ChooseMatingFunction from "./_components/chooseMatingFunction";
 import ChooseSelectionFunction from "./_components/chooseSelectionFunction";
+import ChooseEvalFunction from "./_components/chooseEvaluationFunction";
 
 export default function NewRunner() {
     const [currentStep, setCurrentStep] = useState(1);
@@ -36,6 +37,10 @@ export default function NewRunner() {
 
     // Mating Function.
     const [matingFunc, setMatingFunc] = useState(null);
+
+    // Selection Function.
+    const [selectFunc, setSelectFunc] = useState(null);
+    const [tempTourSize, setTempTourSize] = useState(0);
 
     const router = useRouter();
 
@@ -129,8 +134,20 @@ export default function NewRunner() {
                         />
                     )}
 
-                    {currentStep >= 7 && matingFunc && (
-                        <ChooseSelectionFunction />
+                    {(currentStep >= 7 && matingFunc) && (
+                        <ChooseSelectionFunction
+                            selectFunc={selectFunc}
+                            setSelectFunc={setSelectFunc}
+                            currentStep={currentStep}
+                            nextStep={8}
+                            setCurrentStep={setCurrentStep}
+                            tempTourSize={tempTourSize}
+                            setTempTourSize={setTempTourSize}
+                        />
+                    )}
+
+                    {(currentStep >= 8 && selectFunc && (selectFunc !== "selTournament" || (selectFunc === "selTournament" && tempTourSize > 0))) && (
+                        <ChooseEvalFunction />
                     )}
                 </form>
             </div>
