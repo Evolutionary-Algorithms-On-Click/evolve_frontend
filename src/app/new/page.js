@@ -46,6 +46,13 @@ export default function NewRunner() {
     // Evaluation Function.
     const [evalFunc, setEvalFunc] = useState(null);
 
+    // Algorithm Parameters.
+    const [populationSize, setPopulationSize] = useState(5000);
+    const [generations, setGenerations] = useState(10);
+    const [cxpb, setCxpb] = useState(0.5);
+    const [mutpb, setMutpb] = useState(0.2);
+    const [hof, setHof] = useState(0);
+
     const router = useRouter();
 
     useEffect(() => {
@@ -55,6 +62,111 @@ export default function NewRunner() {
             }
         }
     }, [currentStep])
+
+    const runAlgorithm = async () => {
+        /*
+            algorithm: str
+            individual: str
+            populationFunction: str
+            evaluationFunction: str
+            populationSize: int
+            generations: int
+            cxpb: float
+            mutpb: float
+            weights: tuple
+            individualSize: int
+            indpb: float
+            randomRange: list
+            crossoverFunction: str
+            mutationFunction: str
+            selectionFunction: str
+            tournamentSize: Optional[int] = None
+            mu: Optional[int] = None
+            lambda_: Optional[int] = None
+            hofSize: Optional[int] = 1
+        */
+        const inputData = {
+            "algorithm": algo.toString(),
+            "individual": indGen.toString(),
+            "populationFunction": popFunc.toString(),
+            "evaluationFunction": evalFunc.toString(),
+            "populationSize": parseInt(populationSize ?? 5000),
+            "generations": parseInt(generations ?? 10),
+            "cxpb": parseFloat(cxpb ?? 0.5),
+            "mutpb": parseFloat(mutpb ?? 0.2),
+            "weights": parameters.map((param) => parseFloat(param)),
+            "individualSize": parseInt(indSize ?? 10),
+            "indpb": 0.05,
+            "randomRange": [parseInt(randomRangeStart ?? 0), parseInt(randomRangeEnd ?? 100)],
+            "crossoverFunction": mateFunc ? mateFunc.toString() : "cxOnePoint",
+            "mutationFunction": mutateFunc ? mutateFunc.toString() : "mutFlipBit",
+            "selectionFunction": selectFunc ? selectFunc.toString() : "selRoulette",
+            "tournamentSize": parseInt(tempTourSize ?? 2),
+            "mu": parseInt(mu ?? 1),
+            "lambda_": parseInt(lambda ?? 1),
+            "hofSize": parseInt(hof ?? 5)
+        }
+
+        const response = await fetch((process.env.NEXT_PUBLIC_BACKEND_BASE_URL ?? "http://localhost:8000") + "/api/runAlgo", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(inputData)
+        });
+
+        /*
+        {
+            "message": "Run Algorithm",
+            "runId": "614ae929-f585-4140-84f8-abaf41644661",
+            "data": {
+                "generation": [
+                ],
+                "average": [
+                ],
+                "minimum": [
+                ],
+                "maximum": [
+                ]
+            },
+            "plots": {
+                "fitnessPlot": "http://localhost:8000/api/plots/614ae929-f585-4140-84f8-abaf41644661/fitness_plot.png",
+                "mutationCrossoverEffectPlot": "http://localhost:8000/api/plots/614ae929-f585-4140-84f8-abaf41644661/mutation_crossover_effect.png"
+            },
+            "population": "http://localhost:8000/api/population/614ae929-f585-4140-84f8-abaf41644661/population.pkl",
+            "hallOfFame": [
+                {
+                    "individual": [
+                    ],
+                    "fitness": [
+                    ]
+                }
+            ]
+        }
+        */
+
+        switch (response.status) {
+            case 200:
+                let data = await response.json()
+                let executionHistory = localStorage.getItem("executionHistory");
+
+                data.inputData = inputData
+
+                if (executionHistory) {
+                    executionHistory = JSON.parse(executionHistory)
+                    executionHistory.push(data)
+                }
+
+                localStorage.setItem("executionHistory", JSON.stringify([data]))
+                localStorage.setItem(data.runId, JSON.stringify(data))
+
+                router.push(`/bin/${data.runId}`)
+
+                break;
+            default:
+                alert("Error running algorithm.")
+        }
+    }
 
     return isLoading ? <Loader type={"full"} message={"Running Algorithm..."} /> : (
         <main className="items-center justify-items-center min-h-screen font-[family-name:var(--font-geist-mono)] p-8">
@@ -161,7 +273,32 @@ export default function NewRunner() {
                     )}
 
                     {(currentStep >= 9 && evalFunc) && (
-                        <ConfigureAlgoParams />
+                        <ConfigureAlgoParams
+                            populationSize={populationSize}
+                            setPopulationSize={setPopulationSize}
+                            generations={generations}
+                            setGenerations={setGenerations}
+                            cxpb={cxpb}
+                            setCxpb={setCxpb}
+                            mutpb={mutpb}
+                            setMutpb={setMutpb}
+                            hof={hof}
+                            setHof={setHof}
+                        />
+                    )}
+
+                    {(currentStep >= 9 && evalFunc) && (
+                        // TODO: Disable button if any of the fields are absent.
+                        <div className="mt-4">
+                            <button className="bg-foreground text-background p-2 rounded-lg w-full" onClick={(e) => {
+                                e.preventDefault()
+                                setIsLoading(true)
+                                runAlgorithm().then(() => {
+                                    console.log("Algorithm executed.")
+                                    setIsLoading(false)
+                                })
+                            }}>Execute Algorithm</button>
+                        </div>
                     )}
                 </form>
             </div>
