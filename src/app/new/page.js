@@ -8,6 +8,8 @@ import ChooseWeights from "./_components/chooseWeights";
 import ChooseGenerator from "./_components/chooseGenerator";
 import { GetIndividualSize } from "./_components/getIndividualSize";
 import ChoosePopulationFunction from "./_components/choosePopulationFunction";
+import ChooseMatingFunction from "./_components/chooseMatingFunction";
+import ChooseSelectionFunction from "./_components/chooseSelectionFunction";
 
 export default function NewRunner() {
     const [currentStep, setCurrentStep] = useState(1);
@@ -31,6 +33,9 @@ export default function NewRunner() {
 
     // Population Function.
     const [popFunc, setPopFunc] = useState(null);
+
+    // Mating Function.
+    const [matingFunc, setMatingFunc] = useState(null);
 
     const router = useRouter();
 
@@ -112,6 +117,20 @@ export default function NewRunner() {
                             nextStep={6}
                             setCurrentStep={setCurrentStep}
                         />
+                    )}
+
+                    {(currentStep >= 6 && popFunc) && (
+                        <ChooseMatingFunction
+                            mateFunc={matingFunc}
+                            setMateFunc={setMatingFunc}
+                            currentStep={currentStep}
+                            nextStep={7}
+                            setCurrentStep={setCurrentStep}
+                        />
+                    )}
+
+                    {currentStep >= 7 && matingFunc && (
+                        <ChooseSelectionFunction />
                     )}
                 </form>
             </div>
