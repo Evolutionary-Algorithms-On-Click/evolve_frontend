@@ -11,6 +11,7 @@ import ChoosePopulationFunction from "./_components/choosePopulationFunction";
 import ChooseMatingFunction from "./_components/chooseMatingFunction";
 import ChooseSelectionFunction from "./_components/chooseSelectionFunction";
 import ChooseEvalFunction from "./_components/chooseEvaluationFunction";
+import ConfigureAlgoParams from "./_components/configureAlgoParams";
 
 export default function NewRunner() {
     const [currentStep, setCurrentStep] = useState(1);
@@ -41,6 +42,9 @@ export default function NewRunner() {
     // Selection Function.
     const [selectFunc, setSelectFunc] = useState(null);
     const [tempTourSize, setTempTourSize] = useState(0);
+
+    // Evaluation Function.
+    const [evalFunc, setEvalFunc] = useState(null);
 
     const router = useRouter();
 
@@ -147,7 +151,17 @@ export default function NewRunner() {
                     )}
 
                     {(currentStep >= 8 && selectFunc && (selectFunc !== "selTournament" || (selectFunc === "selTournament" && tempTourSize > 0))) && (
-                        <ChooseEvalFunction />
+                        <ChooseEvalFunction
+                            evalFunc={evalFunc}
+                            setEvalFunc={setEvalFunc}
+                            currentStep={currentStep}
+                            nextStep={9}
+                            setCurrentStep={setCurrentStep}
+                        />
+                    )}
+
+                    {(currentStep >= 9 && evalFunc) && (
+                        <ConfigureAlgoParams />
                     )}
                 </form>
             </div>
