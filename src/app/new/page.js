@@ -7,6 +7,7 @@ import { ChooseAlgo } from "./_components/chooseAlgorithm";
 import ChooseWeights from "./_components/chooseWeights";
 import ChooseGenerator from "./_components/chooseGenerator";
 import { GetIndividualSize } from "./_components/getIndividualSize";
+import ChoosePopulationFunction from "./_components/choosePopulationFunction";
 
 export default function NewRunner() {
     const [currentStep, setCurrentStep] = useState(1);
@@ -24,6 +25,12 @@ export default function NewRunner() {
     const [indGen, setIndGen] = useState(null);
     const [randomRangeStart, setRandomRangeStart] = useState("");
     const [randomRangeEnd, setRandomRangeEnd] = useState("");
+
+    // Individual Size.
+    const [indSize, setIndSize] = useState(0);
+
+    // Population Function.
+    const [popFunc, setPopFunc] = useState(null);
 
     const router = useRouter();
 
@@ -88,7 +95,23 @@ export default function NewRunner() {
                     )}
 
                     {currentStep >= 4 && indGen && randomRangeStart && randomRangeEnd && (parseInt(randomRangeStart) <= parseInt(randomRangeEnd)) && (
-                        <GetIndividualSize />
+                        <GetIndividualSize
+                            indSize={indSize}
+                            setIndSize={setIndSize}
+                            currentStep={currentStep}
+                            nextStep={5}
+                            setCurrentStep={setCurrentStep}
+                        />
+                    )}
+
+                    {(currentStep >= 5 && indSize) && (
+                        <ChoosePopulationFunction
+                            popFunc={popFunc}
+                            setPopFunc={setPopFunc}
+                            currentStep={currentStep}
+                            nextStep={6}
+                            setCurrentStep={setCurrentStep}
+                        />
                     )}
                 </form>
             </div>
