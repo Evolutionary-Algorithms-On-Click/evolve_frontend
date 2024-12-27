@@ -12,6 +12,8 @@ import ChooseMatingFunction from "./_components/chooseMatingFunction";
 import ChooseSelectionFunction from "./_components/chooseSelectionFunction";
 import ChooseEvalFunction from "./_components/chooseEvaluationFunction";
 import ConfigureAlgoParams from "./_components/configureAlgoParams";
+import Preview from "./_components/preview";
+import ChooseMutationFunction from "./_components/chooseMutateFunction";
 
 export default function NewRunner() {
     const [currentStep, setCurrentStep] = useState(1);
@@ -38,6 +40,9 @@ export default function NewRunner() {
 
     // Mating Function.
     const [matingFunc, setMatingFunc] = useState(null);
+
+    // Mutation Function.
+    const [mutateFunc, setMutateFunc] = useState(null);
 
     // Selection Function.
     const [selectFunc, setSelectFunc] = useState(null);
@@ -177,130 +182,155 @@ export default function NewRunner() {
                 <p>Run and Visualize algorithms with just a click.</p>
             </div>
 
-            <div className="border border-gray-400 rounded-2xl p-4 min-w-[40%] max-w-[70%]">
-                <form className="flex flex-col">
-                    <h3 className="text-xl font-bold">Configure Algorithm</h3>
-                    <hr className="my-4" />
+            <div className="flex flex-wrap mt-16 gap-4">
+                <Preview
+                    algo={chosenAlgo}
+                    parameters={parameters}
+                    indGen={indGen}
+                    indSize={indSize}
+                    popFunc={popFunc}
+                    mateFunc={matingFunc}
+                    mutateFunc={mutateFunc}
+                    selectFunc={selectFunc}
+                    evalFunc={evalFunc}
+                    tempTourSize={tempTourSize}
+                />
 
-                    {currentStep >= 1 && (
-                        <ChooseAlgo
-                            chosenAlgo={chosenAlgo}
-                            setChosenAlgo={setChosenAlgo}
-                            currentStep={currentStep}
-                            nextStep={2}
-                            setCurrentStep={setCurrentStep}
-                            mu={mu}
-                            setMu={setMu}
-                            lambda={lambda}
-                            setLambda={setLambda}
-                        />
-                    )}
+                <div className="border border-gray-400 rounded-2xl p-4 min-w-[40%] max-w-[70%]">
+                    <form className="flex flex-col">
+                        <h3 className="text-xl font-bold">Configure Algorithm</h3>
+                        <hr className="my-4" />
 
-                    {currentStep >= 2 && (
-                        <ChooseWeights
-                            currentStep={currentStep}
-                            nextStep={3}
-                            setCurrentStep={setCurrentStep}
-                            parameters={parameters}
-                            setParameters={setParameters}
-                        />
-                    )}
+                        {currentStep >= 1 && (
+                            <ChooseAlgo
+                                chosenAlgo={chosenAlgo}
+                                setChosenAlgo={setChosenAlgo}
+                                currentStep={currentStep}
+                                nextStep={2}
+                                setCurrentStep={setCurrentStep}
+                                mu={mu}
+                                setMu={setMu}
+                                lambda={lambda}
+                                setLambda={setLambda}
+                            />
+                        )}
 
-                    {parameters.length > 0 && currentStep >= 3 && (
-                        <ChooseGenerator
-                            indGen={indGen}
-                            setIndGen={setIndGen}
-                            randomRangeStart={randomRangeStart}
-                            setRandomRangeStart={setRandomRangeStart}
-                            randomRangeEnd={randomRangeEnd}
-                            setRandomRangeEnd={setRandomRangeEnd}
-                            currentStep={currentStep}
-                            setCurrentStep={setCurrentStep}
-                            nextStep={4}
-                        />
-                    )}
+                        {currentStep >= 2 && (
+                            <ChooseWeights
+                                currentStep={currentStep}
+                                nextStep={3}
+                                setCurrentStep={setCurrentStep}
+                                parameters={parameters}
+                                setParameters={setParameters}
+                            />
+                        )}
 
-                    {currentStep >= 4 && indGen && randomRangeStart && randomRangeEnd && (parseInt(randomRangeStart) <= parseInt(randomRangeEnd)) && (
-                        <GetIndividualSize
-                            indSize={indSize}
-                            setIndSize={setIndSize}
-                            currentStep={currentStep}
-                            nextStep={5}
-                            setCurrentStep={setCurrentStep}
-                        />
-                    )}
+                        {parameters.length > 0 && currentStep >= 3 && (
+                            <ChooseGenerator
+                                indGen={indGen}
+                                setIndGen={setIndGen}
+                                randomRangeStart={randomRangeStart}
+                                setRandomRangeStart={setRandomRangeStart}
+                                randomRangeEnd={randomRangeEnd}
+                                setRandomRangeEnd={setRandomRangeEnd}
+                                currentStep={currentStep}
+                                setCurrentStep={setCurrentStep}
+                                nextStep={4}
+                            />
+                        )}
 
-                    {(currentStep >= 5 && indSize) && (
-                        <ChoosePopulationFunction
-                            popFunc={popFunc}
-                            setPopFunc={setPopFunc}
-                            currentStep={currentStep}
-                            nextStep={6}
-                            setCurrentStep={setCurrentStep}
-                        />
-                    )}
+                        {currentStep >= 4 && indGen && randomRangeStart && randomRangeEnd && (parseInt(randomRangeStart) <= parseInt(randomRangeEnd)) && (
+                            <GetIndividualSize
+                                indSize={indSize}
+                                setIndSize={setIndSize}
+                                currentStep={currentStep}
+                                nextStep={5}
+                                setCurrentStep={setCurrentStep}
+                            />
+                        )}
 
-                    {(currentStep >= 6 && popFunc) && (
-                        <ChooseMatingFunction
-                            mateFunc={matingFunc}
-                            setMateFunc={setMatingFunc}
-                            currentStep={currentStep}
-                            nextStep={7}
-                            setCurrentStep={setCurrentStep}
-                        />
-                    )}
+                        {(currentStep >= 5 && indSize) && (
+                            <ChoosePopulationFunction
+                                popFunc={popFunc}
+                                setPopFunc={setPopFunc}
+                                currentStep={currentStep}
+                                nextStep={6}
+                                setCurrentStep={setCurrentStep}
+                            />
+                        )}
 
-                    {(currentStep >= 7 && matingFunc) && (
-                        <ChooseSelectionFunction
-                            selectFunc={selectFunc}
-                            setSelectFunc={setSelectFunc}
-                            currentStep={currentStep}
-                            nextStep={8}
-                            setCurrentStep={setCurrentStep}
-                            tempTourSize={tempTourSize}
-                            setTempTourSize={setTempTourSize}
-                        />
-                    )}
+                        {(currentStep >= 6 && popFunc) && (
+                            <ChooseMatingFunction
+                                mateFunc={matingFunc}
+                                setMateFunc={setMatingFunc}
+                                currentStep={currentStep}
+                                nextStep={7}
+                                setCurrentStep={setCurrentStep}
+                            />
+                        )}
 
-                    {(currentStep >= 8 && selectFunc && (selectFunc !== "selTournament" || (selectFunc === "selTournament" && tempTourSize > 0))) && (
-                        <ChooseEvalFunction
-                            evalFunc={evalFunc}
-                            setEvalFunc={setEvalFunc}
-                            currentStep={currentStep}
-                            nextStep={9}
-                            setCurrentStep={setCurrentStep}
-                        />
-                    )}
+                        {(currentStep >= 7 && matingFunc) && (
+                            <ChooseMutationFunction
+                                mutateFunc={mutateFunc}
+                                setMutateFunc={setMutateFunc}
+                                currentStep={currentStep}
+                                nextStep={8}
+                                setCurrentStep={setCurrentStep}
+                            />
+                        )}
 
-                    {(currentStep >= 9 && evalFunc) && (
-                        <ConfigureAlgoParams
-                            populationSize={populationSize}
-                            setPopulationSize={setPopulationSize}
-                            generations={generations}
-                            setGenerations={setGenerations}
-                            cxpb={cxpb}
-                            setCxpb={setCxpb}
-                            mutpb={mutpb}
-                            setMutpb={setMutpb}
-                            hof={hof}
-                            setHof={setHof}
-                        />
-                    )}
+                        {(currentStep >= 8 && matingFunc) && (
+                            <ChooseSelectionFunction
+                                selectFunc={selectFunc}
+                                setSelectFunc={setSelectFunc}
+                                currentStep={currentStep}
+                                nextStep={9}
+                                setCurrentStep={setCurrentStep}
+                                tempTourSize={tempTourSize}
+                                setTempTourSize={setTempTourSize}
+                            />
+                        )}
 
-                    {(currentStep >= 9 && evalFunc) && (
-                        // TODO: Disable button if any of the fields are absent.
-                        <div className="mt-4">
-                            <button className="bg-foreground text-background p-2 rounded-lg w-full" onClick={(e) => {
-                                e.preventDefault()
-                                setIsLoading(true)
-                                runAlgorithm().then(() => {
-                                    console.log("Algorithm executed.")
-                                    setIsLoading(false)
-                                })
-                            }}>Execute Algorithm</button>
-                        </div>
-                    )}
-                </form>
+                        {(currentStep >= 9 && selectFunc && (selectFunc !== "selTournament" || (selectFunc === "selTournament" && tempTourSize > 0))) && (
+                            <ChooseEvalFunction
+                                evalFunc={evalFunc}
+                                setEvalFunc={setEvalFunc}
+                                currentStep={currentStep}
+                                nextStep={10}
+                                setCurrentStep={setCurrentStep}
+                            />
+                        )}
+
+                        {(currentStep >= 10 && evalFunc) && (
+                            <ConfigureAlgoParams
+                                populationSize={populationSize}
+                                setPopulationSize={setPopulationSize}
+                                generations={generations}
+                                setGenerations={setGenerations}
+                                cxpb={cxpb}
+                                setCxpb={setCxpb}
+                                mutpb={mutpb}
+                                setMutpb={setMutpb}
+                                hof={hof}
+                                setHof={setHof}
+                            />
+                        )}
+
+                        {(currentStep >= 9 && evalFunc) && (
+                            // TODO: Disable button if any of the fields are absent.
+                            <div className="mt-4">
+                                <button className="bg-foreground text-background p-2 rounded-lg w-full" onClick={(e) => {
+                                    e.preventDefault()
+                                    setIsLoading(true)
+                                    runAlgorithm().then(() => {
+                                        console.log("Algorithm executed.")
+                                        setIsLoading(false)
+                                    })
+                                }}>Execute Algorithm</button>
+                            </div>
+                        )}
+                    </form>
+                </div>
             </div>
         </main>
     );
