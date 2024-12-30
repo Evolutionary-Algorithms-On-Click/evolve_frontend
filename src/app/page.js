@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -12,9 +13,9 @@ export default function Home() {
         </p>
 
         <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
+          <Link
             className="rounded-full border border-solid border-black/[.08] transition-colors flex items-center justify-center bg-background text-foreground gap-2 hover:bg-[#dddddd] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="/create"
+            href="/new"
           >
             <Image
               className="dark:invert"
@@ -24,7 +25,7 @@ export default function Home() {
               height={20}
             />
             Get Started
-          </a>
+          </Link>
           <p
             className="rounded-full transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44 flex-col bg-foreground text-background cursor-not-allowed"
           >
@@ -34,7 +35,7 @@ export default function Home() {
         </div>
       </main>
       <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
+        <Link
           className="flex items-center gap-2 hover:underline hover:underline-offset-4"
           href="https://github.com/orgs/Evolutionary-Algorithms-On-Click/repositories"
           target="_blank"
@@ -49,7 +50,7 @@ export default function Home() {
             className="rounded-full"
           />
           Source Code →
-        </a>
+        </Link>
       </footer>
     </div>
   );

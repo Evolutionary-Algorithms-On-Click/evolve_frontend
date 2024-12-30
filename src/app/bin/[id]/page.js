@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -72,11 +73,11 @@ export default function Execution() {
                         <h3 className="text-lg font-bold text-gray-800">Population</h3>
                         <div className="flex flex-row space-x-4 mt-4">
                         <button className="bg-black flex space-x-0 py-1 px-2 rounded-lg hover:scale-105 transition-all h-fit">
-                            <a href={data && data.population} target="_blank" rel="noreferrer" className="text-white">Download</a>
+                            <Link href={data && data.population} target="_blank" rel="noreferrer" className="text-white">Download</Link>
                             <img src="/download.svg" alt="Download" width={20} height={20} />
                         </button>
                         <button className="bg-black flex space-x-1 py-1 px-2 rounded-lg hover:scale-105 transition-all">
-                            <a href="/uploadPopulation" target="_blank" rel="noreferrer" className="text-white">Unpickle</a>
+                            <Link href="/uploadPopulation" target="_blank" rel="noreferrer" className="text-white">Unpickle</Link>
                             <img src="/unpickle.svg" alt="Download" width={20} height={20} />
                         </button>
                         </div>
