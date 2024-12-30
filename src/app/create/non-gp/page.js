@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import Loader from "../_components/Loader";
+import Loader from "../../_components/Loader";
 import { ChooseAlgo } from "./_components/chooseAlgorithm";
 import ChooseWeights from "./_components/chooseWeights";
 import ChooseGenerator from "./_components/chooseGenerator";
@@ -15,7 +15,7 @@ import ConfigureAlgoParams from "./_components/configureAlgoParams";
 import Preview from "./_components/preview";
 import ChooseMutationFunction from "./_components/chooseMutateFunction";
 
-export default function NewRunner() {
+export default function ConfigureNonGP() {
     const [currentStep, setCurrentStep] = useState(1);
     const [isLoading, setIsLoading] = useState(false);
 
