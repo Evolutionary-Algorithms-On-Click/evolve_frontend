@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Loader from "../../_components/Loader";
-import { ChooseAlgo } from "./_components/chooseAlgorithm";
+import { ChooseAlgo } from "../_components/chooseAlgorithm";
 import ChooseWeights from "./_components/chooseWeights";
 import ChooseGenerator from "./_components/chooseGenerator";
 import { GetIndividualSize } from "./_components/getIndividualSize";
@@ -174,7 +174,7 @@ export default function ConfigureNonGP() {
     }
 
     return isLoading ? <Loader type={"full"} message={"Running Algorithm..."} /> : (
-        <main className="items-center justify-items-center min-h-screen font-[family-name:var(--font-geist-mono)] p-8">
+        <main className="flex flex-col justify-center items-center justify-items-center min-h-screen font-[family-name:var(--font-geist-mono)] p-8">
             <div>
                 <h1 className="text-3xl sm:text-4xl font-bold">
                     Evolve OnClick
@@ -196,9 +196,10 @@ export default function ConfigureNonGP() {
                     tempTourSize={tempTourSize}
                 />
 
-                <div className="border border-gray-400 rounded-2xl p-4 min-w-[40%] max-w-[70%]">
+                <div className="border border-gray-400 rounded-2xl p-4">
                     <form className="flex flex-col">
                         <h3 className="text-xl font-bold">Configure Algorithm</h3>
+                        <p className="text-sm text-gray-500">Non-GP</p>
                         <hr className="my-4" />
 
                         {currentStep >= 1 && (
