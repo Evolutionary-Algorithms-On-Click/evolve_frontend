@@ -56,7 +56,7 @@ export default function ConfigureNonGP() {
     const [generations, setGenerations] = useState(10);
     const [cxpb, setCxpb] = useState(0.5);
     const [mutpb, setMutpb] = useState(0.2);
-    const [hof, setHof] = useState(0);
+    const [hof, setHof] = useState(5);
 
     const router = useRouter();
 
@@ -91,7 +91,7 @@ export default function ConfigureNonGP() {
             hofSize: Optional[int] = 1
         */
         const inputData = {
-            "algorithm": algo.toString(),
+            "algorithm": chosenAlgo.toString(),
             "individual": indGen.toString(),
             "populationFunction": popFunc.toString(),
             "evaluationFunction": evalFunc.toString(),
@@ -103,7 +103,7 @@ export default function ConfigureNonGP() {
             "individualSize": parseInt(indSize ?? 10),
             "indpb": 0.05,
             "randomRange": [parseInt(randomRangeStart ?? 0), parseInt(randomRangeEnd ?? 100)],
-            "crossoverFunction": mateFunc ? mateFunc.toString() : "cxOnePoint",
+            "crossoverFunction": matingFunc ? matingFunc.toString() : "cxOnePoint",
             "mutationFunction": mutateFunc ? mutateFunc.toString() : "mutFlipBit",
             "selectionFunction": selectFunc ? selectFunc.toString() : "selRoulette",
             "tournamentSize": parseInt(tempTourSize ?? 2),
