@@ -20,6 +20,7 @@ export default function ChoosePrimitiveSet({
                         setPrimitiveSet(Array.from(_set));
 
                         setCurrentStep(currentStep < nextStep ? nextStep : currentStep);
+                        console.log(currentStep, nextStep);
                     }} key={index} className={"border border-gray-300 p-4 rounded-lg max-w-xl text-left items-start min-w-2/3" + (primitiveSet && (primitiveSet.includes(element.name)) ? " bg-foreground text-background" : "")}>
                         <h5 className="text-lg font-bold">{element.name}</h5>
                         <p className="text-sm text-gray-400">Arity: {element.arity}</p>

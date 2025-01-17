@@ -4,6 +4,7 @@ import Loader from "@/app/_components/Loader";
 import { useState } from "react";
 import { ChooseAlgo } from "../_components/chooseAlgorithm";
 import ChoosePrimitiveSet from "./_components/primitive";
+import ChooseTreeGeneratorExpression from "./_components/treeGenerator";
 
 export default function ConfigureGP() {
     const [currentStep, setCurrentStep] = useState(1);
@@ -16,6 +17,11 @@ export default function ConfigureGP() {
 
     // Primitive Set Elements.
     const [primitiveSet, setPrimitiveSet] = useState([]);
+
+    // Tree Generator Expression.
+    const [treeGenExpression, setTreeGenExpression] = useState(null);
+    const [minHeight, setMinHeight] = useState(0);
+    const [maxHeight, setMaxHeight] = useState(0);
 
     return isLoading ? <Loader type={"full"} message={"Running Algorithm..."} /> : (
         <main className="flex flex-col justify-center items-center justify-items-center min-h-screen font-[family-name:var(--font-geist-mono)] p-8">
@@ -43,7 +49,7 @@ export default function ConfigureGP() {
                 <div className="border border-gray-400 rounded-2xl p-4">
                     <form className="flex flex-col">
                         <h3 className="text-xl font-bold">Configure Algorithm</h3>
-                        <p className="text-sm text-gray-500">Genetic Programming</p>
+                        <p className="text-sm text-gray-500">Genetic Programming - <span className="text-green-500">PrimitiveTree</span></p>
                         <hr className="my-4" />
 
                         {currentStep >= 1 && (
@@ -67,6 +73,20 @@ export default function ConfigureGP() {
                                 nextStep={3}
                                 primitiveSet={primitiveSet}
                                 setPrimitiveSet={setPrimitiveSet}
+                            />
+                        )}
+
+                        {currentStep >= 3 && (
+                            <ChooseTreeGeneratorExpression
+                                currentStep={currentStep}
+                                setCurrentStep={setCurrentStep}
+                                nextStep={4}
+                                treeGenExpression={treeGenExpression}
+                                setTreeGenExpression={setTreeGenExpression}
+                                minHeight={minHeight}
+                                setMinHeight={setMinHeight}
+                                maxHeight={maxHeight}
+                                setMaxHeight={setMaxHeight}
                             />
                         )}
                     </form>
