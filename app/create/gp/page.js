@@ -12,6 +12,7 @@ import { gpMutationData } from "@/app/_data/mutation";
 import ChooseMatingFunction from "../_components/chooseMatingFunction";
 import { gpMateData } from "@/app/_data/mate";
 import ChooseWeights from "../_components/chooseWeights";
+import ConfigureBloatLimits from "./_components/bloatLimits";
 
 export default function ConfigureGP() {
     const [currentStep, setCurrentStep] = useState(1);
@@ -53,6 +54,10 @@ export default function ConfigureGP() {
     // Mating Function.
     const [matingFunc, setMatingFunc] = useState(null);
     const [terminalProb, setTerminalProb] = useState(0.1);
+
+    // Bloat limits.
+    const [mateHeightLimit, setMateHeightLimit] = useState(0);
+    const [mutateHeightLimit, setMutateHeightLimit] = useState(0);
 
     return isLoading ? (
         <Loader type={"full"} message={"Running Algorithm..."} />
@@ -222,6 +227,20 @@ export default function ConfigureGP() {
                                 setTerminalProb={setTerminalProb}
                             />
                         )}
+
+                        {currentStep >= 11 && (
+                            <ConfigureBloatLimits
+                                currentStep={currentStep}
+                                setCurrentStep={setCurrentStep}
+                                nextStep={12}
+                                mateHeightLimit={mateHeightLimit}
+                                setMateHeightLimit={setMateHeightLimit}
+                                mutateHeightLimit={mutateHeightLimit}
+                                setMutateHeightLimit={setMutateHeightLimit}
+                            />
+                        )}
+
+                        {/* TODO: Algo Execution Params, Symbolic Regression Polynomial. */}
                     </form>
                 </div>
             </div>
