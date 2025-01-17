@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Loader from "../../_components/Loader";
 import { ChooseAlgo } from "../_components/chooseAlgorithm";
-import ChooseWeights from "./_components/chooseWeights";
+import ChooseWeights from "../_components/chooseWeights";
 import ChooseGenerator from "./_components/chooseGenerator";
 import { GetIndividualSize } from "./_components/getIndividualSize";
 import ChooseInitializationFunction from "../_components/chooseInitializationFunction";

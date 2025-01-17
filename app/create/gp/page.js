@@ -11,7 +11,7 @@ import ChooseMutationFunction from "../_components/chooseMutateFunction";
 import { gpMutationData } from "@/app/_data/mutation";
 import ChooseMatingFunction from "../_components/chooseMatingFunction";
 import { gpMateData } from "@/app/_data/mate";
-import ChooseWeights from "../non-gp/_components/chooseWeights";
+import ChooseWeights from "../_components/chooseWeights";
 
 export default function ConfigureGP() {
     const [currentStep, setCurrentStep] = useState(1);
