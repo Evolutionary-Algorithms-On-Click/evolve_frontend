@@ -7,6 +7,8 @@ import ChoosePrimitiveSet from "./_components/primitive";
 import ChooseTreeGeneratorExpression from "./_components/treeGenerator";
 import ChooseInitializationFunction from "../_components/chooseInitializationFunction";
 import ChooseSelectionFunction from "../_components/chooseSelectionFunction";
+import ChooseMutationFunction from "../_components/chooseMutateFunction";
+import { gpMutationData } from "@/app/_data/mutation";
 
 export default function ConfigureGP() {
     const [currentStep, setCurrentStep] = useState(1);
@@ -34,6 +36,10 @@ export default function ConfigureGP() {
     // Selection Function.
     const [selectionFunction, setSelectionFunction] = useState(null);
     const [tempTourSize, setTempTourSize] = useState(0);
+
+    // Mutation Function.
+    const [mutateFunc, setMutateFunc] = useState(null);
+    const [mode, setMode] = useState("one");
 
     return isLoading ? (
         <Loader type={"full"} message={"Running Algorithm..."} />
@@ -143,6 +149,20 @@ export default function ConfigureGP() {
                                 setSelectFunc={setSelectionFunction}
                                 tempTourSize={tempTourSize}
                                 setTempTourSize={setTempTourSize}
+                            />
+                        )}
+
+                        {currentStep >= 7 && (
+                            <ChooseMutationFunction
+                                title="Step 7: Choose a Mutation Function."
+                                mutationData={gpMutationData}
+                                currentStep={currentStep}
+                                setCurrentStep={setCurrentStep}
+                                nextStep={8}
+                                mutateFunc={mutateFunc}
+                                setMutateFunc={setMutateFunc}
+                                mode={mode}
+                                setMode={setMode}
                             />
                         )}
                     </form>

@@ -13,7 +13,8 @@ import ChooseSelectionFunction from "../_components/chooseSelectionFunction";
 import ChooseEvalFunction from "./_components/chooseEvaluationFunction";
 import ConfigureAlgoParams from "./_components/configureAlgoParams";
 import Preview from "./_components/preview";
-import ChooseMutationFunction from "./_components/chooseMutateFunction";
+import ChooseMutationFunction from "../_components/chooseMutateFunction";
+import { mutationData } from "@/app/_data/mutation";
 
 export default function ConfigureNonGP() {
     const [currentStep, setCurrentStep] = useState(1);
@@ -298,6 +299,7 @@ export default function ConfigureNonGP() {
 
                         {currentStep >= 7 && matingFunc && (
                             <ChooseMutationFunction
+                                mutationData={mutationData}
                                 mutateFunc={mutateFunc}
                                 setMutateFunc={setMutateFunc}
                                 currentStep={currentStep}
