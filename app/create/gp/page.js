@@ -40,6 +40,9 @@ export default function ConfigureGP() {
     // Mutation Function.
     const [mutateFunc, setMutateFunc] = useState(null);
     const [mode, setMode] = useState("one");
+    const [mutExpr, setMutExpr] = useState(null);
+    const [mutMinHeight, setMutMinHeight] = useState(0);
+    const [mutMaxHeight, setMutMaxHeight] = useState(0);
 
     return isLoading ? (
         <Loader type={"full"} message={"Running Algorithm..."} />
@@ -67,7 +70,12 @@ export default function ConfigureGP() {
                     /> */}
 
                 <div className="border border-gray-400 rounded-2xl p-4">
-                    <form className="flex flex-col">
+                    <form
+                        onSubmit={(e) => {
+                            e.preventDefault();
+                        }}
+                        className="flex flex-col"
+                    >
                         <h3 className="text-xl font-bold">
                             Configure Algorithm
                         </h3>
@@ -163,6 +171,21 @@ export default function ConfigureGP() {
                                 setMutateFunc={setMutateFunc}
                                 mode={mode}
                                 setMode={setMode}
+                            />
+                        )}
+
+                        {currentStep >= 8 && (
+                            <ChooseTreeGeneratorExpression
+                                title="Step 8: Choose a Mutation Generator Tree Expression."
+                                currentStep={currentStep}
+                                setCurrentStep={setCurrentStep}
+                                nextStep={9}
+                                treeGenExpression={mutExpr}
+                                setTreeGenExpression={setMutExpr}
+                                minHeight={mutMinHeight}
+                                setMinHeight={setMutMinHeight}
+                                maxHeight={mutMaxHeight}
+                                setMaxHeight={setMutMaxHeight}
                             />
                         )}
                     </form>

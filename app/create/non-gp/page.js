@@ -217,7 +217,12 @@ export default function ConfigureNonGP() {
                 />
 
                 <div className="border border-gray-400 rounded-2xl p-4">
-                    <form className="flex flex-col">
+                    <form
+                        onSubmit={(e) => {
+                            e.preventDefault();
+                        }}
+                        className="flex flex-col"
+                    >
                         <h3 className="text-xl font-bold">
                             Configure Algorithm
                         </h3>

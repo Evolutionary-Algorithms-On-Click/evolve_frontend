@@ -1,6 +1,7 @@
 import { treeGeneratorData } from "@/app/_data/treeGenExpression";
 
 export default function ChooseTreeGeneratorExpression({
+    title = "Step 3: Choose an initial Individual Generator Function",
     currentStep,
     setCurrentStep,
     nextStep,
@@ -13,9 +14,7 @@ export default function ChooseTreeGeneratorExpression({
 }) {
     return (
         <div className="my-4">
-            <h4 className="text-lg font-bold mb-8">
-                Step 3: Choose an initial Individual Generator Function/
-            </h4>
+            <h4 className="text-lg font-bold mb-8">{title}</h4>
             <div className="grid grid-cols-2 gap-4 align-top">
                 {treeGeneratorData.map((algorithm, index) => (
                     <button
