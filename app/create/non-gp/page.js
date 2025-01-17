@@ -7,7 +7,7 @@ import { ChooseAlgo } from "../_components/chooseAlgorithm";
 import ChooseWeights from "./_components/chooseWeights";
 import ChooseGenerator from "./_components/chooseGenerator";
 import { GetIndividualSize } from "./_components/getIndividualSize";
-import ChoosePopulationFunction from "./_components/choosePopulationFunction";
+import ChooseInitializationFunction from "../_components/chooseInitializationFunction";
 import ChooseMatingFunction from "./_components/chooseMatingFunction";
 import ChooseSelectionFunction from "./_components/chooseSelectionFunction";
 import ChooseEvalFunction from "./_components/chooseEvaluationFunction";
@@ -277,7 +277,7 @@ export default function ConfigureNonGP() {
                             )}
 
                         {currentStep >= 5 && indSize && (
-                            <ChoosePopulationFunction
+                            <ChooseInitializationFunction
                                 popFunc={popFunc}
                                 setPopFunc={setPopFunc}
                                 currentStep={currentStep}

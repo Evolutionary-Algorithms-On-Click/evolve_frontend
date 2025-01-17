@@ -5,6 +5,7 @@ import { useState } from "react";
 import { ChooseAlgo } from "../_components/chooseAlgorithm";
 import ChoosePrimitiveSet from "./_components/primitive";
 import ChooseTreeGeneratorExpression from "./_components/treeGenerator";
+import ChooseInitializationFunction from "../_components/chooseInitializationFunction";
 
 export default function ConfigureGP() {
     const [currentStep, setCurrentStep] = useState(1);
@@ -22,6 +23,12 @@ export default function ConfigureGP() {
     const [treeGenExpression, setTreeGenExpression] = useState(null);
     const [minHeight, setMinHeight] = useState(0);
     const [maxHeight, setMaxHeight] = useState(0);
+
+    // Individual Generator Function.
+    const [indGen, setIndGen] = useState(null);
+
+    // Population Generator Function.
+    const [popFunc, setPopFunc] = useState(null);
 
     return isLoading ? (
         <Loader type={"full"} message={"Running Algorithm..."} />
@@ -96,6 +103,28 @@ export default function ConfigureGP() {
                                 setMinHeight={setMinHeight}
                                 maxHeight={maxHeight}
                                 setMaxHeight={setMaxHeight}
+                            />
+                        )}
+
+                        {currentStep >= 4 && (
+                            <ChooseInitializationFunction
+                                title="Step 4: Choose an Individual Generator Function."
+                                currentStep={currentStep}
+                                setCurrentStep={setCurrentStep}
+                                nextStep={5}
+                                popFunc={indGen}
+                                setPopFunc={setIndGen}
+                            />
+                        )}
+
+                        {currentStep >= 5 && (
+                            <ChooseInitializationFunction
+                                title="Step 5: Choose an Population Generator Function."
+                                currentStep={currentStep}
+                                setCurrentStep={setCurrentStep}
+                                nextStep={5}
+                                popFunc={popFunc}
+                                setPopFunc={setPopFunc}
                             />
                         )}
                     </form>
