@@ -3,6 +3,7 @@
 import Loader from "@/app/_components/Loader";
 import { useState } from "react";
 import { ChooseAlgo } from "../_components/chooseAlgorithm";
+import ChoosePrimitiveSet from "./_components/primitive";
 
 export default function ConfigureGP() {
     const [currentStep, setCurrentStep] = useState(1);
@@ -12,6 +13,9 @@ export default function ConfigureGP() {
     const [chosenAlgo, setChosenAlgo] = useState(null);
     const [mu, setMu] = useState(0);
     const [lambda, setLambda] = useState(0);
+
+    // Primitive Set Elements.
+    const [primitiveSet, setPrimitiveSet] = useState([]);
 
     return isLoading ? <Loader type={"full"} message={"Running Algorithm..."} /> : (
         <main className="flex flex-col justify-center items-center justify-items-center min-h-screen font-[family-name:var(--font-geist-mono)] p-8">
@@ -53,6 +57,16 @@ export default function ConfigureGP() {
                                 setMu={setMu}
                                 lambda={lambda}
                                 setLambda={setLambda}
+                            />
+                        )}
+
+                        {currentStep >= 2 && (
+                            <ChoosePrimitiveSet
+                                currentStep={currentStep}
+                                setCurrentStep={setCurrentStep}
+                                nextStep={3}
+                                primitiveSet={primitiveSet}
+                                setPrimitiveSet={setPrimitiveSet}
                             />
                         )}
                     </form>
