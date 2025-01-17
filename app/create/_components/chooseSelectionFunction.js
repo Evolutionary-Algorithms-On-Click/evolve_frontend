@@ -1,6 +1,7 @@
 import { selectionData } from "@/app/_data/selection";
 
 export default function ChooseSelectionFunction({
+    title = "Step 8: Choose a selection function.",
     selectFunc,
     setSelectFunc,
     currentStep,
@@ -11,9 +12,7 @@ export default function ChooseSelectionFunction({
 }) {
     return (
         <div className="mt-16">
-            <h4 className="text-lg font-bold mb-4">
-                Step 8: Choose a selection function.
-            </h4>
+            <h4 className="text-lg font-bold mb-4">{title}</h4>
             <div className="grid grid-cols-2 gap-4 align-top">
                 {selectionData.map((sel, index) => (
                     <button

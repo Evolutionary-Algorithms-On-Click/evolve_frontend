@@ -6,6 +6,7 @@ import { ChooseAlgo } from "../_components/chooseAlgorithm";
 import ChoosePrimitiveSet from "./_components/primitive";
 import ChooseTreeGeneratorExpression from "./_components/treeGenerator";
 import ChooseInitializationFunction from "../_components/chooseInitializationFunction";
+import ChooseSelectionFunction from "../_components/chooseSelectionFunction";
 
 export default function ConfigureGP() {
     const [currentStep, setCurrentStep] = useState(1);
@@ -29,6 +30,10 @@ export default function ConfigureGP() {
 
     // Population Generator Function.
     const [popFunc, setPopFunc] = useState(null);
+
+    // Selection Function.
+    const [selectionFunction, setSelectionFunction] = useState(null);
+    const [tempTourSize, setTempTourSize] = useState(0);
 
     return isLoading ? (
         <Loader type={"full"} message={"Running Algorithm..."} />
@@ -122,9 +127,22 @@ export default function ConfigureGP() {
                                 title="Step 5: Choose an Population Generator Function."
                                 currentStep={currentStep}
                                 setCurrentStep={setCurrentStep}
-                                nextStep={5}
+                                nextStep={6}
                                 popFunc={popFunc}
                                 setPopFunc={setPopFunc}
+                            />
+                        )}
+
+                        {currentStep >= 6 && (
+                            <ChooseSelectionFunction
+                                title="Step 6: Choose a Selection Function."
+                                currentStep={currentStep}
+                                setCurrentStep={setCurrentStep}
+                                nextStep={7}
+                                selectFunc={selectionFunction}
+                                setSelectFunc={setSelectionFunction}
+                                tempTourSize={tempTourSize}
+                                setTempTourSize={setTempTourSize}
                             />
                         )}
                     </form>
