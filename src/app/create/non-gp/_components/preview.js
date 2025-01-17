@@ -12,16 +12,17 @@ export default function Preview({
 }) {
     // Section will have a div representing selected values.
     return (
-        <div className="flex flex-col items-start border border-gray-400 rounded-2xl p-4 min-w-16 h-fit md:sticky top-4" >
+        <div className="flex flex-col items-start border border-gray-400 rounded-2xl p-4 min-w-16 h-fit md:sticky top-4">
             <h3 className="text-xl font-bold">Config Summary</h3>
             <div className="flex flex-col">
                 <div className="mt-4">
                     <h4 className="text-lg font-semibold">Algorithm</h4>
-                    <code className="bg-foreground p-1 rounded-lg text-background">{algo || "None"}</code>
+                    <code className="bg-foreground p-1 rounded-lg text-background">
+                        {algo || "None"}
+                    </code>
                 </div>
 
                 {parameters ? <hr className="my-4" /> : null}
-
 
                 {parameters && (
                     <div className="mt-4">
@@ -30,26 +31,42 @@ export default function Preview({
                             <table className="w-full text-center">
                                 <tbody>
                                     {parameters.map((param, index) => (
-                                        <tr key={index} className={index % 2 === 0 ? "bg-gray-100" : "bg-white"}>
+                                        <tr
+                                            key={index}
+                                            className={
+                                                index % 2 === 0
+                                                    ? "bg-gray-100"
+                                                    : "bg-white"
+                                            }
+                                        >
                                             <td className="border-b border-gray-300 p-2">
-                                                <p className="font-bold">{param + ".0"}</p>
-                                                <p className="font-extralight">dim_{index + 1}</p>
+                                                <p className="font-bold">
+                                                    {param + ".0"}
+                                                </p>
+                                                <p className="font-extralight">
+                                                    dim_{index + 1}
+                                                </p>
                                             </td>
                                         </tr>
                                     ))}
                                 </tbody>
                             </table>
-                        ) : (<p>None</p>)}
+                        ) : (
+                            <p>None</p>
+                        )}
                     </div>
                 )}
 
                 {indGen ? <hr className="mt-4" /> : null}
 
-
                 {indGen && (
                     <div className="mt-4">
-                        <h4 className="text-lg font-semibold">Individual Generator</h4>
-                        <code className="bg-foreground p-1 rounded-lg text-background">{indGen}</code>
+                        <h4 className="text-lg font-semibold">
+                            Individual Generator
+                        </h4>
+                        <code className="bg-foreground p-1 rounded-lg text-background">
+                            {indGen}
+                        </code>
                     </div>
                 )}
 
@@ -57,8 +74,12 @@ export default function Preview({
 
                 {indSize && (
                     <div className="mt-4">
-                        <h4 className="text-lg font-semibold">Individual Size</h4>
-                        <code className="bg-foreground p-1 rounded-lg text-background">{indSize}</code>
+                        <h4 className="text-lg font-semibold">
+                            Individual Size
+                        </h4>
+                        <code className="bg-foreground p-1 rounded-lg text-background">
+                            {indSize}
+                        </code>
                     </div>
                 )}
 
@@ -66,8 +87,12 @@ export default function Preview({
 
                 {popFunc && (
                     <div className="mt-4">
-                        <h4 className="text-lg font-semibold">Population Function</h4>
-                        <code className="bg-foreground p-1 rounded-lg text-background">{popFunc}</code>
+                        <h4 className="text-lg font-semibold">
+                            Population Function
+                        </h4>
+                        <code className="bg-foreground p-1 rounded-lg text-background">
+                            {popFunc}
+                        </code>
                     </div>
                 )}
 
@@ -75,8 +100,12 @@ export default function Preview({
 
                 {mateFunc && (
                     <div className="mt-4">
-                        <h4 className="text-lg font-semibold">Mating Function</h4>
-                        <code className="bg-foreground p-1 rounded-lg text-background">{mateFunc}</code>
+                        <h4 className="text-lg font-semibold">
+                            Mating Function
+                        </h4>
+                        <code className="bg-foreground p-1 rounded-lg text-background">
+                            {mateFunc}
+                        </code>
                     </div>
                 )}
 
@@ -84,8 +113,12 @@ export default function Preview({
 
                 {mutateFunc && (
                     <div className="mt-4">
-                        <h4 className="text-lg font-semibold">Mutation Function</h4>
-                        <code className="bg-foreground p-1 rounded-lg text-background">{mutateFunc}</code>
+                        <h4 className="text-lg font-semibold">
+                            Mutation Function
+                        </h4>
+                        <code className="bg-foreground p-1 rounded-lg text-background">
+                            {mutateFunc}
+                        </code>
                     </div>
                 )}
 
@@ -93,9 +126,17 @@ export default function Preview({
 
                 {selectFunc && (
                     <div className="mt-4">
-                        <h4 className="text-lg font-semibold">Selection Function</h4>
-                        <code className="bg-foreground p-1 rounded-lg text-background">{selectFunc}</code>
-                        {selectFunc === "selTournament" && <p className="font-extralight">Tournament Size = {tempTourSize}</p>}
+                        <h4 className="text-lg font-semibold">
+                            Selection Function
+                        </h4>
+                        <code className="bg-foreground p-1 rounded-lg text-background">
+                            {selectFunc}
+                        </code>
+                        {selectFunc === "selTournament" && (
+                            <p className="font-extralight">
+                                Tournament Size = {tempTourSize}
+                            </p>
+                        )}
                     </div>
                 )}
 
@@ -103,12 +144,15 @@ export default function Preview({
 
                 {evalFunc && (
                     <div className="mt-4">
-                        <h4 className="text-lg font-semibold">Evaluation Function</h4>
-                        <code className="bg-foreground p-1 rounded-lg text-background">{evalFunc}</code>
+                        <h4 className="text-lg font-semibold">
+                            Evaluation Function
+                        </h4>
+                        <code className="bg-foreground p-1 rounded-lg text-background">
+                            {evalFunc}
+                        </code>
                     </div>
                 )}
-
             </div>
         </div>
-    )
+    );
 }

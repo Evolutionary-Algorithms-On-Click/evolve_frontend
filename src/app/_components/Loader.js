@@ -1,9 +1,6 @@
 import { CircularProgress } from "@mui/material";
 
-export default function Loader({
-    type,
-    message,
-}) {
+export default function Loader({ type, message }) {
     switch (type) {
         case "full":
             return (

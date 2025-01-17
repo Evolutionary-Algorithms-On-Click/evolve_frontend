@@ -2,7 +2,7 @@ export const individualList = [
     "binaryString",
     // "permutation",
     "floatingPoint",
-    "integer"
+    "integer",
 ];
 
 export function validateIndividualList(individualList) {
@@ -11,21 +11,19 @@ export function validateIndividualList(individualList) {
 
 export const individualData = [
     {
-        'name' : 'binaryString',
-        'description': 'A random binary string of 0s and 1s.'
+        name: "binaryString",
+        description: "A random binary string of 0s and 1s.",
     },
     // {
     //     'name': 'permutation',
     //     'description': 'A permutation of integers to form unique individuals.'
     // },
     {
-        'name' : 'floatingPoint',
-        'description': 'A floating-point individual with a specified range.'
+        name: "floatingPoint",
+        description: "A floating-point individual with a specified range.",
     },
     {
-        'name' : 'integer',
-        'description' : 'An integer individual within a specified range.'
-    }
-]
-
-
+        name: "integer",
+        description: "An integer individual within a specified range.",
+    },
+];

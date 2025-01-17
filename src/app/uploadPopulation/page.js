@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from 'react';
-import { useDropzone } from 'react-dropzone';
-import CodeMirror from '@uiw/react-codemirror';
-import { json } from '@codemirror/lang-json';
+import { useState } from "react";
+import { useDropzone } from "react-dropzone";
+import CodeMirror from "@uiw/react-codemirror";
+import { json } from "@codemirror/lang-json";
 
 export default function UploadPage() {
     const [file, setFile] = useState(null);
@@ -17,32 +17,36 @@ export default function UploadPage() {
         e.preventDefault();
 
         if (!file) {
-            alert('Please select a file first!');
+            alert("Please select a file first!");
             return;
         }
 
         const formData = new FormData();
-        formData.append('file', file);
+        formData.append("file", file);
 
         try {
-            const res = await fetch((process.env.NEXT_PUBLIC_BACKEND_BASE_URL ?? "http://localhost:8000") + '/api/unpickleFile/', {
-                method: 'POST',
-                headers: {
-                    accept: 'application/json',
+            const res = await fetch(
+                (process.env.NEXT_PUBLIC_BACKEND_BASE_URL ??
+                    "http://localhost:8000") + "/api/unpickleFile/",
+                {
+                    method: "POST",
+                    headers: {
+                        accept: "application/json",
+                    },
+                    body: formData,
                 },
-                body: formData,
-            });
+            );
 
             const data = await res.json();
             setResponse(data?.data);
         } catch (error) {
-            console.error('Error uploading file:', error);
+            console.error("Error uploading file:", error);
         }
     };
 
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
         onDrop,
-        accept: { 'application/octet-stream': ['.pkl'] },
+        accept: { "application/octet-stream": [".pkl"] },
     });
 
     return (
@@ -51,26 +55,40 @@ export default function UploadPage() {
                 <h1 className="text-3xl sm:text-4xl font-bold text-center mb-4">
                     Evolve OnClick Unpickler
                 </h1>
-                <p className='text-center'>View Pickled Population on your Browser.</p>
+                <p className="text-center">
+                    View Pickled Population on your Browser.
+                </p>
             </div>
 
-            <h1 className="text-2xl font-bold mb-4 mt-24">Upload a .pkl File</h1>
-            <div {...getRootProps()} className={`border-2 border-dashed p-6 rounded-lg ${isDragActive ? 'border-blue-500' : 'border-gray-400'} mb-4`}>
+            <h1 className="text-2xl font-bold mb-4 mt-24">
+                Upload a .pkl File
+            </h1>
+            <div
+                {...getRootProps()}
+                className={`border-2 border-dashed p-6 rounded-lg ${isDragActive ? "border-blue-500" : "border-gray-400"} mb-4`}
+            >
                 <input {...getInputProps()} />
                 {isDragActive ? (
                     <p className="text-blue-500">Drop the files here...</p>
                 ) : (
-                    <p className="text-gray-600">Drag 'n' drop a .pkl file here, or click to select one</p>
+                    <p className="text-gray-600">
+                        Drag 'n' drop a .pkl file here, or click to select one
+                    </p>
                 )}
             </div>
 
             {file && (
                 <div className="mb-4">
-                    <p className="text-gray-800">Selected File: <strong>{file.name}</strong></p>
+                    <p className="text-gray-800">
+                        Selected File: <strong>{file.name}</strong>
+                    </p>
                 </div>
             )}
 
-            <button onClick={handleSubmit} className="bg-black text-white py-2 px-4 rounded">
+            <button
+                onClick={handleSubmit}
+                className="bg-black text-white py-2 px-4 rounded"
+            >
                 Upload
             </button>
 
@@ -79,12 +97,10 @@ export default function UploadPage() {
                     <h2 className="font-bold">Population:</h2>
                     <CodeMirror
                         value={
-                        "{\n"+
-                        response.map((x, i) => (
-                            `\t[${x.toString()}]\n`
-                        ))
-                        +"\n}"
-                        }    
+                            "{\n" +
+                            response.map((x, i) => `\t[${x.toString()}]\n`) +
+                            "\n}"
+                        }
                         width="1200px"
                         extensions={[json()]}
                         readOnly

@@ -1,20 +1,20 @@
-export const evalFuncList = ["evalOneMax", "evalProduct", "evalDifference"]
+export const evalFuncList = ["evalOneMax", "evalProduct", "evalDifference"];
 
 export function validateEvalFunc(evalFunc) {
-  return evalFuncList.includes(evalFunc)
+    return evalFuncList.includes(evalFunc);
 }
 
 export const evalFuncData = [
     {
         name: "evalOneMax",
-        description: "Count the number of 1s in the individual"
+        description: "Count the number of 1s in the individual",
     },
     {
         name: "evalProduct",
-        description: "Multiply the values of the individual"
+        description: "Multiply the values of the individual",
     },
     {
         name: "evalDifference",
-        description: "Subtract the values of the individual"
-    }
-]
+        description: "Subtract the values of the individual",
+    },
+];

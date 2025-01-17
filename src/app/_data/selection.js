@@ -8,29 +8,33 @@ export const selectionList = [
     "selWorst",
     "selStochasticUniversalSampling",
     "selLexicase",
-    "selAutomaticEpsilonLexicase"
-]
+    "selAutomaticEpsilonLexicase",
+];
 
 export function validateSelection(selection) {
-    return selectionList.includes(selection)
+    return selectionList.includes(selection);
 }
 
 export const selectionData = [
     {
         name: "selTournament",
-        description: "Select the best individual among tournsize randomly chosen individuals, k times.",
+        description:
+            "Select the best individual among tournsize randomly chosen individuals, k times.",
     },
     {
         name: "selRoulette",
-        description: "Select by roulette wheel. The selection probability of an individual is proportional to its fitness.",
+        description:
+            "Select by roulette wheel. The selection probability of an individual is proportional to its fitness.",
     },
     {
         name: "selNSGA2",
-        description: "Select the best individual according to the non-dominated sorting of NSGA-II.",
+        description:
+            "Select the best individual according to the non-dominated sorting of NSGA-II.",
     },
     {
         name: "selSPEA2",
-        description: "Select the best individual according to the non-dominated sorting of SPEA2.",
+        description:
+            "Select the best individual according to the non-dominated sorting of SPEA2.",
     },
     {
         name: "selRandom",
@@ -46,14 +50,17 @@ export const selectionData = [
     },
     {
         name: "selStochasticUniversalSampling",
-        description: "Select by stochastic universal sampling. The selection probability of an individual is proportional to its fitness.",
+        description:
+            "Select by stochastic universal sampling. The selection probability of an individual is proportional to its fitness.",
     },
     {
         name: "selLexicase",
-        description: "Select the best individual according to the lexicase selection.",
+        description:
+            "Select the best individual according to the lexicase selection.",
     },
     {
         name: "selAutomaticEpsilonLexicase",
-        description: "Select the best individual according to the automatic epsilon lexicase selection.",
+        description:
+            "Select the best individual according to the automatic epsilon lexicase selection.",
     },
-]
+];

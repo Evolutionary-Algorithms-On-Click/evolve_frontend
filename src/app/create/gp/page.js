@@ -23,7 +23,9 @@ export default function ConfigureGP() {
     const [minHeight, setMinHeight] = useState(0);
     const [maxHeight, setMaxHeight] = useState(0);
 
-    return isLoading ? <Loader type={"full"} message={"Running Algorithm..."} /> : (
+    return isLoading ? (
+        <Loader type={"full"} message={"Running Algorithm..."} />
+    ) : (
         <main className="flex flex-col justify-center items-center justify-items-center min-h-screen font-[family-name:var(--font-geist-mono)] p-8">
             <div>
                 <h1 className="text-3xl sm:text-4xl font-bold">
@@ -48,8 +50,15 @@ export default function ConfigureGP() {
 
                 <div className="border border-gray-400 rounded-2xl p-4">
                     <form className="flex flex-col">
-                        <h3 className="text-xl font-bold">Configure Algorithm</h3>
-                        <p className="text-sm text-gray-500">Genetic Programming - <span className="text-green-500">PrimitiveTree</span></p>
+                        <h3 className="text-xl font-bold">
+                            Configure Algorithm
+                        </h3>
+                        <p className="text-sm text-gray-500">
+                            Genetic Programming -{" "}
+                            <span className="text-green-500">
+                                PrimitiveTree
+                            </span>
+                        </p>
                         <hr className="my-4" />
 
                         {currentStep >= 1 && (
