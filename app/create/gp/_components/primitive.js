@@ -8,9 +8,9 @@ export default function ChoosePrimitiveSet({
     setPrimitiveSet,
 }) {
     return (
-        <div className="my-4">
-            <h4 className="text-lg font-bold mb-8">
-                Step 2: Choose Primitive Set Elements.
+        <div className="my-4 mt-16">
+            <h4 className="text-lg font-bold mb-4">
+                Step 3: Choose Primitive Set Elements.
             </h4>
             <div className="grid grid-cols-2 gap-4 align-top">
                 {primitiveSetElements.map((element, index) => (

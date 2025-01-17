@@ -53,8 +53,7 @@ export default function ChooseMutationFunction({
             {mutateFunc === "mutEphemeral" && (
                 <div className="mt-8">
                     <h5 className="text-lg font-bold">
-                        Step 7.1: Choose the number of individual ephemeral
-                        constants to mutate.
+                        {`Step ${nextStep - 1}.1: Choose the number of individual ephemeral constants to mutate.`}
                     </h5>
                     <div className="mt-4 grid grid-cols-2 gap-2 align-top">
                         <button

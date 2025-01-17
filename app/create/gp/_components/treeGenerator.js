@@ -1,7 +1,7 @@
 import { treeGeneratorData } from "@/app/_data/treeGenExpression";
 
 export default function ChooseTreeGeneratorExpression({
-    title = "Step 3: Choose an initial Individual Generator Function",
+    title = "Step 4: Choose an initial Individual Generator Function",
     currentStep,
     setCurrentStep,
     nextStep,
@@ -13,8 +13,8 @@ export default function ChooseTreeGeneratorExpression({
     setMaxHeight,
 }) {
     return (
-        <div className="my-4">
-            <h4 className="text-lg font-bold mb-8">{title}</h4>
+        <div className="my-4 mt-16">
+            <h4 className="text-lg font-bold mb-4">{title}</h4>
             <div className="grid grid-cols-2 gap-4 align-top">
                 {treeGeneratorData.map((algorithm, index) => (
                     <button
@@ -54,8 +54,8 @@ export default function ChooseTreeGeneratorExpression({
             {treeGenExpression && (
                 <div className="mt-8">
                     <h5 className="text-lg font-bold">
-                        Step 3.1: Configure height constraints for tree
-                        generation.
+                        {`${nextStep - 1}.1: Configure height constraints for tree
+                        generation.`}
                     </h5>
                     {!(
                         minHeight &&

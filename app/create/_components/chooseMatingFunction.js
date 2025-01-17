@@ -1,17 +1,17 @@
-import { mateData } from "@/app/_data/mate";
-
 export default function ChooseMatingFunction({
+    title = "Step 6: Choose a mating function.",
+    mateData,
     mateFunc,
     setMateFunc,
     currentStep,
     nextStep,
     setCurrentStep,
+    terminalProb,
+    setTerminalProb,
 }) {
     return (
-        <div className="mt-16">
-            <h4 className="text-lg font-bold mb-4">
-                Step 6: Choose a mating function.
-            </h4>
+        <div className="mt-8">
+            <h4 className="text-lg font-bold mb-4">{title}</h4>
             {/* grid: each element has a name and description */}
             <div className="grid grid-cols-2 gap-4 align-top">
                 {mateData.map((mate, index) => (
@@ -36,6 +36,28 @@ export default function ChooseMatingFunction({
                     </button>
                 ))}
             </div>
+
+            {mateFunc === "cxOnePointLeafBiased" && (
+                <div className="mt-8">
+                    <h4 className="text-lg font-bold mb-4">
+                        {`Step ${nextStep - 1}.1: Set the terminal probability for
+                        cxOnePointLeafBiased.`}
+                    </h4>
+                    <input
+                        type="number"
+                        value={terminalProb}
+                        onChange={(e) => {
+                            e.preventDefault();
+                            if (isNaN(e.target.value) || e.target.value < 0) {
+                                e.target.value = 0.1;
+                            }
+
+                            setTerminalProb(e.target.value);
+                        }}
+                        className="border border-gray-300 p-2 rounded-lg max-w-xl text-left items-start min-w-2/3"
+                    />
+                </div>
+            )}
         </div>
     );
 }

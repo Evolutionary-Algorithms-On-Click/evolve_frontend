@@ -11,8 +11,8 @@ export default function ChooseWeights({
     const [tempParamWeight, setTempParamWeight] = useState(null);
 
     return (
-        <div className="mt-4">
-            <h4 className="text-lg font-bold mb-8">
+        <div className="mt-8">
+            <h4 className="text-lg font-bold mb-4">
                 Step 2: Parameters to optimize (weights)
             </h4>
 

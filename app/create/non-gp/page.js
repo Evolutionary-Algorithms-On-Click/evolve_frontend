@@ -8,13 +8,14 @@ import ChooseWeights from "./_components/chooseWeights";
 import ChooseGenerator from "./_components/chooseGenerator";
 import { GetIndividualSize } from "./_components/getIndividualSize";
 import ChooseInitializationFunction from "../_components/chooseInitializationFunction";
-import ChooseMatingFunction from "./_components/chooseMatingFunction";
+import ChooseMatingFunction from "../_components/chooseMatingFunction";
 import ChooseSelectionFunction from "../_components/chooseSelectionFunction";
 import ChooseEvalFunction from "./_components/chooseEvaluationFunction";
 import ConfigureAlgoParams from "./_components/configureAlgoParams";
 import Preview from "./_components/preview";
 import ChooseMutationFunction from "../_components/chooseMutateFunction";
 import { mutationData } from "@/app/_data/mutation";
+import { mateData } from "@/app/_data/mate";
 
 export default function ConfigureNonGP() {
     const [currentStep, setCurrentStep] = useState(1);
@@ -294,6 +295,7 @@ export default function ConfigureNonGP() {
 
                         {currentStep >= 6 && popFunc && (
                             <ChooseMatingFunction
+                                mateData={mateData}
                                 mateFunc={matingFunc}
                                 setMateFunc={setMatingFunc}
                                 currentStep={currentStep}

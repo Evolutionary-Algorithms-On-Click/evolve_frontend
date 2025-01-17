@@ -9,6 +9,9 @@ import ChooseInitializationFunction from "../_components/chooseInitializationFun
 import ChooseSelectionFunction from "../_components/chooseSelectionFunction";
 import ChooseMutationFunction from "../_components/chooseMutateFunction";
 import { gpMutationData } from "@/app/_data/mutation";
+import ChooseMatingFunction from "../_components/chooseMatingFunction";
+import { gpMateData } from "@/app/_data/mate";
+import ChooseWeights from "../non-gp/_components/chooseWeights";
 
 export default function ConfigureGP() {
     const [currentStep, setCurrentStep] = useState(1);
@@ -18,6 +21,9 @@ export default function ConfigureGP() {
     const [chosenAlgo, setChosenAlgo] = useState(null);
     const [mu, setMu] = useState(0);
     const [lambda, setLambda] = useState(0);
+
+    // Weights parameters.
+    const [parameters, setParameters] = useState([]);
 
     // Primitive Set Elements.
     const [primitiveSet, setPrimitiveSet] = useState([]);
@@ -43,6 +49,10 @@ export default function ConfigureGP() {
     const [mutExpr, setMutExpr] = useState(null);
     const [mutMinHeight, setMutMinHeight] = useState(0);
     const [mutMaxHeight, setMutMaxHeight] = useState(0);
+
+    // Mating Function.
+    const [matingFunc, setMatingFunc] = useState(null);
+    const [terminalProb, setTerminalProb] = useState(0.1);
 
     return isLoading ? (
         <Loader type={"full"} message={"Running Algorithm..."} />
@@ -102,20 +112,30 @@ export default function ConfigureGP() {
                         )}
 
                         {currentStep >= 2 && (
-                            <ChoosePrimitiveSet
+                            <ChooseWeights
                                 currentStep={currentStep}
                                 setCurrentStep={setCurrentStep}
                                 nextStep={3}
+                                parameters={parameters}
+                                setParameters={setParameters}
+                            />
+                        )}
+
+                        {currentStep >= 3 && (
+                            <ChoosePrimitiveSet
+                                currentStep={currentStep}
+                                setCurrentStep={setCurrentStep}
+                                nextStep={4}
                                 primitiveSet={primitiveSet}
                                 setPrimitiveSet={setPrimitiveSet}
                             />
                         )}
 
-                        {currentStep >= 3 && (
+                        {currentStep >= 4 && (
                             <ChooseTreeGeneratorExpression
                                 currentStep={currentStep}
                                 setCurrentStep={setCurrentStep}
-                                nextStep={4}
+                                nextStep={5}
                                 treeGenExpression={treeGenExpression}
                                 setTreeGenExpression={setTreeGenExpression}
                                 minHeight={minHeight}
@@ -125,34 +145,34 @@ export default function ConfigureGP() {
                             />
                         )}
 
-                        {currentStep >= 4 && (
+                        {currentStep >= 5 && (
                             <ChooseInitializationFunction
-                                title="Step 4: Choose an Individual Generator Function."
+                                title="Step 5: Choose an Individual Generator Function."
                                 currentStep={currentStep}
                                 setCurrentStep={setCurrentStep}
-                                nextStep={5}
+                                nextStep={6}
                                 popFunc={indGen}
                                 setPopFunc={setIndGen}
                             />
                         )}
 
-                        {currentStep >= 5 && (
+                        {currentStep >= 6 && (
                             <ChooseInitializationFunction
-                                title="Step 5: Choose an Population Generator Function."
+                                title="Step 6: Choose an Population Generator Function."
                                 currentStep={currentStep}
                                 setCurrentStep={setCurrentStep}
-                                nextStep={6}
+                                nextStep={7}
                                 popFunc={popFunc}
                                 setPopFunc={setPopFunc}
                             />
                         )}
 
-                        {currentStep >= 6 && (
+                        {currentStep >= 7 && (
                             <ChooseSelectionFunction
-                                title="Step 6: Choose a Selection Function."
+                                title="Step 7: Choose a Selection Function."
                                 currentStep={currentStep}
                                 setCurrentStep={setCurrentStep}
-                                nextStep={7}
+                                nextStep={8}
                                 selectFunc={selectionFunction}
                                 setSelectFunc={setSelectionFunction}
                                 tempTourSize={tempTourSize}
@@ -160,13 +180,13 @@ export default function ConfigureGP() {
                             />
                         )}
 
-                        {currentStep >= 7 && (
+                        {currentStep >= 8 && (
                             <ChooseMutationFunction
-                                title="Step 7: Choose a Mutation Function."
+                                title="Step 8: Choose a Mutation Function."
                                 mutationData={gpMutationData}
                                 currentStep={currentStep}
                                 setCurrentStep={setCurrentStep}
-                                nextStep={8}
+                                nextStep={9}
                                 mutateFunc={mutateFunc}
                                 setMutateFunc={setMutateFunc}
                                 mode={mode}
@@ -174,18 +194,32 @@ export default function ConfigureGP() {
                             />
                         )}
 
-                        {currentStep >= 8 && (
+                        {currentStep >= 9 && (
                             <ChooseTreeGeneratorExpression
-                                title="Step 8: Choose a Mutation Generator Tree Expression."
+                                title="Step 9: Choose a Mutation Generator Tree Expression."
                                 currentStep={currentStep}
                                 setCurrentStep={setCurrentStep}
-                                nextStep={9}
+                                nextStep={10}
                                 treeGenExpression={mutExpr}
                                 setTreeGenExpression={setMutExpr}
                                 minHeight={mutMinHeight}
                                 setMinHeight={setMutMinHeight}
                                 maxHeight={mutMaxHeight}
                                 setMaxHeight={setMutMaxHeight}
+                            />
+                        )}
+
+                        {currentStep >= 10 && (
+                            <ChooseMatingFunction
+                                title="Step 10: Choose a Mating Function."
+                                mateData={gpMateData}
+                                mateFunc={matingFunc}
+                                setMateFunc={setMatingFunc}
+                                currentStep={currentStep}
+                                nextStep={11}
+                                setCurrentStep={setCurrentStep}
+                                terminalProb={terminalProb}
+                                setTerminalProb={setTerminalProb}
                             />
                         )}
                     </form>
