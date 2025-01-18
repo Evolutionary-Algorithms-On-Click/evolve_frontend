@@ -13,77 +13,71 @@ import ChooseMatingFunction from "../_components/chooseMatingFunction";
 import { gpMateData } from "@/app/_data/mate";
 import ChooseWeights from "../_components/chooseWeights";
 import ConfigureBloatLimits from "./_components/bloatLimits";
+import ConfigureEquation from "./_components/equation";
+
+// The rest of the code remains unchanged
+
 
 export default function ConfigureGP() {
     const [currentStep, setCurrentStep] = useState(1);
     const [isLoading, setIsLoading] = useState(false);
 
-    // Algorithm Parameters.
+    // Algorithm Parameters
     const [chosenAlgo, setChosenAlgo] = useState(null);
     const [mu, setMu] = useState(0);
     const [lambda, setLambda] = useState(0);
 
-    // Weights parameters.
+    // Weights Parameters
     const [parameters, setParameters] = useState([]);
 
-    // Primitive Set Elements.
+    // Primitive Set Elements
     const [primitiveSet, setPrimitiveSet] = useState([]);
 
-    // Tree Generator Expression.
+    // Tree Generator Expression
     const [treeGenExpression, setTreeGenExpression] = useState(null);
     const [minHeight, setMinHeight] = useState(0);
     const [maxHeight, setMaxHeight] = useState(0);
 
-    // Individual Generator Function.
+    // Individual Generator Function
     const [indGen, setIndGen] = useState(null);
 
-    // Population Generator Function.
+    // Population Generator Function
     const [popFunc, setPopFunc] = useState(null);
 
-    // Selection Function.
+    // Selection Function
     const [selectionFunction, setSelectionFunction] = useState(null);
     const [tempTourSize, setTempTourSize] = useState(0);
 
-    // Mutation Function.
+    // Mutation Function
     const [mutateFunc, setMutateFunc] = useState(null);
     const [mode, setMode] = useState("one");
     const [mutExpr, setMutExpr] = useState(null);
     const [mutMinHeight, setMutMinHeight] = useState(0);
     const [mutMaxHeight, setMutMaxHeight] = useState(0);
 
-    // Mating Function.
+    // Mating Function
     const [matingFunc, setMatingFunc] = useState(null);
     const [terminalProb, setTerminalProb] = useState(0.1);
 
-    // Bloat limits.
+    // Bloat Limits
     const [mateHeightLimit, setMateHeightLimit] = useState(0);
     const [mutateHeightLimit, setMutateHeightLimit] = useState(0);
+
+    // Equation Parameters
+    const [degree, setDegree] = useState(0);
+    const [coefficients, setCoefficients] = useState([]);
+    const [equation, setEquation] = useState("");
 
     return isLoading ? (
         <Loader type={"full"} message={"Running Algorithm..."} />
     ) : (
         <main className="flex flex-col justify-center items-center justify-items-center min-h-screen font-[family-name:var(--font-geist-mono)] p-8">
             <div>
-                <h1 className="text-3xl sm:text-4xl font-bold">
-                    Evolve OnClick
-                </h1>
+                <h1 className="text-3xl sm:text-4xl font-bold">Evolve OnClick</h1>
                 <p>Run and Visualize algorithms with just a click.</p>
             </div>
 
             <div className="flex flex-wrap mt-16 gap-4">
-                {/* <Preview
-                        algo={chosenAlgo}
-                        parameters={parameters}
-                        indGen={indGen}
-                        indSize={indSize}
-                        popFunc={popFunc}
-                        mateFunc={matingFunc}
-                        mutateFunc={mutateFunc}
-                        selectFunc={selectFunc}
-                        evalFunc={evalFunc}
-                        tempTourSize={tempTourSize}
-                    /> */}
-
                 <div className="border border-gray-400 rounded-2xl p-4">
                     <form
                         onSubmit={(e) => {
@@ -91,14 +85,10 @@ export default function ConfigureGP() {
                         }}
                         className="flex flex-col"
                     >
-                        <h3 className="text-xl font-bold">
-                            Configure Algorithm
-                        </h3>
+                        <h3 className="text-xl font-bold">Configure Algorithm</h3>
                         <p className="text-sm text-gray-500">
                             Genetic Programming -{" "}
-                            <span className="text-green-500">
-                                PrimitiveTree
-                            </span>
+                            <span className="text-green-500">PrimitiveTree</span>
                         </p>
                         <hr className="my-4" />
 
@@ -163,7 +153,7 @@ export default function ConfigureGP() {
 
                         {currentStep >= 6 && (
                             <ChooseInitializationFunction
-                                title="Step 6: Choose an Population Generator Function."
+                                title="Step 6: Choose a Population Generator Function."
                                 currentStep={currentStep}
                                 setCurrentStep={setCurrentStep}
                                 nextStep={7}
@@ -240,7 +230,21 @@ export default function ConfigureGP() {
                             />
                         )}
 
-                        {/* TODO: Algo Execution Params, Symbolic Regression Polynomial. */}
+                        {currentStep >= 12 && (
+                            <ConfigureEquation
+                                currentStep={currentStep}
+                                setCurrentStep={setCurrentStep}
+                                nextStep={13}
+                                degree={degree}
+                                setDegree={setDegree}
+                                coefficients={coefficients}
+                                setCoefficients={setCoefficients}
+                                equation={equation}
+                                setEquation={setEquation}
+                            />
+                        )}
+
+                        {/* TODO: Algo Execution Params, Symbolic Regression Polynomial */}
                     </form>
                 </div>
             </div>
