@@ -16,7 +16,7 @@ export default function ConfigureBloatLimits({
             <div className="grid grid-cols-2 gap-4 align-top">
                 <div>
                     <label className="block mb-2 font-medium">
-                        Max Height after mating.
+                        Min Height after mutating.
                     </label>
                     <input
                         type="number"
