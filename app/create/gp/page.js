@@ -233,10 +233,10 @@ export default function ConfigureGP() {
                                 currentStep={currentStep}
                                 setCurrentStep={setCurrentStep}
                                 nextStep={12}
-                                mateHeightLimit={mateHeightLimit}
-                                setMateHeightLimit={setMateHeightLimit}
-                                mutateHeightLimit={mutateHeightLimit}
-                                setMutateHeightLimit={setMutateHeightLimit}
+                                mateHeight={mateHeightLimit}
+                                setMateHeight={setMateHeightLimit}
+                                mutHeight={mutateHeightLimit}
+                                setMutHeight={setMutateHeightLimit}
                             />
                         )}
 
