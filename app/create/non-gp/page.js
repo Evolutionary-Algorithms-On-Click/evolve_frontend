@@ -11,7 +11,7 @@ import ChooseInitializationFunction from "../_components/chooseInitializationFun
 import ChooseMatingFunction from "../_components/chooseMatingFunction";
 import ChooseSelectionFunction from "../_components/chooseSelectionFunction";
 import ChooseEvalFunction from "./_components/chooseEvaluationFunction";
-import ConfigureAlgoParams from "./_components/configureAlgoParams";
+import ConfigureAlgoParams from "../_components/configureAlgoParams";
 import Preview from "./_components/preview";
 import ChooseMutationFunction from "../_components/chooseMutateFunction";
 import { mutationData } from "@/app/_data/mutation";

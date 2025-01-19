@@ -39,8 +39,8 @@ export default function ConfigureEquation({
                     power > 0 && formattedCoeff === 1
                         ? ""
                         : formattedCoeff === -1
-                        ? "-"
-                        : formattedCoeff;
+                          ? "-"
+                          : formattedCoeff;
 
                 // Construct term based on the power of x
                 if (power === 0) return `${coeffStr}`; // Constant term
@@ -52,16 +52,24 @@ export default function ConfigureEquation({
             .replace(/\+\s?-/g, "- "); // Replace "+ -" with "- "
 
         setEquation(terms);
+        if (terms === "") setEquation("Equation will appear here");
+        if (degree > 0 && terms) {
+            setCurrentStep(currentStep < nextStep ? nextStep : currentStep);
+        }
     };
 
     return (
         <div className="my-4 mt-16">
-            <h4 className="text-lg font-bold mb-4">Step {nextStep - 1}: Define Polynomial Equation</h4>
+            <h4 className="text-lg font-bold mb-4">
+                Step {nextStep - 1}: Define Polynomial Equation
+            </h4>
 
             <div className="flex flex-col gap-4">
                 {/* Input for Degree of Polynomial */}
                 <div>
-                    <label className="block mb-2 font-medium">Degree of the Polynomial</label>
+                    <label className="block mb-2 font-medium">
+                        Degree of the Polynomial
+                    </label>
                     <input
                         type="number"
                         min="0"
@@ -74,7 +82,9 @@ export default function ConfigureEquation({
 
                 {/* Input for Coefficients */}
                 <div>
-                    <label className="block mb-2 font-medium">Coefficients</label>
+                    <label className="block mb-2 font-medium">
+                        Coefficients
+                    </label>
                     {degree > 0 && (
                         <div className="grid grid-cols-2 gap-4">
                             {Array.from({ length: degree + 1 }).map((_, i) => {
@@ -90,7 +100,10 @@ export default function ConfigureEquation({
                                             className="border border-gray-300 p-2 rounded-lg w-full"
                                             placeholder={`Enter coefficient for x^${degree - i}`}
                                             onChange={(e) =>
-                                                handleCoefficientChange(index, e.target.value)
+                                                handleCoefficientChange(
+                                                    index,
+                                                    e.target.value,
+                                                )
                                             }
                                         />
                                     </div>
@@ -108,16 +121,6 @@ export default function ConfigureEquation({
                     </p>
                 </div>
             </div>
-
-            {/* Proceed Button */}
-            {degree > 0 && equation && (
-                <button
-                    onClick={() => setCurrentStep(currentStep < nextStep ? nextStep : currentStep)}
-                    className="mt-4 bg-green-500 text-white px-4 py-2 rounded-lg"
-                >
-                    Proceed to Next Step
-                </button>
-            )}
         </div>
     );
 }

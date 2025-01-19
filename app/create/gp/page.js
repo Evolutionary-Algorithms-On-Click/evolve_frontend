@@ -14,9 +14,9 @@ import { gpMateData } from "@/app/_data/mate";
 import ChooseWeights from "../_components/chooseWeights";
 import ConfigureBloatLimits from "./_components/bloatLimits";
 import ConfigureEquation from "./_components/equation";
+import ConfigureAlgoParams from "../_components/configureAlgoParams";
 
 // The rest of the code remains unchanged
-
 
 export default function ConfigureGP() {
     const [currentStep, setCurrentStep] = useState(1);
@@ -68,12 +68,21 @@ export default function ConfigureGP() {
     const [coefficients, setCoefficients] = useState([]);
     const [equation, setEquation] = useState("");
 
+    // Algorithm Parameters.
+    const [populationSize, setPopulationSize] = useState(5000);
+    const [generations, setGenerations] = useState(10);
+    const [cxpb, setCxpb] = useState(0.5);
+    const [mutpb, setMutpb] = useState(0.2);
+    const [hof, setHof] = useState(5);
+
     return isLoading ? (
         <Loader type={"full"} message={"Running Algorithm..."} />
     ) : (
         <main className="flex flex-col justify-center items-center justify-items-center min-h-screen font-[family-name:var(--font-geist-mono)] p-8">
             <div>
-                <h1 className="text-3xl sm:text-4xl font-bold">Evolve OnClick</h1>
+                <h1 className="text-3xl sm:text-4xl font-bold">
+                    Evolve OnClick
+                </h1>
                 <p>Run and Visualize algorithms with just a click.</p>
             </div>
 
@@ -85,10 +94,14 @@ export default function ConfigureGP() {
                         }}
                         className="flex flex-col"
                     >
-                        <h3 className="text-xl font-bold">Configure Algorithm</h3>
+                        <h3 className="text-xl font-bold">
+                            Configure Algorithm
+                        </h3>
                         <p className="text-sm text-gray-500">
                             Genetic Programming -{" "}
-                            <span className="text-green-500">PrimitiveTree</span>
+                            <span className="text-green-500">
+                                PrimitiveTree
+                            </span>
                         </p>
                         <hr className="my-4" />
 
@@ -244,7 +257,39 @@ export default function ConfigureGP() {
                             />
                         )}
 
-                        {/* TODO: Algo Execution Params, Symbolic Regression Polynomial */}
+                        {currentStep >= 13 && (
+                            <ConfigureAlgoParams
+                                populationSize={populationSize}
+                                setPopulationSize={setPopulationSize}
+                                generations={generations}
+                                setGenerations={setGenerations}
+                                cxpb={cxpb}
+                                setCxpb={setCxpb}
+                                mutpb={mutpb}
+                                setMutpb={setMutpb}
+                                hof={hof}
+                                setHof={setHof}
+                            />
+                        )}
+
+                        {currentStep >= 13 && (
+                            // TODO: Disable button if any of the fields are absent.
+                            <div className="mt-4">
+                                <button
+                                    className="bg-foreground text-background p-2 rounded-lg w-full"
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        setIsLoading(true);
+                                        // TODO: Connect to the API and run the algorithm.
+                                        setTimeout(() => {
+                                            setIsLoading(false);
+                                        }, 3000);
+                                    }}
+                                >
+                                    Execute Algorithm
+                                </button>
+                            </div>
+                        )}
                     </form>
                 </div>
             </div>
