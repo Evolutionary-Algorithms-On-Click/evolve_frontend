@@ -228,6 +228,7 @@ export default function ConfigureGP() {
                                 setCurrentStep={setCurrentStep}
                                 terminalProb={terminalProb}
                                 setTerminalProb={setTerminalProb}
+                                setPrimitiveSet={setPrimitiveSet}
                             />
                         )}
 

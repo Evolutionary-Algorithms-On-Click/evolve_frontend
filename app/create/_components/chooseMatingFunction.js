@@ -8,6 +8,7 @@ export default function ChooseMatingFunction({
     setCurrentStep,
     terminalProb,
     setTerminalProb,
+    setPrimitiveSet, // Only used for GP -> cxSemantic.
 }) {
     return (
         <div className="mt-8">
@@ -19,6 +20,18 @@ export default function ChooseMatingFunction({
                         onClick={(e) => {
                             e.preventDefault();
                             setMateFunc(mate.name);
+
+                            if (
+                                mate.name === "cxOnePointLeafBiased" &&
+                                terminalProb < 0
+                            ) {
+                                return;
+                            }
+
+                            if (mate.name === "cxSemantic") {
+                                setPrimitiveSet(["lf", "mul", "add", "sub"]);
+                            }
+
                             setCurrentStep(
                                 currentStep < nextStep ? nextStep : currentStep,
                             );
