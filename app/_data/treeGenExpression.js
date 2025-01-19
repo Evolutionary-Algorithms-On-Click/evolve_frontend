@@ -10,7 +10,7 @@ export const treeGeneratorData = [
             "Generate an expression where each leaf might have a different depth.",
     },
     {
-        name: "genRampedHalfAndHalf",
+        name: "genHalfAndHalf",
         description: "Generate an expression using both genFull and genGrow.",
     },
 ];

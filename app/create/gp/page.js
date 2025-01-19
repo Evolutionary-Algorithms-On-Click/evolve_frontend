@@ -75,6 +75,97 @@ export default function ConfigureGP() {
     const [mutpb, setMutpb] = useState(0.2);
     const [hof, setHof] = useState(5);
 
+    const runGPAlgorithm = async () => {
+        /*
+        const gpConfig = {
+            "algorithm": "eaSimple", // DONE
+            "arity": 1, // DONE
+            "operators": [
+                "add", "sub", "mul", "div", "neg", "cos", "sin"
+            ], // DONE
+            "argNames": [
+                "x"
+            ], // DONE
+            "individualType": "PrimitiveTree", // DONE
+            "expr": "genHalfAndHalf", // DONE
+            "min_": 1, // DONE
+            "max_": 2, // DONE
+            "realFunction": "x**4 + x**3 + x**2 + x",
+            "individualFunction": "initIterate", // DONE
+            "populationFunction": "initRepeat", // DONE
+            "selectionFunction": "selTournament", // DONE
+            "tournamentSize": 3, // DONE
+            "expr_mut": "genFull", // DONE
+            "expr_mut_min": 0, // DONE
+            "expr_mut_max": 2, // DONE
+            "crossoverFunction": "cxOnePoint", // "cxSemantic" needs ['lf', 'mul', 'add', 'sub'] operators exactly. DONE
+            "terminalProb": 0.1, // Only when crossoverFunction is "cxOnePointLeafBiased". Max value is 0.2 that works well. DONE
+            "mutationFunction": "mutUniform", // DONE
+            "mutationMode": "one", // One of "one" or "all". Only when mutationFunction is "mutEphemeral". // DONE
+            "mateHeight": 17, // DONE
+            "mutHeight": 17, // DONE
+            "weights": [
+                1.0
+            ], // DONE
+            
+            "populationSize": 300,
+            "generations": 40,
+            "cxpb": 0.5,
+            "mutpb": 0.1,
+            "mu": 1000,
+            "lambda_": 4,
+            "hofSize": 1
+            }
+        */
+        const inputData = {
+            algorithm: chosenAlgo.toString() ?? "eaSimple",
+            arity: parseInt(1),
+            operators: primitiveSet ?? ["add", "sub", "mul", "div"],
+            argNames: ["x"],
+            individualType: "PrimitiveTree",
+            expr: treeGenExpression ?? "genHalfAndHalf",
+            min_: parseInt(minHeight) ?? 10,
+            max_: parseInt(maxHeight) ?? 20,
+            realFunction: equation.toString() ?? "x**4 + x**3 + x**2 + x",
+            individualFunction: indGen.toString() ?? "initIterate",
+            populationFunction: popFunc.toString() ?? "initRepeat",
+            selectionFunction: selectionFunction.toString() ?? "selTournament",
+            tournamentSize: parseInt(tempTourSize) ?? 3,
+            expr_mut: mutExpr.toString() ?? "genFull",
+            expr_mut_min: parseInt(mutMinHeight) ?? 0,
+            expr_mut_max: parseInt(mutMaxHeight) ?? 2,
+            crossoverFunction: matingFunc.toString() ?? "cxOnePoint",
+            terminalProb: parseFloat(terminalProb) ?? 0.1,
+            mutationFunction: mutateFunc.toString() ?? "mutUniform",
+            mutationMode: mode.toString() ?? "one",
+            mateHeight: parseInt(mateHeightLimit) ?? 17,
+            mutHeight: parseInt(mutateHeightLimit) ?? 17,
+            weights: parameters.map((x) => parseFloat(x)) ?? [1.0],
+            populationSize: parseInt(populationSize) ?? 300,
+            generations: parseInt(generations) ?? 40,
+            cxpb: parseFloat(cxpb) ?? 0.5,
+            mutpb: parseFloat(mutpb) ?? 0.1,
+            mu: parseInt(mu) ?? 1,
+            lambda_: parseInt(lambda) ?? 1,
+            hofSize: parseInt(hof) ?? 1,
+            individualSize: 10,
+        };
+
+        const response = await fetch(
+            (process.env.NEXT_PUBLIC_BACKEND_BASE_URL ??
+                "http://localhost:8000") + "/api/runGpAlgo",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(inputData),
+            },
+        );
+
+        // TODO: Handle response.
+    };
+
     return isLoading ? (
         <Loader type={"full"} message={"Running Algorithm..."} />
     ) : (
@@ -281,10 +372,9 @@ export default function ConfigureGP() {
                                     onClick={(e) => {
                                         e.preventDefault();
                                         setIsLoading(true);
-                                        // TODO: Connect to the API and run the algorithm.
-                                        setTimeout(() => {
+                                        runGPAlgorithm().then(() => {
                                             setIsLoading(false);
-                                        }, 3000);
+                                        });
                                     }}
                                 >
                                     Execute Algorithm
