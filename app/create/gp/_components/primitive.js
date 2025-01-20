@@ -27,7 +27,6 @@ export default function ChoosePrimitiveSet({
                             setCurrentStep(
                                 currentStep < nextStep ? nextStep : currentStep,
                             );
-                            console.log(currentStep, nextStep);
                         }}
                         key={index}
                         className={

@@ -12,10 +12,11 @@ import ChooseMatingFunction from "../_components/chooseMatingFunction";
 import ChooseSelectionFunction from "../_components/chooseSelectionFunction";
 import ChooseEvalFunction from "./_components/chooseEvaluationFunction";
 import ConfigureAlgoParams from "../_components/configureAlgoParams";
-import Preview from "./_components/preview";
+import Preview from "../../_components/non-gp/preview";
 import ChooseMutationFunction from "../_components/chooseMutateFunction";
 import { mutationData } from "@/app/_data/mutation";
 import { mateData } from "@/app/_data/mate";
+import Link from "next/link";
 
 export default function ConfigureNonGP() {
     const [currentStep, setCurrentStep] = useState(1);
@@ -203,6 +204,13 @@ export default function ConfigureNonGP() {
                 <p>Run and Visualize algorithms with just a click.</p>
             </div>
 
+            <Link
+                href="/create"
+                className="rounded-full border border-solid border-black/[.08] transition-colors flex items-center justify-center bg-foreground text-background hover:bg-[#dddddd] hover:text-foreground text-sm sm:text-base px-4 py-2 mt-8"
+            >
+                Go Back ←
+            </Link>
+
             <div className="flex flex-wrap mt-16 gap-4">
                 <Preview
                     algo={chosenAlgo}
@@ -215,6 +223,12 @@ export default function ConfigureNonGP() {
                     selectFunc={selectFunc}
                     evalFunc={evalFunc}
                     tempTourSize={tempTourSize}
+                    currentStep={currentStep}
+                    populationSize={populationSize}
+                    generations={generations}
+                    cxpb={cxpb}
+                    mutpb={mutpb}
+                    hofSize={hof}
                 />
 
                 <div className="border border-gray-400 rounded-2xl p-4">
@@ -356,7 +370,7 @@ export default function ConfigureNonGP() {
                             />
                         )}
 
-                        {currentStep >= 9 && evalFunc && (
+                        {currentStep >= 10 && evalFunc && (
                             // TODO: Disable button if any of the fields are absent.
                             <div className="mt-4">
                                 <button
@@ -365,7 +379,6 @@ export default function ConfigureNonGP() {
                                         e.preventDefault();
                                         setIsLoading(true);
                                         runAlgorithm().then(() => {
-                                            console.log("Algorithm executed.");
                                             setIsLoading(false);
                                         });
                                     }}

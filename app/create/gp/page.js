@@ -16,6 +16,8 @@ import ConfigureBloatLimits from "./_components/bloatLimits";
 import ConfigureEquation from "./_components/equation";
 import ConfigureAlgoParams from "../_components/configureAlgoParams";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
+import PreviewGP from "@/app/_components/gp/preview";
 
 // The rest of the code remains unchanged
 
@@ -203,7 +205,42 @@ export default function ConfigureGP() {
                 <p>Run and Visualize algorithms with just a click.</p>
             </div>
 
+            <Link
+                href="/create"
+                className="rounded-full border border-solid border-black/[.08] transition-colors flex items-center justify-center bg-foreground text-background hover:bg-[#dddddd] hover:text-foreground text-sm sm:text-base px-4 py-2 mt-8"
+            >
+                Go Back ←
+            </Link>
+
             <div className="flex flex-wrap mt-16 gap-4">
+                <PreviewGP
+                    algo={chosenAlgo}
+                    parameters={parameters}
+                    indGen={indGen}
+                    primitiveSet={primitiveSet}
+                    treeGenExpression={treeGenExpression}
+                    minHeight={minHeight}
+                    maxHeight={maxHeight}
+                    popFunc={popFunc}
+                    selectFunc={selectionFunction}
+                    tempTourSize={tempTourSize}
+                    mutateFunc={mutateFunc}
+                    mode={mode}
+                    mutExpr={mutExpr}
+                    mutMinHeight={mutMinHeight}
+                    mutMaxHeight={mutMaxHeight}
+                    matingFunc={matingFunc}
+                    terminalProb={terminalProb}
+                    mateHeightLimit={mateHeightLimit}
+                    mutateHeightLimit={mutateHeightLimit}
+                    generations={generations}
+                    populationSize={populationSize}
+                    cxpb={cxpb}
+                    mutpb={mutpb}
+                    hofSize={hof}
+                    currentStep={currentStep}
+                />
+
                 <div className="border border-gray-400 rounded-2xl p-4">
                     <form
                         onSubmit={(e) => {

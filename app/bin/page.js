@@ -9,8 +9,6 @@ export default function ExecutionHistory() {
         if (cacheData) {
             setData(JSON.parse(cacheData));
         }
-
-        console.log(cacheData);
     }, []);
 
     return (

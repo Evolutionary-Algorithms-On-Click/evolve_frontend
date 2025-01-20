@@ -3,18 +3,18 @@ import Link from "next/link";
 
 export default function Home() {
     return (
-        <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-            <main className="flex flex-col gap-6 row-start-2 items-center">
-                <h1 className="text-4xl sm:text-5xl text-center font-bold">
+        <div className="min-h-screen flex flex-col items-center justify-between p-8 sm:p-20 bg-background font-[family-name:var(--font-geist-mono)]">
+            <main className="flex flex-col items-center gap-6 flex-grow justify-center">
+                <h1 className="text-4xl sm:text-5xl text-center font-bold text-foreground">
                     Evolve OnClick
                 </h1>
-                <p className="list-inside list-decimal text-lg text-center font-[family-name:var(--font-geist-mono)]">
+                <p className="text-lg text-center text-foreground">
                     Run and Visualize algorithms with just a click.
                 </p>
 
-                <div className="flex gap-4 items-center flex-col sm:flex-row">
+                <div className="flex flex-col sm:flex-row gap-4 items-center">
                     <Link
-                        className="rounded-full border border-solid transition-colors flex items-center justify-center bg-background text-foreground gap-2 hover:bg-gray-200 text-sm sm:text-base px-6 py-4 sm:px-8 shadow-lg"
+                        className="rounded-full border border-solid transition-colors flex items-center justify-center bg-background text-foreground gap-2 hover:bg-gray-100 text-sm sm:text-base px-6 py-4 sm:px-8 shadow-md"
                         href="/create"
                     >
                         <Image
@@ -26,7 +26,7 @@ export default function Home() {
                         />
                         Get Started
                     </Link>
-                    <p className="rounded-full transition-colors flex items-center justify-center bg-gray-800 text-white hover:bg-gray-700 text-sm sm:text-base h-12 sm:h-14 px-6 sm:px-8 shadow-lg cursor-not-allowed">
+                    <p className="rounded-full transition-colors flex items-center justify-center bg-foreground text-background hover:bg-gray-700 text-sm sm:text-base h-12 sm:h-14 px-6 sm:px-8 shadow-md cursor-not-allowed">
                         Read our docs
                         <span className="text-xs font-extralight ml-2">
                             {"coming soon"}
@@ -34,9 +34,9 @@ export default function Home() {
                     </p>
                 </div>
             </main>
-            <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
+            <footer className="flex gap-6 flex-wrap items-center justify-center py-4">
                 <Link
-                    className="flex items-center gap-2 hover:underline hover:underline-offset-4"
+                    className="flex items-center gap-2 hover:underline hover:underline-offset-4 text-foreground"
                     href="https://github.com/orgs/Evolutionary-Algorithms-On-Click/repositories"
                     target="_blank"
                     rel="noopener noreferrer"

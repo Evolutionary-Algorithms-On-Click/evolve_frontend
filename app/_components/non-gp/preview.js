@@ -9,10 +9,16 @@ export default function Preview({
     selectFunc,
     evalFunc,
     tempTourSize,
+    populationSize,
+    generations,
+    cxpb,
+    mutpb,
+    hofSize,
+    currentStep,
 }) {
     // Section will have a div representing selected values.
     return (
-        <div className="flex flex-col items-start border border-gray-400 rounded-2xl p-4 min-w-16 h-fit md:sticky top-4">
+        <div className="flex flex-col items-start border border-gray-400 rounded-2xl p-4 min-w-16 h-fit md:sticky top-4 bg-white text-black">
             <h3 className="text-xl font-bold">Config Summary</h3>
             <div className="flex flex-col">
                 <div className="mt-4">
@@ -151,6 +157,75 @@ export default function Preview({
                             {evalFunc}
                         </code>
                     </div>
+                )}
+
+                {currentStep >= 10 && (
+                    <>
+                        {populationSize ? <hr className="mt-4" /> : null}
+
+                        {populationSize && (
+                            <div className="mt-4">
+                                <h4 className="text-lg font-semibold">
+                                    Population Size
+                                </h4>
+                                <code className="bg-foreground p-1 rounded-lg text-background">
+                                    {populationSize}
+                                </code>
+                            </div>
+                        )}
+
+                        {generations ? <hr className="mt-4" /> : null}
+
+                        {generations && (
+                            <div className="mt-4">
+                                <h4 className="text-lg font-semibold">
+                                    Generations
+                                </h4>
+                                <code className="bg-foreground p-1 rounded-lg text-background">
+                                    {generations}
+                                </code>
+                            </div>
+                        )}
+
+                        {cxpb ? <hr className="mt-4" /> : null}
+
+                        {cxpb && (
+                            <div className="mt-4">
+                                <h4 className="text-lg font-semibold">
+                                    Crossover Probability
+                                </h4>
+                                <code className="bg-foreground p-1 rounded-lg text-background">
+                                    {cxpb}
+                                </code>
+                            </div>
+                        )}
+
+                        {mutpb ? <hr className="mt-4" /> : null}
+
+                        {mutpb && (
+                            <div className="mt-4">
+                                <h4 className="text-lg font-semibold">
+                                    Mutation Probability
+                                </h4>
+                                <code className="bg-foreground p-1 rounded-lg text-background">
+                                    {mutpb}
+                                </code>
+                            </div>
+                        )}
+
+                        {hofSize ? <hr className="mt-4" /> : null}
+
+                        {hofSize && (
+                            <div className="mt-4">
+                                <h4 className="text-lg font-semibold">
+                                    Hall of Fame Size
+                                </h4>
+                                <code className="bg-foreground p-1 rounded-lg text-background">
+                                    {hofSize}
+                                </code>
+                            </div>
+                        )}
+                    </>
                 )}
             </div>
         </div>
