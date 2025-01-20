@@ -1,5 +1,6 @@
 "use client";
 
+import PreviewGP from "@/app/_components/gp/preview";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
@@ -10,6 +11,11 @@ export default function GPRunResult() {
     const { id } = useParams();
 
     const router = useRouter();
+
+    /*
+{"algorithm":"eaSimple",
+"arity":1,"operators":["add","mul","sub","div"],"argNames":["x"],"individualType":"PrimitiveTree","expr":"genFull","min_":1,"max_":4,"realFunction":"1*x**3 + 1*x**2 + 1*x + 1","individualFunction":"initIterate","populationFunction":"initRepeat","selectionFunction":"selRoulette","tournamentSize":0,"expr_mut":"genFull","expr_mut_min":1,"expr_mut_max":3,"crossoverFunction":"cxOnePoint","terminalProb":0.1,"mutationFunction":"mutUniform","mutationMode":"one","mateHeight":1,"mutHeight":3,"weights":[1],"populationSize":2000,"generations":5,"cxpb":0.5,"mutpb":0.2,"mu":0,"lambda_":0,"hofSize":5,"individualSize":10}
+*/
 
     useEffect(() => {
         const cacheData = localStorage.getItem(id);
@@ -44,65 +50,96 @@ export default function GPRunResult() {
                 {!data ? (
                     <p className="text-gray-600">Loading...</p>
                 ) : (
-                    <div className="flex flex-col items-start border border-gray-400 rounded-2xl p-4 bg-white shadow-lg">
-                        <div className="mt-4">
-                            <h3 className="text-lg font-bold text-gray-800">
-                                Best Fitness
-                            </h3>
-                            <p className="text-gray-800 mt-2">
-                                {data && data.bestFitness}
-                            </p>
-                        </div>
-                        <div className="mt-4">
-                            <h3 className="text-lg font-bold text-gray-800">
-                                Tree Plot
-                            </h3>
-                            <Image
-                                src={data && data.plots.treePlot}
-                                alt="Fitness Plot"
-                                width={800}
-                                height={100}
-                                className="mt-2 rounded-lg shadow-md"
-                            />
-                        </div>
+                    <div className="flex flex-row flex-wrap gap-4">
+                        <PreviewGP
+                            algo={data["inputData"]["algorithm"]}
+                            parameters={data["inputData"]["parameters"]}
+                            indGen={data["inputData"]["individualFunction"]}
+                            primitiveSet={data["inputData"]["operators"]}
+                            treeGenExpression={
+                                data["inputData"]["treeGenExpression"]
+                            }
+                            minHeight={data["inputData"]["min_"]}
+                            maxHeight={data["inputData"]["max_"]}
+                            popFunc={data["inputData"]["populationFunction"]}
+                            selectFunc={data["inputData"]["selectionFunction"]}
+                            tempTourSize={data["inputData"]["tournamentSize"]}
+                            mutateFunc={data["inputData"]["mutationFunction"]}
+                            mode={data["inputData"]["mutationMode"]}
+                            mutExpr={data["inputData"]["expr_mut"]}
+                            mutMinHeight={data["inputData"]["expr_mut_min"]}
+                            mutMaxHeight={data["inputData"]["expr_mut_max"]}
+                            matingFunc={data["inputData"]["crossoverFunction"]}
+                            terminalProb={data["inputData"]["terminalProb"]}
+                            mateHeightLimit={data["inputData"]["mateHeight"]}
+                            mutateHeightLimit={data["inputData"]["mutHeight"]}
+                            generations={data["inputData"]["generations"]}
+                            populationSize={data["inputData"]["populationSize"]}
+                            cxpb={data["inputData"]["cxpb"]}
+                            mutpb={data["inputData"]["mutpb"]}
+                            hofSize={data["inputData"]["hofSize"]}
+                            currentStep={13}
+                        />
+                        <div className="flex flex-col items-start border border-gray-400 rounded-2xl p-4 bg-white shadow-lg">
+                            <div className="mt-4">
+                                <h3 className="text-lg font-bold text-gray-800">
+                                    Best Fitness
+                                </h3>
+                                <p className="text-gray-800 mt-2">
+                                    {data && data.bestFitness}
+                                </p>
+                            </div>
+                            <div className="mt-4">
+                                <h3 className="text-lg font-bold text-gray-800">
+                                    Tree Plot
+                                </h3>
+                                <Image
+                                    src={data && data.plots.treePlot}
+                                    alt="Fitness Plot"
+                                    width={800}
+                                    height={100}
+                                    className="mt-2 rounded-lg shadow-md"
+                                />
+                            </div>
 
-                        <div className="mt-4">
-                            <h3 className="text-lg font-bold text-gray-800">
-                                Population
-                            </h3>
-                            <div className="flex flex-row space-x-4 mt-4">
-                                <button className="bg-black flex space-x-0 py-1 px-2 rounded-lg hover:scale-105 transition-all h-fit">
-                                    <Link
-                                        href={data && data.population}
-                                        target="_blank"
-                                        rel="noreferrer"
-                                        className="text-white"
-                                    >
-                                        Download
-                                    </Link>
-                                    <Image
-                                        src="/download.svg"
-                                        alt="Download"
-                                        width={20}
-                                        height={20}
-                                    />
-                                </button>
-                                <button className="bg-black flex space-x-1 py-1 px-2 rounded-lg hover:scale-105 transition-all">
-                                    <Link
-                                        href="/uploadPopulation"
-                                        target="_blank"
-                                        rel="noreferrer"
-                                        className="text-white"
-                                    >
-                                        Unpickle
-                                    </Link>
-                                    <Image
-                                        src="/unpickle.svg"
-                                        alt="Download"
-                                        width={20}
-                                        height={20}
-                                    />
-                                </button>
+                            <div className="mt-4">
+                                <h3 className="text-lg font-bold text-gray-800">
+                                    Population
+                                </h3>
+                                <div className="flex flex-row space-x-4 mt-4">
+                                    <button className="bg-black flex space-x-0 py-1 px-2 rounded-lg hover:scale-105 transition-all h-fit">
+                                        <Link
+                                            href={data && data.population}
+                                            target="_blank"
+                                            rel="noreferrer"
+                                            className="text-white"
+                                        >
+                                            Download
+                                        </Link>
+                                        <Image
+                                            src="/download.svg"
+                                            alt="Download"
+                                            width={20}
+                                            height={20}
+                                        />
+                                    </button>
+                                    <button className="bg-black flex space-x-1 py-1 px-2 rounded-lg hover:scale-105 transition-all">
+                                        <Link
+                                            href="/uploadPopulation"
+                                            target="_blank"
+                                            rel="noreferrer"
+                                            className="text-white"
+                                        >
+                                            Unpickle
+                                        </Link>
+                                        <Image
+                                            src="/unpickle.svg"
+                                            alt="Download"
+                                            width={20}
+                                            height={20}
+                                        />
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>

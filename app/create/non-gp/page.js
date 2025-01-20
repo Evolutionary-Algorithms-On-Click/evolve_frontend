@@ -12,7 +12,7 @@ import ChooseMatingFunction from "../_components/chooseMatingFunction";
 import ChooseSelectionFunction from "../_components/chooseSelectionFunction";
 import ChooseEvalFunction from "./_components/chooseEvaluationFunction";
 import ConfigureAlgoParams from "../_components/configureAlgoParams";
-import Preview from "../../_components/preview";
+import Preview from "../../_components/non-gp/preview";
 import ChooseMutationFunction from "../_components/chooseMutateFunction";
 import { mutationData } from "@/app/_data/mutation";
 import { mateData } from "@/app/_data/mate";
@@ -379,7 +379,6 @@ export default function ConfigureNonGP() {
                                         e.preventDefault();
                                         setIsLoading(true);
                                         runAlgorithm().then(() => {
-                                            console.log("Algorithm executed.");
                                             setIsLoading(false);
                                         });
                                     }}

@@ -1,6 +1,6 @@
 "use client";
 
-import Preview from "@/app/_components/preview";
+import Preview from "@/app/_components/non-gp/preview";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
@@ -16,7 +16,6 @@ export default function Execution() {
         const cacheData = localStorage.getItem(id);
         if (cacheData) {
             setData(JSON.parse(cacheData));
-            console.log(JSON.stringify(JSON.parse(cacheData)["inputData"]));
         } else {
             router.replace("/");
         }
