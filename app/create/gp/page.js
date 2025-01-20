@@ -15,6 +15,7 @@ import ChooseWeights from "../_components/chooseWeights";
 import ConfigureBloatLimits from "./_components/bloatLimits";
 import ConfigureEquation from "./_components/equation";
 import ConfigureAlgoParams from "../_components/configureAlgoParams";
+import { useRouter } from "next/navigation";
 
 // The rest of the code remains unchanged
 
@@ -74,6 +75,8 @@ export default function ConfigureGP() {
     const [cxpb, setCxpb] = useState(0.5);
     const [mutpb, setMutpb] = useState(0.2);
     const [hof, setHof] = useState(5);
+
+    const router = useRouter();
 
     const runGPAlgorithm = async () => {
         /*
@@ -163,7 +166,30 @@ export default function ConfigureGP() {
             },
         );
 
-        // TODO: Handle response.
+        switch (response.status) {
+            case 200:
+                let data = await response.json();
+                let executionHistory = localStorage.getItem("executionHistory");
+
+                data.inputData = inputData;
+
+                if (executionHistory) {
+                    executionHistory = JSON.parse(executionHistory);
+                    executionHistory.push(data);
+                }
+
+                localStorage.setItem(
+                    "executionHistory",
+                    JSON.stringify([data]),
+                );
+                localStorage.setItem(data.runId, JSON.stringify(data));
+
+                router.push(`/bin/gp/${data.runId}`);
+
+                break;
+            default:
+                alert("Error running algorithm.");
+        }
     };
 
     return isLoading ? (

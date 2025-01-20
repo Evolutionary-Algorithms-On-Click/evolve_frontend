@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -95,7 +96,7 @@ export default function Execution() {
                             <h5 className="text-sm text-gray-600">
                                 Fitness Plot
                             </h5>
-                            <img
+                            <Image
                                 src={data && data.plots.fitnessPlot}
                                 alt="Fitness Plot"
                                 width={800}
@@ -105,7 +106,7 @@ export default function Execution() {
                             <h5 className="text-sm text-gray-600 mt-4">
                                 Mutation CrossOver Effect Plot
                             </h5>
-                            <img
+                            <Image
                                 src={
                                     data &&
                                     data.plots.mutationCrossoverEffectPlot
@@ -131,7 +132,7 @@ export default function Execution() {
                                     >
                                         Download
                                     </Link>
-                                    <img
+                                    <Image
                                         src="/download.svg"
                                         alt="Download"
                                         width={20}
@@ -147,7 +148,7 @@ export default function Execution() {
                                     >
                                         Unpickle
                                     </Link>
-                                    <img
+                                    <Image
                                         src="/unpickle.svg"
                                         alt="Download"
                                         width={20}
