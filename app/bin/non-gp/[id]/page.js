@@ -34,7 +34,14 @@ export default function Execution() {
                 Execution ID: {id}
             </h2>
 
-            <div className="flex flex-wrap mt-16 gap-4">
+            <Link
+                href="/create/non-gp"
+                className="rounded-full border border-solid border-black/[.08] transition-colors flex items-center justify-center bg-foreground text-background hover:bg-[#dddddd] hover:text-foreground text-sm sm:text-base px-4 py-2 mt-8"
+            >
+                Go Back ←
+            </Link>
+
+            <div className="flex flex-wrap mt-8 gap-4">
                 {!data ? (
                     <p className="text-gray-600">Loading...</p>
                 ) : (
