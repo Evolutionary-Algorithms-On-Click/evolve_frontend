@@ -16,6 +16,7 @@ import ConfigureBloatLimits from "./_components/bloatLimits";
 import ConfigureEquation from "./_components/equation";
 import ConfigureAlgoParams from "../_components/configureAlgoParams";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 // The rest of the code remains unchanged
 
@@ -202,6 +203,13 @@ export default function ConfigureGP() {
                 </h1>
                 <p>Run and Visualize algorithms with just a click.</p>
             </div>
+
+            <Link
+                href="/create"
+                className="rounded-full border border-solid border-black/[.08] transition-colors flex items-center justify-center bg-foreground text-background hover:bg-[#dddddd] hover:text-foreground text-sm sm:text-base px-4 py-2 mt-8"
+            >
+                Go Back ←
+            </Link>
 
             <div className="flex flex-wrap mt-16 gap-4">
                 <div className="border border-gray-400 rounded-2xl p-4">
