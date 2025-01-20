@@ -4,31 +4,31 @@ import Link from "next/link";
 export default function Home() {
     return (
         <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-            <main className="flex flex-col gap-4 row-start-2 items-center">
-                <h1 className="text-3xl sm:text-4xl text-center font-bold">
+            <main className="flex flex-col gap-6 row-start-2 items-center">
+                <h1 className="text-4xl sm:text-5xl text-center font-bold">
                     Evolve OnClick
                 </h1>
-                <p className="list-inside list-decimal text-sm text-center font-[family-name:var(--font-geist-mono)]">
+                <p className="list-inside list-decimal text-lg text-center font-[family-name:var(--font-geist-mono)]">
                     Run and Visualize algorithms with just a click.
                 </p>
 
                 <div className="flex gap-4 items-center flex-col sm:flex-row">
                     <Link
-                        className="rounded-full border border-solid border-black/[.08] transition-colors flex items-center justify-center bg-background text-foreground gap-2 hover:bg-[#dddddd] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
+                        className="rounded-full border border-solid transition-colors flex items-center justify-center bg-background text-foreground gap-2 hover:bg-gray-200 text-sm sm:text-base px-6 py-4 sm:px-8 shadow-lg"
                         href="/create"
                     >
                         <Image
                             className="dark:invert"
                             src="https://nextjs.org/icons/vercel.svg"
                             alt="Vercel logomark"
-                            width={20}
-                            height={20}
+                            width={24}
+                            height={24}
                         />
                         Get Started
                     </Link>
-                    <p className="rounded-full transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44 flex-col bg-foreground text-background cursor-not-allowed">
+                    <p className="rounded-full transition-colors flex items-center justify-center bg-gray-800 text-white hover:bg-gray-700 text-sm sm:text-base h-12 sm:h-14 px-6 sm:px-8 shadow-lg cursor-not-allowed">
                         Read our docs
-                        <span className="text-xs font-extralight">
+                        <span className="text-xs font-extralight ml-2">
                             {"coming soon"}
                         </span>
                     </p>

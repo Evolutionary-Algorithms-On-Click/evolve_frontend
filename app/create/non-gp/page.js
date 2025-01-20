@@ -184,7 +184,7 @@ export default function ConfigureNonGP() {
                 );
                 localStorage.setItem(data.runId, JSON.stringify(data));
 
-                router.push(`/bin/${data.runId}`);
+                router.push(`/bin/non-gp/${data.runId}`);
 
                 break;
             default:

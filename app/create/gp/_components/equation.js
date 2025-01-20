@@ -9,6 +9,10 @@ export default function ConfigureEquation({
     equation,
     setEquation,
 }) {
+    const formatEquation = (eq) => {
+        return eq.replace(/\*\*/g, "^").replace(/\*/g, "");
+    };
+
     const handleDegreeChange = (e) => {
         const newDegree = parseInt(e.target.value) || 0;
         setDegree(newDegree);
@@ -34,18 +38,10 @@ export default function ConfigureEquation({
                 const formattedCoeff = parseFloat(coeff);
                 if (isNaN(formattedCoeff) || formattedCoeff === 0) return null; // Skip 0 coefficients
 
-                // Handle coefficient display (omit 1 for non-constant terms)
-                const coeffStr =
-                    power > 0 && formattedCoeff === 1
-                        ? ""
-                        : formattedCoeff === -1
-                          ? "-"
-                          : formattedCoeff;
-
                 // Construct term based on the power of x
-                if (power === 0) return `${coeffStr}`; // Constant term
-                if (power === 1) return `${coeffStr}x`; // x term
-                return `${coeffStr}x^${power}`; // Higher degree terms
+                if (power === 0) return `${formattedCoeff}`; // Constant term
+                if (power === 1) return `${formattedCoeff}*x`; // x term
+                return `${formattedCoeff}*x**${power}`; // Higher degree terms
             })
             .filter(Boolean) // Remove null terms
             .join(" + ")
@@ -117,7 +113,8 @@ export default function ConfigureEquation({
                 <div className="mt-4">
                     <h5 className="text-lg font-bold">Polynomial Equation</h5>
                     <p className="mt-2 p-4 border border-gray-300 rounded-lg bg-gray-50">
-                        {equation || "Equation will appear here"}
+                        {formatEquation(equation) ||
+                            "Equation will appear here"}
                     </p>
                 </div>
             </div>

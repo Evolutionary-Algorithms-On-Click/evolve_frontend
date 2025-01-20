@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -34,7 +35,14 @@ export default function Execution() {
                 Execution ID: {id}
             </h2>
 
-            <div className="flex flex-wrap mt-16 gap-4">
+            <Link
+                href="/create/non-gp"
+                className="rounded-full border border-solid border-black/[.08] transition-colors flex items-center justify-center bg-foreground text-background hover:bg-[#dddddd] hover:text-foreground text-sm sm:text-base px-4 py-2 mt-8"
+            >
+                Go Back ←
+            </Link>
+
+            <div className="flex flex-wrap mt-8 gap-4">
                 {!data ? (
                     <p className="text-gray-600">Loading...</p>
                 ) : (
@@ -88,7 +96,7 @@ export default function Execution() {
                             <h5 className="text-sm text-gray-600">
                                 Fitness Plot
                             </h5>
-                            <img
+                            <Image
                                 src={data && data.plots.fitnessPlot}
                                 alt="Fitness Plot"
                                 width={800}
@@ -98,7 +106,7 @@ export default function Execution() {
                             <h5 className="text-sm text-gray-600 mt-4">
                                 Mutation CrossOver Effect Plot
                             </h5>
-                            <img
+                            <Image
                                 src={
                                     data &&
                                     data.plots.mutationCrossoverEffectPlot
@@ -124,7 +132,7 @@ export default function Execution() {
                                     >
                                         Download
                                     </Link>
-                                    <img
+                                    <Image
                                         src="/download.svg"
                                         alt="Download"
                                         width={20}
@@ -140,7 +148,7 @@ export default function Execution() {
                                     >
                                         Unpickle
                                     </Link>
-                                    <img
+                                    <Image
                                         src="/unpickle.svg"
                                         alt="Download"
                                         width={20}
