@@ -172,6 +172,9 @@ export default function ConfigureNonGP() {
                 let data = await response.json();
                 let executionHistory = localStorage.getItem("executionHistory");
 
+                inputData.runType = "non-gp";
+                inputData.runId = data.runId;
+                inputData.timestamp = new Date().toISOString();
                 data.inputData = inputData;
 
                 if (executionHistory) {
@@ -181,7 +184,7 @@ export default function ConfigureNonGP() {
 
                 localStorage.setItem(
                     "executionHistory",
-                    JSON.stringify([data]),
+                    JSON.stringify(executionHistory ?? [data]),
                 );
                 localStorage.setItem(data.runId, JSON.stringify(data));
 
@@ -208,7 +211,7 @@ export default function ConfigureNonGP() {
                 href="/create"
                 className="rounded-full border border-solid border-black/[.08] transition-colors flex items-center justify-center bg-foreground text-background hover:bg-[#dddddd] hover:text-foreground text-sm sm:text-base px-4 py-2 mt-8"
             >
-                Go Back ←
+                ← Go Back
             </Link>
 
             <div className="flex flex-wrap mt-16 gap-4">

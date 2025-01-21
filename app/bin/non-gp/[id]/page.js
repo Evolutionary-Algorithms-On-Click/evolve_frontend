@@ -40,12 +40,20 @@ export default function Execution() {
                 Execution ID: {id}
             </h2>
 
-            <Link
-                href="/create/non-gp"
-                className="rounded-full border border-solid border-black/[.08] transition-colors flex items-center justify-center bg-foreground text-background hover:bg-[#dddddd] hover:text-foreground text-sm sm:text-base px-4 py-2 mt-8"
-            >
-                Go Back ←
-            </Link>
+            <div className="flex flex-row items-center gap-4 mt-4">
+                <Link
+                    href="/create/non-gp"
+                    className="rounded-full border border-solid border-black/[.08] transition-colors flex items-center justify-center bg-background text-foreground hover:bg-[#000000] hover:text-background text-sm sm:text-base px-4 py-2 mt-8"
+                >
+                    ← Go Back
+                </Link>
+                <Link
+                    href="/bin"
+                    className="rounded-full border border-solid border-black/[.08] transition-colors flex items-center justify-center bg-foreground text-background hover:bg-[#dddddd] hover:text-foreground text-sm sm:text-base px-4 py-2 mt-8"
+                >
+                    View All Runs →
+                </Link>
+            </div>
 
             <div className="flex flex-wrap mt-8 gap-4">
                 {!data ? (
