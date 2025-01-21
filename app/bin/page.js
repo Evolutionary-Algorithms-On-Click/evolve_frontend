@@ -96,7 +96,11 @@ export default function CachedResults() {
                                             const {
                                                 inputData,
                                                 hallOfFame,
-                                                inputData: { algorithm, runId },
+                                                inputData: {
+                                                    algorithm,
+                                                    runId,
+                                                    timestamp,
+                                                },
                                                 plots: { treePlot },
                                             } = data;
 
@@ -124,7 +128,7 @@ export default function CachedResults() {
                                                     <p className="text-sm text-gray-600 mb-4">
                                                         Execution Date:{" "}
                                                         {formatDate(
-                                                            data.timestamp ||
+                                                            timestamp ||
                                                                 new Date().toISOString(),
                                                         )}
                                                     </p>
