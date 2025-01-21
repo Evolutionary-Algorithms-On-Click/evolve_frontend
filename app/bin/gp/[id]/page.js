@@ -8,6 +8,8 @@ import { useEffect, useState } from "react";
 
 export default function GPRunResult() {
     const [data, setData] = useState(null);
+    const [codeContent, setCodeContent] = useState("");
+    const [showCode, setShowCode] = useState(false);
     const { id } = useParams();
 
     const router = useRouter();
@@ -20,7 +22,16 @@ export default function GPRunResult() {
     useEffect(() => {
         const cacheData = localStorage.getItem(id);
         if (cacheData) {
-            setData(JSON.parse(cacheData));
+            const parsedData = JSON.parse(cacheData);
+            setData(parsedData);
+
+            // Fetch the code content.
+            fetch(parsedData.code)
+                .then((response) => response.text())
+                .then((text) => setCodeContent(text))
+                .catch((error) =>
+                    console.error("Error fetching code content:", error),
+                );
         } else {
             router.replace("/");
         }
@@ -47,9 +58,18 @@ export default function GPRunResult() {
                 >
                     ← Go Back
                 </Link>
+                <button
+                    className="rounded-full border border-solid border-gray-300 transition-colors flex items-center justify-center bg-white text-gray-900 hover:bg-gray-200 text-sm sm:text-base px-4 py-2 mt-8"
+                    onClick={(e) => {
+                        e.preventDefault();
+                        setShowCode(!showCode);
+                    }}
+                >
+                    {showCode ? "Hide Code </>" : "Show Code </ >"}
+                </button>
                 <Link
                     href="/bin"
-                    className="rounded-full border border-solid border-black/[.08] transition-colors flex items-center justify-center bg-foreground text-background hover:bg-[#dddddd] hover:text-foreground text-sm sm:text-base px-4 py-2 mt-8"
+                    className="rounded-full border border-solid border-black/[.08] transition-colors flex items-center justify-center bg-background text-foreground hover:bg-[#000000] hover:text-background text-sm sm:text-base px-4 py-2 mt-8"
                 >
                     View All Runs →
                 </Link>
@@ -59,15 +79,13 @@ export default function GPRunResult() {
                 {!data ? (
                     <p className="text-gray-600">Loading...</p>
                 ) : (
-                    <div className="flex flex-row flex-wrap gap-4">
+                    <div className="flex flex-row flex-wrap justify-center items-start gap-4">
                         <PreviewGP
                             algo={data["inputData"]["algorithm"]}
                             parameters={data["inputData"]["parameters"]}
                             indGen={data["inputData"]["individualFunction"]}
                             primitiveSet={data["inputData"]["operators"]}
-                            treeGenExpression={
-                                data["inputData"]["treeGenExpression"]
-                            }
+                            treeGenExpression={data["inputData"]["expr"]}
                             minHeight={data["inputData"]["min_"]}
                             maxHeight={data["inputData"]["max_"]}
                             popFunc={data["inputData"]["populationFunction"]}
@@ -89,67 +107,84 @@ export default function GPRunResult() {
                             hofSize={data["inputData"]["hofSize"]}
                             currentStep={13}
                         />
-                        <div className="flex flex-col items-start border border-gray-400 rounded-2xl p-4 bg-white shadow-lg">
-                            <div className="mt-4">
-                                <h3 className="text-lg font-bold text-gray-800">
-                                    Best Fitness
-                                </h3>
-                                <p className="text-gray-800 mt-2">
-                                    {data && data.bestFitness}
-                                </p>
-                            </div>
-                            <div className="mt-4">
-                                <h3 className="text-lg font-bold text-gray-800">
-                                    Tree Plot
-                                </h3>
-                                <Image
-                                    src={data && data.plots.treePlot}
-                                    alt="Fitness Plot"
-                                    width={800}
-                                    height={100}
-                                    className="mt-2 rounded-lg shadow-md"
-                                />
-                            </div>
-
-                            <div className="mt-4">
-                                <h3 className="text-lg font-bold text-gray-800">
-                                    Population
-                                </h3>
-                                <div className="flex flex-row space-x-4 mt-4">
-                                    <button className="bg-black flex space-x-0 py-1 px-2 rounded-lg hover:scale-105 transition-all h-fit">
-                                        <Link
-                                            href={data && data.population}
-                                            target="_blank"
-                                            rel="noreferrer"
-                                            className="text-white"
-                                        >
-                                            Download
-                                        </Link>
-                                        <Image
-                                            src="/download.svg"
-                                            alt="Download"
-                                            width={20}
-                                            height={20}
-                                        />
-                                    </button>
-                                    <button className="bg-black flex space-x-1 py-1 px-2 rounded-lg hover:scale-105 transition-all">
-                                        <Link
-                                            href="/uploadPopulation"
-                                            target="_blank"
-                                            rel="noreferrer"
-                                            className="text-white"
-                                        >
-                                            Unpickle
-                                        </Link>
-                                        <Image
-                                            src="/unpickle.svg"
-                                            alt="Download"
-                                            width={20}
-                                            height={20}
-                                        />
-                                    </button>
+                        <div className="flex flex-col items-start border border-gray-400 rounded-2xl p-4 bg-white shadow-lg max-w-[80%]">
+                            {showCode ? (
+                                <div>
+                                    <h3 className="text-xl font-bold text-gray-800">
+                                        Code
+                                    </h3>
+                                    <pre className="bg-gray-200 p-4 rounded-lg overflow-auto text-sm mt-4">
+                                        <code className="overflow-auto text-wrap">
+                                            {codeContent}
+                                        </code>
+                                    </pre>
                                 </div>
-                            </div>
+                            ) : (
+                                <>
+                                    <div className="mt-4">
+                                        <h3 className="text-lg font-bold text-gray-800">
+                                            Best Fitness
+                                        </h3>
+                                        <p className="text-gray-800 mt-2">
+                                            {data && data.bestFitness}
+                                        </p>
+                                    </div>
+                                    <div className="mt-4">
+                                        <h3 className="text-lg font-bold text-gray-800">
+                                            Best Individual Plot
+                                        </h3>
+                                        <Image
+                                            src={data && data.plots.treePlot}
+                                            alt="Fitness Plot"
+                                            width={800}
+                                            height={100}
+                                            className="mt-2 rounded-lg shadow-sm border"
+                                        />
+                                    </div>
+
+                                    <div className="mt-4">
+                                        <h3 className="text-lg font-bold text-gray-800">
+                                            Population
+                                        </h3>
+                                        <div className="flex flex-row space-x-4 mt-4">
+                                            <button className="bg-black flex space-x-0 py-1 px-2 rounded-lg hover:scale-105 transition-all h-fit">
+                                                <Link
+                                                    href={
+                                                        data && data.population
+                                                    }
+                                                    target="_blank"
+                                                    rel="noreferrer"
+                                                    className="text-white"
+                                                >
+                                                    Download
+                                                </Link>
+                                                <Image
+                                                    src="/download.svg"
+                                                    alt="Download"
+                                                    width={20}
+                                                    height={20}
+                                                />
+                                            </button>
+                                            <button className="bg-black flex space-x-1 py-1 px-2 rounded-lg hover:scale-105 transition-all">
+                                                <Link
+                                                    href="/uploadPopulation"
+                                                    target="_blank"
+                                                    rel="noreferrer"
+                                                    className="text-white"
+                                                >
+                                                    Unpickle
+                                                </Link>
+                                                <Image
+                                                    src="/unpickle.svg"
+                                                    alt="Download"
+                                                    width={20}
+                                                    height={20}
+                                                />
+                                            </button>
+                                        </div>
+                                    </div>
+                                </>
+                            )}
                         </div>
                     </div>
                 )}
