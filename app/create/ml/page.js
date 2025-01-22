@@ -12,6 +12,7 @@ import { mutationData } from "@/app/_data/mutation";
 import { mateData } from "@/app/_data/mate";
 import ConfigureAlgoParams from "../_components/configureAlgoParams";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export default function OptimizeMLModelWithEA() {
     const [currentStep, setCurrentStep] = useState(0);
@@ -47,11 +48,77 @@ export default function OptimizeMLModelWithEA() {
     const [tempTourSize, setTempTourSize] = useState(0);
 
     // Algorithm Parameters.
-    const [populationSize, setPopulationSize] = useState(5000);
-    const [generations, setGenerations] = useState(10);
+    const [populationSize, setPopulationSize] = useState(20);
+    const [generations, setGenerations] = useState(30);
     const [cxpb, setCxpb] = useState(0.5);
     const [mutpb, setMutpb] = useState(0.2);
     const [hof, setHof] = useState(5);
+
+    const router = useRouter();
+
+    const runGPAlgorithm = async () => {
+        const inputData = {
+            algorithm: chosenAlgo,
+            mlEvalFunctionCodeString: mlEvalFunctionCodeString,
+            populationSize: populationSize,
+            generations: generations,
+            cxpb: cxpb,
+            mutpb: mutpb,
+            weights: parameters,
+            googleDriveUrl: datasetURL,
+            sep: sep,
+            mlImportCodeString: mlImportCodeString,
+            targetColumnName: targetColumnName,
+            indpb: 0.05,
+            crossoverFunction: matingFunc,
+            mutationFunction: mutateFunc,
+            selectionFunction: selectFunc,
+            tournamentSize: tempTourSize,
+            mu: mu,
+            lambda_: lambda,
+            hofSize: hof,
+        };
+
+        const response = await fetch(
+            (process.env.NEXT_PUBLIC_BACKEND_BASE_URL ??
+                "http://localhost:8000") + "/api/runMlAlgo",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(inputData),
+            },
+        );
+
+        switch (response.status) {
+            case 200:
+                let data = await response.json();
+                let executionHistory = localStorage.getItem("executionHistory");
+
+                inputData.runType = "ml";
+                inputData.runId = data.runId;
+                inputData.timestamp = new Date().toISOString();
+                data.inputData = inputData;
+
+                if (executionHistory) {
+                    executionHistory = JSON.parse(executionHistory);
+                    executionHistory.push(data);
+                }
+
+                localStorage.setItem(
+                    "executionHistory",
+                    JSON.stringify(executionHistory ?? [data]),
+                );
+                localStorage.setItem(data.runId, JSON.stringify(data));
+
+                router.push(`/bin/ml/${data.runId}`);
+
+                break;
+            default:
+                alert("Error running algorithm.");
+        }
+    };
 
     return isLoading ? (
         <Loader type={"full"} message={"Optimizing your ML Model..."} />
@@ -281,10 +348,9 @@ export default function OptimizeMLModelWithEA() {
                                     onClick={(e) => {
                                         e.preventDefault();
                                         setIsLoading(true);
-                                        // TODO: Call the API to run the algorithm.
-                                        setTimeout(() => {
+                                        runGPAlgorithm().then(() => {
                                             setIsLoading(false);
-                                        }, 5000);
+                                        });
                                     }}
                                 >
                                     Execute Algorithm

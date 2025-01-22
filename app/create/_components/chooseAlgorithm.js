@@ -1,7 +1,7 @@
 import { algorithmData } from "@/app/_data/algorithms";
 
 export const ChooseAlgo = ({
-    title=`Step 1: Choose Algorithm`,
+    title = `Step 1: Choose Algorithm`,
     chosenAlgo,
     setChosenAlgo,
     nextStep,
