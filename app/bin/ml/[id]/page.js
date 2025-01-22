@@ -67,7 +67,7 @@ export default function MLExecResult() {
 
             <div className="flex flex-row items-center gap-4 mt-4">
                 <Link
-                    href="/create/gp"
+                    href="/create/ml"
                     className="rounded-full border border-solid border-black/[.08] transition-colors flex items-center justify-center bg-background text-foreground hover:bg-[#000000] hover:text-background text-sm sm:text-base px-4 py-2 mt-8"
                 >
                     ← Go Back
