@@ -81,6 +81,12 @@ export default function CachedResults() {
                         >
                             Without Genetic Programming
                         </button>
+                        <button
+                            className={`rounded-full border border-solid transition-colors flex items-center justify-center gap-2 text-sm sm:text-base px-6 py-2 sm:px-8 shadow-md ${activeTab === "ml" ? "bg-foreground text-background" : "bg-background text-foreground"}`}
+                            onClick={() => setActiveTab("ml")}
+                        >
+                            Optimized ML Models with EA
+                        </button>
                     </div>
                     {Object.keys(cacheData).map(
                         (runType) =>

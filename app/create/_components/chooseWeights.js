@@ -2,6 +2,7 @@
 import { useState } from "react";
 
 export default function ChooseWeights({
+    title = "Step 2: Parameters to optimize (weights)",
     currentStep,
     nextStep,
     setCurrentStep,
@@ -12,9 +13,7 @@ export default function ChooseWeights({
 
     return (
         <div className="mt-8">
-            <h4 className="text-lg font-bold mb-4">
-                Step 2: Parameters to optimize (weights)
-            </h4>
+            <h4 className="text-lg font-bold mb-4">{title}</h4>
 
             {/* 
             

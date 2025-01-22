@@ -4,13 +4,13 @@ import Image from "next/image";
 export default function ChooseGpOrNotGp() {
     return (
         <main className="flex items-center justify-center min-h-screen font-[family-name:var(--font-geist-mono)] p-8 bg-gray-100">
-            <div className="text-center max-w-2xl">
+            <div className="text-center">
                 <h1 className="text-3xl font-bold mb-8">Choose Your Path</h1>
-                <p className="mb-8 text-lg text-gray-700">
+                <p className="mb-8 text-lg text-gray-700 max-w-2xl">
                     Select whether you want to use Genetic Programming (GP) for
                     your project or skip it.
                 </p>
-                <div className="flex flex-wrap mt-8 gap-4 justify-center">
+                <div className="flex flex-wrap mt-8 gap-2 justify-center">
                     <Link
                         href="/create/non-gp"
                         className="rounded-full border border-solid border-black/[.08] transition-colors flex items-center justify-center bg-background text-foreground gap-2 hover:bg-[#dddddd] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
@@ -19,9 +19,15 @@ export default function ChooseGpOrNotGp() {
                     </Link>
                     <Link
                         href="/create/gp"
-                        className="rounded-full border border-solid border-black/[.08] transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#dddddd] hover:text-foreground text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
+                        className="rounded-full border border-solid border-black/[.08] transition-colors flex items-center justify-center bg-background text-foreground gap-2 hover:bg-[#dddddd] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
                     >
-                        I want to use Genetic Programming →
+                        I want to use Genetic Programming (GP)
+                    </Link>
+                    <Link
+                        href="/create/ml"
+                        className="rounded-full border border-solid border-black/[.08] transition-colors flex items-center justify-center bg-background text-foreground gap-2 hover:bg-[#dddddd] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
+                    >
+                        Optimize ML Model with EA →
                     </Link>
                 </div>
                 <div className="mt-16">

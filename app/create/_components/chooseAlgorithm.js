@@ -1,6 +1,7 @@
 import { algorithmData } from "@/app/_data/algorithms";
 
 export const ChooseAlgo = ({
+    title = `Step 1: Choose Algorithm`,
     chosenAlgo,
     setChosenAlgo,
     nextStep,
@@ -13,7 +14,7 @@ export const ChooseAlgo = ({
 }) => {
     return (
         <div className="my-4">
-            <h4 className="text-lg font-bold mb-4">Step 1: Choose Algorithm</h4>
+            <h4 className="text-lg font-bold mb-4">{title}</h4>
             <div className="grid grid-cols-2 gap-4 align-top">
                 {algorithmData.map((algorithm, index) => (
                     <button
