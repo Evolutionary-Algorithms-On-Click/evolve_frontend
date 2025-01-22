@@ -1,4 +1,5 @@
 export default function ConfigureAlgoParams({
+    title=`Step 10: Configure Genetic Algorithm`,
     populationSize,
     setPopulationSize,
     generations,
@@ -19,7 +20,7 @@ export default function ConfigureAlgoParams({
                 mutpb=0.2 
             */}
             <h4 className="text-lg font-bold mb-4">
-                Step 10: Configure Genetic Algorithm
+                {title}
             </h4>
 
             <div className="grid grid-cols-2 gap-4">
