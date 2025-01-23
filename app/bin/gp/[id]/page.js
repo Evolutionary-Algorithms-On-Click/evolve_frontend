@@ -9,7 +9,11 @@ import { useEffect, useState } from "react";
 export default function GPRunResult() {
     const [data, setData] = useState(null);
     const [codeContent, setCodeContent] = useState("");
+    const [logsContent, setLogsContent] = useState("");
+    const [bestFitness, setBestFitness] = useState("");
+
     const [showCode, setShowCode] = useState(false);
+    const [showLogs, setShowLogs] = useState(false);
     const { id } = useParams();
 
     const router = useRouter();
@@ -31,6 +35,22 @@ export default function GPRunResult() {
                 .then((text) => setCodeContent(text))
                 .catch((error) =>
                     console.error("Error fetching code content:", error),
+                );
+
+            // Fetch the logs content.
+            fetch(parsedData.logs)
+                .then((response) => response.text())
+                .then((text) => setLogsContent(text))
+                .catch((error) =>
+                    console.error("Error fetching logs content:", error),
+                );
+
+            // Fetch the best fitness.
+            fetch(parsedData.bestFitness)
+                .then((response) => response.text())
+                .then((text) => setBestFitness(text))
+                .catch((error) =>
+                    console.error("Error fetching best fitness:", error),
                 );
         } else {
             router.replace("/");
@@ -62,10 +82,21 @@ export default function GPRunResult() {
                     className="rounded-full border border-solid border-gray-300 transition-colors flex items-center justify-center bg-white text-gray-900 hover:bg-gray-200 text-sm sm:text-base px-4 py-2 mt-8"
                     onClick={(e) => {
                         e.preventDefault();
+                        setShowLogs(false);
                         setShowCode(!showCode);
                     }}
                 >
                     {showCode ? "Hide Code </>" : "Show Code </ >"}
+                </button>
+                <button
+                    className="rounded-full border border-solid border-gray-300 transition-colors flex items-center justify-center bg-white text-gray-900 hover:bg-gray-200 text-sm sm:text-base px-4 py-2 mt-8"
+                    onClick={(e) => {
+                        e.preventDefault();
+                        setShowCode(false);
+                        setShowLogs(!showLogs);
+                    }}
+                >
+                    {showLogs ? "Hide Logs (x)" : "Show Logs (-)"}
                 </button>
                 <Link
                     href="/bin"
@@ -119,16 +150,45 @@ export default function GPRunResult() {
                                         </code>
                                     </pre>
                                 </div>
+                            ) : showLogs ? (
+                                <div className="w-[100%] flex flex-col">
+                                    <h3 className="text-xl font-bold text-gray-800">
+                                        Generation Wise Logs
+                                    </h3>
+                                    <button
+                                        className="rounded-full border border-solid border-gray-300 transition-colors flex items-center justify-center bg-white text-gray-900 hover:bg-gray-200 text-sm sm:text-base px-4 py-2 mt-2 w-fit"
+                                        onClick={() => {
+                                            const element =
+                                                document.createElement("a");
+                                            const file = new Blob(
+                                                [logsContent],
+                                                {
+                                                    type: "text/plain",
+                                                },
+                                            );
+                                            element.href =
+                                                URL.createObjectURL(file);
+                                            element.download = `logs_${id}.txt`;
+                                            document.body.appendChild(element);
+                                            element.click();
+                                        }}
+                                    >
+                                        Download Logs
+                                    </button>
+                                    <pre className="rounded-lg text-sm mt-4">
+                                        <code className="">{logsContent}</code>
+                                    </pre>
+                                </div>
                             ) : (
                                 <>
-                                    <div className="mt-4">
-                                        <h3 className="text-lg font-bold text-gray-800">
-                                            Best Fitness
-                                        </h3>
-                                        <p className="text-gray-800 mt-2">
-                                            {data && data.bestFitness}
-                                        </p>
-                                    </div>
+                                    <h3 className="text-xl font-bold text-gray-800 mt-4">
+                                        Best Individual Fitness
+                                    </h3>
+                                    <pre className="rounded-lg text-sm mt-4 overflow-auto w-[200px]">
+                                        <code className="overflow-auto text-wrap">
+                                            {bestFitness}
+                                        </code>
+                                    </pre>
                                     <div className="mt-4">
                                         <h3 className="text-lg font-bold text-gray-800">
                                             Best Individual Plot
@@ -140,48 +200,6 @@ export default function GPRunResult() {
                                             height={100}
                                             className="mt-2 rounded-lg shadow-sm border"
                                         />
-                                    </div>
-
-                                    <div className="mt-4">
-                                        <h3 className="text-lg font-bold text-gray-800">
-                                            Population
-                                        </h3>
-                                        <div className="flex flex-row space-x-4 mt-4">
-                                            <button className="bg-black flex space-x-0 py-1 px-2 rounded-lg hover:scale-105 transition-all h-fit">
-                                                <Link
-                                                    href={
-                                                        data && data.population
-                                                    }
-                                                    target="_blank"
-                                                    rel="noreferrer"
-                                                    className="text-white"
-                                                >
-                                                    Download
-                                                </Link>
-                                                <Image
-                                                    src="/download.svg"
-                                                    alt="Download"
-                                                    width={20}
-                                                    height={20}
-                                                />
-                                            </button>
-                                            <button className="bg-black flex space-x-1 py-1 px-2 rounded-lg hover:scale-105 transition-all">
-                                                <Link
-                                                    href="/uploadPopulation"
-                                                    target="_blank"
-                                                    rel="noreferrer"
-                                                    className="text-white"
-                                                >
-                                                    Unpickle
-                                                </Link>
-                                                <Image
-                                                    src="/unpickle.svg"
-                                                    alt="Download"
-                                                    width={20}
-                                                    height={20}
-                                                />
-                                            </button>
-                                        </div>
                                     </div>
                                 </>
                             )}

@@ -123,6 +123,26 @@ export default function MLExecResult() {
                                     <h3 className="text-xl font-bold text-gray-800">
                                         Generation Wise Logs
                                     </h3>
+                                    <button
+                                        className="rounded-full border border-solid border-gray-300 transition-colors flex items-center justify-center bg-white text-gray-900 hover:bg-gray-200 text-sm sm:text-base px-4 py-2 mt-2 w-fit"
+                                        onClick={() => {
+                                            const element =
+                                                document.createElement("a");
+                                            const file = new Blob(
+                                                [logbookContent],
+                                                {
+                                                    type: "text/plain",
+                                                },
+                                            );
+                                            element.href =
+                                                URL.createObjectURL(file);
+                                            element.download = `logs_${id}.txt`;
+                                            document.body.appendChild(element);
+                                            element.click();
+                                        }}
+                                    >
+                                        Download Logs
+                                    </button>
                                     <pre className="rounded-lg text-sm mt-4">
                                         <code className="">
                                             {logbookContent}
