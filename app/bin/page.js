@@ -22,6 +22,15 @@ export default function CachedResults() {
             acc[runType].push(data);
             return acc;
         }, {});
+
+        // Sort each group by timestamp
+        Object.keys(groupedData).forEach((runType) => {
+            groupedData[runType].sort(
+                (a, b) =>
+                    new Date(b.inputData.timestamp) -
+                    new Date(a.inputData.timestamp),
+            );
+        });
         setCacheData(groupedData);
     }, []);
 
