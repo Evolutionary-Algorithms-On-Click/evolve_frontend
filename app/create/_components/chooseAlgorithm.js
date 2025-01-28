@@ -42,7 +42,7 @@ export const ChooseAlgo = ({
                         }}
                         key={index}
                         className={
-                            "border p-4 rounded-lg max-w-xl text-left items-start min-w-2/3  bg-opacity-30" +
+                            "border p-4 rounded-2xl max-w-xl text-left items-start min-w-2/3  bg-opacity-30" +
                             (chosenAlgo && chosenAlgo === algorithm.name
                                 ? " border-blue-500 bg-blue-100 text-blue-900"
                                 : " border-gray-300 hover:bg-gray-100 hover:text-foreground")

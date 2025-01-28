@@ -201,19 +201,27 @@ export default function ConfigureGP() {
         <Loader type={"full"} message={"Running Algorithm..."} />
     ) : (
         <main className="flex flex-col justify-center items-center justify-items-center min-h-screen font-[family-name:var(--font-geist-mono)] p-8">
-            <div>
+            <div className="text-center">
                 <h1 className="text-3xl sm:text-4xl font-bold">
                     Evolve OnClick
                 </h1>
                 <p>Run and Visualize algorithms with just a click.</p>
             </div>
 
-            <Link
-                href="/create"
-                className="rounded-full border border-solid border-black/[.08] transition-colors flex items-center justify-center bg-foreground text-background hover:bg-[#dddddd] hover:text-foreground text-sm sm:text-base px-4 py-2 mt-8"
-            >
-                ← Go Back
-            </Link>
+            <div className="flex flex-row gap-4">
+                <Link
+                    href="/create/gp"
+                    className="rounded-full border border-solid border-black/[.08] transition-colors flex items-center justify-center bg-background text-foreground hover:bg-[#000000] hover:text-background text-sm sm:text-base px-4 py-2 mt-8"
+                >
+                    ← Go Back
+                </Link>
+                <Link
+                    href="/bin"
+                    className="rounded-full border border-solid border-black/[.08] transition-colors flex items-center justify-center bg-background text-foreground hover:bg-[#000000] hover:text-background text-sm sm:text-base px-4 py-2 mt-8"
+                >
+                    View Previous Runs →
+                </Link>
+            </div>
 
             <div className="flex flex-wrap mt-16 gap-4 border border-gray-400 rounded-2xl bg-gray-100 bg-opacity-70">
                 <PreviewGP

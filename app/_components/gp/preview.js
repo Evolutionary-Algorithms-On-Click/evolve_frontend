@@ -40,7 +40,7 @@ export default function PreviewGP({
             <div className="flex flex-col">
                 <div className="mt-4">
                     <h4 className="text-lg font-semibold mb-1">Algorithm</h4>
-                    <code className="bg-blue-300 py-1 px-3 rounded-full text-blue-950 font-bold">
+                    <code className="border border-blue-400 py-1 px-3 rounded-full text-foreground">
                         {algo || "None"}
                     </code>
                 </div>
@@ -50,7 +50,7 @@ export default function PreviewGP({
 
             {parameters && (
                 <div className="mt-4">
-                    <h4 className="text-lg font-semibold">Weights</h4>
+                    <h4 className="text-lg font-semibold mb-1">Weights</h4>
                     {parameters.length > 0 ? (
                         <table className="w-full text-center">
                             <tbody>
@@ -84,7 +84,7 @@ export default function PreviewGP({
             {primitiveSet ? <hr className="mt-4" /> : null}
 
             {primitiveSet && primitiveSet.length > 0 && (
-                <h4 className="text-lg font-semibold">Primitive Set</h4>
+                <h4 className="text-lg font-semibold" mb-1>Primitive Set</h4>
             )}
 
             {primitiveSet && (
@@ -108,7 +108,7 @@ export default function PreviewGP({
                     <h4 className="text-lg font-semibold mb-1">
                         Tree-Gen Expression
                     </h4>
-                    <code className="bg-foreground py-1 px-3 rounded-full text-background">
+                    <code className="border border-blue-400 py-1 px-3 rounded-full text-foreground">
                         {treeGenExpression}
                     </code>
 
@@ -129,10 +129,10 @@ export default function PreviewGP({
 
             {indGen && (
                 <div className="mt-4">
-                    <h4 className="text-lg font-semibold">
+                    <h4 className="text-lg font-semibold mb-1">
                         Individual Generator
                     </h4>
-                    <code className="bg-foreground p-1 rounded-lg text-background">
+                    <code className="border border-blue-400 py-1 px-3 rounded-full text-foreground">
                         {indGen}
                     </code>
                 </div>
@@ -142,10 +142,10 @@ export default function PreviewGP({
 
             {popFunc && (
                 <div className="mt-4">
-                    <h4 className="text-lg font-semibold">
+                    <h4 className="text-lg font-semibold mb-1">
                         Population Function
                     </h4>
-                    <code className="bg-foreground p-1 rounded-lg text-background">
+                    <code className="border border-blue-400 py-1 px-3 rounded-full text-foreground">
                         {popFunc}
                     </code>
                 </div>
@@ -155,10 +155,10 @@ export default function PreviewGP({
 
             {selectFunc && (
                 <div className="mt-4">
-                    <h4 className="text-lg font-semibold">
+                    <h4 className="text-lg font-semibold mb-1">
                         Selection Function
                     </h4>
-                    <code className="bg-foreground p-1 rounded-lg text-background">
+                    <code className="border border-blue-400 py-1 px-3 rounded-full text-foreground">
                         {selectFunc}
                     </code>
                     {selectFunc === "selTournament" && (
@@ -173,25 +173,25 @@ export default function PreviewGP({
 
             {mutateFunc && (
                 <div className="mt-4">
-                    <h4 className="text-lg font-semibold">Mutation Function</h4>
-                    <code className="bg-foreground p-1 rounded-lg text-background">
+                    <h4 className="text-lg font-semibold mb-1">Mutation Function</h4>
+                    <code className="border border-blue-400 py-1 px-3 rounded-full text-foreground">
                         {mutateFunc}
                     </code>
 
-                    <h4 className="text-md font-semibold mt-2">
+                    <h4 className="text-md font-semibold mt-2 mb-1">
                         Mutation Expression
                     </h4>
 
-                    <code className="bg-foreground p-1 rounded-lg text-background">
-                        {mutExpr}
+                    <code className="border border-blue-400 py-1 px-3 rounded-full text-foreground">
+                        {mutExpr ? mutExpr : "None"}
                     </code>
 
                     {mutateFunc === "mutEphemeral" && (
                         <>
-                            <h5 className="text-md font-semibold mt-2">
+                            <h5 className="text-md font-semibold mt-2 mb-1">
                                 Mutation Mode
                             </h5>
-                            <code className="bg-foreground p-1 rounded-lg text-background">
+                            <code className="border border-blue-400 py-1 px-3 rounded-full text-foreground">
                                 {mode}
                             </code>
                         </>
@@ -214,8 +214,8 @@ export default function PreviewGP({
 
             {matingFunc && (
                 <div className="mt-4">
-                    <h4 className="text-lg font-semibold">Mating Function</h4>
-                    <code className="bg-foreground p-1 rounded-lg text-background">
+                    <h4 className="text-lg font-semibold mb-1">Mating Function</h4>
+                    <code className="border border-blue-400 py-1 px-3 rounded-full text-foreground">
                         {matingFunc}
                     </code>
 
@@ -252,10 +252,10 @@ export default function PreviewGP({
 
                     {populationSize && (
                         <div className="mt-4">
-                            <h4 className="text-lg font-semibold">
+                            <h4 className="text-lg font-semibold mb-1">
                                 Population Size
                             </h4>
-                            <code className="bg-foreground p-1 rounded-lg text-background">
+                            <code className="border border-blue-400 py-1 px-3 rounded-full text-foreground">
                                 {populationSize}
                             </code>
                         </div>
@@ -265,10 +265,10 @@ export default function PreviewGP({
 
                     {generations && (
                         <div className="mt-4">
-                            <h4 className="text-lg font-semibold">
+                            <h4 className="text-lg font-semibold mb-1">
                                 Generations
                             </h4>
-                            <code className="bg-foreground p-1 rounded-lg text-background">
+                            <code className="border border-blue-400 py-1 px-3 rounded-full text-foreground">
                                 {generations}
                             </code>
                         </div>
@@ -278,10 +278,10 @@ export default function PreviewGP({
 
                     {cxpb && (
                         <div className="mt-4">
-                            <h4 className="text-lg font-semibold">
+                            <h4 className="text-lg font-semibold mb-1">
                                 Crossover Probability
                             </h4>
-                            <code className="bg-foreground p-1 rounded-lg text-background">
+                            <code className="border border-blue-400 py-1 px-3 rounded-full text-foreground">
                                 {cxpb}
                             </code>
                         </div>
@@ -291,10 +291,10 @@ export default function PreviewGP({
 
                     {mutpb && (
                         <div className="mt-4">
-                            <h4 className="text-lg font-semibold">
+                            <h4 className="text-lg font-semibold mb-1">
                                 Mutation Probability
                             </h4>
-                            <code className="bg-foreground p-1 rounded-lg text-background">
+                            <code className="border border-blue-400 py-1 px-3 rounded-full text-foreground">
                                 {mutpb}
                             </code>
                         </div>
@@ -304,10 +304,10 @@ export default function PreviewGP({
 
                     {hofSize && (
                         <div className="mt-4">
-                            <h4 className="text-lg font-semibold">
+                            <h4 className="text-lg font-semibold mb-1">
                                 Hall of Fame Size
                             </h4>
-                            <code className="bg-foreground p-1 rounded-lg text-background">
+                            <code className="border border-blue-400 py-1 px-3 rounded-full text-foreground">
                                 {hofSize}
                             </code>
                         </div>
