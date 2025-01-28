@@ -84,7 +84,9 @@ export default function PreviewGP({
             {primitiveSet ? <hr className="mt-4" /> : null}
 
             {primitiveSet && primitiveSet.length > 0 && (
-                <h4 className="text-lg font-semibold" mb-1>Primitive Set</h4>
+                <h4 className="text-lg font-semibold" mb-1>
+                    Primitive Set
+                </h4>
             )}
 
             {primitiveSet && (
@@ -173,7 +175,9 @@ export default function PreviewGP({
 
             {mutateFunc && (
                 <div className="mt-4">
-                    <h4 className="text-lg font-semibold mb-1">Mutation Function</h4>
+                    <h4 className="text-lg font-semibold mb-1">
+                        Mutation Function
+                    </h4>
                     <code className="border border-blue-400 py-1 px-3 rounded-full text-foreground">
                         {mutateFunc}
                     </code>
@@ -214,7 +218,9 @@ export default function PreviewGP({
 
             {matingFunc && (
                 <div className="mt-4">
-                    <h4 className="text-lg font-semibold mb-1">Mating Function</h4>
+                    <h4 className="text-lg font-semibold mb-1">
+                        Mating Function
+                    </h4>
                     <code className="border border-blue-400 py-1 px-3 rounded-full text-foreground">
                         {matingFunc}
                     </code>
