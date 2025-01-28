@@ -35,12 +35,12 @@ export default function PreviewGP({
     currentStep,
 }) {
     return (
-        <div className="flex flex-col items-start border border-gray-400 rounded-2xl p-4 min-w-16 h-fit md:sticky top-4 bg-white text-black">
+        <div className="flex flex-col items-start p-4 min-w-16 h-fit md:sticky top-4 bg-grey-100 bg-opacity-70 text-black">
             <h3 className="text-xl font-bold">Config Summary</h3>
             <div className="flex flex-col">
                 <div className="mt-4">
-                    <h4 className="text-lg font-semibold">Algorithm</h4>
-                    <code className="bg-foreground p-1 rounded-lg text-background">
+                    <h4 className="text-lg font-semibold mb-1">Algorithm</h4>
+                    <code className="bg-blue-300 py-1 px-3 rounded-full text-blue-950 font-bold">
                         {algo || "None"}
                     </code>
                 </div>
@@ -59,11 +59,11 @@ export default function PreviewGP({
                                         key={index}
                                         className={
                                             index % 2 === 0
-                                                ? "bg-gray-100"
+                                                ? "bg-blue-50"
                                                 : "bg-white"
                                         }
                                     >
-                                        <td className="border-b border-gray-300 p-2">
+                                        <td className="border border-gray-300 p-2">
                                             <p className="font-bold">
                                                 {param + ".0"}
                                             </p>
@@ -88,12 +88,12 @@ export default function PreviewGP({
             )}
 
             {primitiveSet && (
-                <div className="mt-4 flex flex-row flex-wrap gap-1">
+                <div className="mt-4 flex flex-row flex-wrap gap-1 max-w-[196px]">
                     {primitiveSet.length > 0 &&
                         primitiveSet.map((prim, index) => (
                             <code
                                 key={index}
-                                className="bg-foreground p-1 rounded-lg text-background"
+                                className="border border-blue-400 py-1 px-2 rounded-xl text-foreground"
                             >
                                 {prim}
                             </code>

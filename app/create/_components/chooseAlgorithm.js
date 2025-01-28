@@ -1,7 +1,7 @@
 import { algorithmData } from "@/app/_data/algorithms";
 
 export const ChooseAlgo = ({
-    title = `Step 1: Choose Algorithm`,
+    title = `Step 1: Choose Algorithm Strategy`,
     chosenAlgo,
     setChosenAlgo,
     nextStep,
@@ -42,14 +42,14 @@ export const ChooseAlgo = ({
                         }}
                         key={index}
                         className={
-                            "border border-gray-300 p-4 rounded-lg max-w-xl text-left items-start min-w-2/3" +
+                            "border p-4 rounded-lg max-w-xl text-left items-start min-w-2/3  bg-opacity-30" +
                             (chosenAlgo && chosenAlgo === algorithm.name
-                                ? " bg-foreground text-background"
-                                : "")
+                                ? " border-blue-500 bg-blue-100 text-blue-900"
+                                : " border-gray-300 hover:bg-gray-100 hover:text-foreground")
                         }
                     >
                         <h5 className="text-lg font-bold">{algorithm.name}</h5>
-                        <p>{algorithm.description}</p>
+                        <p className="mt-3 text-sm">{algorithm.description}</p>
                     </button>
                 ))}
             </div>

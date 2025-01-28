@@ -215,7 +215,7 @@ export default function ConfigureGP() {
                 ← Go Back
             </Link>
 
-            <div className="flex flex-wrap mt-16 gap-4">
+            <div className="flex flex-wrap mt-16 gap-4 border border-gray-400 rounded-2xl bg-gray-100 bg-opacity-70">
                 <PreviewGP
                     algo={chosenAlgo}
                     parameters={parameters}
@@ -244,7 +244,7 @@ export default function ConfigureGP() {
                     currentStep={currentStep}
                 />
 
-                <div className="border border-gray-400 rounded-2xl p-4">
+                <div className="border border-gray-400 rounded-2xl p-4 bg-white">
                     <form
                         onSubmit={(e) => {
                             e.preventDefault();
