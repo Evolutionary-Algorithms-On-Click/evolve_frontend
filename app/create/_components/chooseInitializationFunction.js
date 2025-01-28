@@ -24,10 +24,10 @@ export default function ChooseInitializationFunction({
                         }}
                         key={index}
                         className={
-                            "border border-gray-300 p-4 rounded-lg max-w-xl text-left items-start min-w-2/3" +
+                            "border border-gray-300 p-4 rounded-lg max-w-xl text-left items-start min-w-2/3 bg-opacity-30" +
                             (popFunc && popFunc === pop.name
-                                ? " bg-foreground text-background"
-                                : "")
+                                ? " border-blue-500 bg-blue-100 text-blue-900"
+                            : " border-gray-300 hover:bg-gray-100 hover:text-foreground")
                         }
                     >
                         <h5 className="text-lg font-bold">{pop.name}</h5>

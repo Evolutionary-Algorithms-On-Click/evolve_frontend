@@ -64,8 +64,8 @@ export default function ChooseTreeGeneratorExpression({
                         !isNaN(maxHeight) &&
                         minHeight <= maxHeight
                     ) && (
-                        <p className="text-red-500">
-                            Min. Height should be less than or equal to Max.
+                        <p className="text-red-500 text-sm">
+                            Note: Min. Height should be less than or equal to Max.
                             Height.
                         </p>
                     )}

@@ -39,9 +39,9 @@ export default function ChooseWeights({
                                 setMinMaxSelected(true);
                             }}
                             className={
-                                "p-1 rounded-l-xl w-full border border-foreground" +
+                                "p-1 rounded-l-xl w-full border bg-opacity-30" +
                                 (tempParamWeight === 1.0
-                                    ? "border border-blue-500 bg-blue-100 text-blue-900"
+                                    ? " border-blue-500 bg-blue-100 text-blue-900"
                                     : "border-gray-300 hover:bg-gray-100 hover:text-foreground")
                             }
                         >
@@ -55,9 +55,9 @@ export default function ChooseWeights({
                                 setMinMaxSelected(true);
                             }}
                             className={
-                                "p-1 rounded-r-xl w-full border border-foreground" +
+                                "p-1 rounded-r-xl w-full border bg-opacity-30" +
                                 (tempParamWeight === -1.0
-                                    ? "border border-blue-500 bg-blue-100 text-blue-900"
+                                    ? " border-blue-500 bg-blue-100 text-blue-900"
                                     : "border-gray-300 hover:bg-gray-100 hover:text-foreground")
                             }
                         >

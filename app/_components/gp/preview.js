@@ -105,10 +105,10 @@ export default function PreviewGP({
 
             {treeGenExpression && (
                 <div className="mt-4">
-                    <h4 className="text-lg font-semibold">
+                    <h4 className="text-lg font-semibold mb-1">
                         Tree-Gen Expression
                     </h4>
-                    <code className="bg-foreground p-1 rounded-lg text-background">
+                    <code className="bg-foreground py-1 px-3 rounded-full text-background">
                         {treeGenExpression}
                     </code>
 
