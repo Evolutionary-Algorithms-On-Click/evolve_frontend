@@ -38,11 +38,11 @@ export default function ChooseTreeGeneratorExpression({
                         }}
                         key={index}
                         className={
-                            "border border-gray-300 p-4 rounded-lg max-w-xl text-left items-start min-w-2/3" +
+                            "border p-4 rounded-lg max-w-xl text-left items-start min-w-2/3 bg-opacity-30" +
                             (treeGenExpression &&
                             treeGenExpression === algorithm.name
-                                ? " bg-foreground text-background"
-                                : "")
+                                ? " border-blue-500 bg-blue-100 text-blue-900"
+                                : " border-gray-300 hover:bg-gray-100 hover:text-foreground")
                         }
                     >
                         <h5 className="text-lg font-bold">{algorithm.name}</h5>
@@ -64,9 +64,9 @@ export default function ChooseTreeGeneratorExpression({
                         !isNaN(maxHeight) &&
                         minHeight <= maxHeight
                     ) && (
-                        <p className="text-red-500">
-                            Min. Height should be less than or equal to Max.
-                            Height.
+                        <p className="text-red-500 text-sm">
+                            Note: Min. Height should be less than or equal to
+                            Max. Height.
                         </p>
                     )}
                     <div className="grid grid-cols-2 gap-4 mt-4">

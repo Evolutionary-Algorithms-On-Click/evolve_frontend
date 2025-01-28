@@ -38,10 +38,10 @@ export default function ChooseMutationFunction({
                         }}
                         key={index}
                         className={
-                            "border border-gray-300 p-4 rounded-lg max-w-xl text-left items-start min-w-2/3" +
+                            "border border-gray-300 p-4 rounded-lg max-w-xl text-left items-start min-w-2/3 bg-opacity-30" +
                             (mutateFunc && mutateFunc === mut.name
-                                ? " bg-foreground text-background"
-                                : "")
+                                ? " border-blue-500 bg-blue-100 text-blue-900"
+                                : " border-gray-300 hover:bg-gray-100 hover:text-foreground")
                         }
                     >
                         <h5 className="text-lg font-bold">{mut.name}</h5>
