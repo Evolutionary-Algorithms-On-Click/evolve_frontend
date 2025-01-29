@@ -74,7 +74,7 @@ export default function Execution() {
                 {!data ? (
                     <p className="text-gray-600">Loading...</p>
                 ) : (
-                    <div className="flex flex-row flex-wrap justify-center items-start gap-4">
+                    <div className="flex flex-wrap gap-4 border border-gray-400 rounded-2xl bg-white bg-opacity-70">
                         <Preview
                             algo={data["inputData"]["algorithm"]}
                             parameters={data["inputData"]["weights"]}

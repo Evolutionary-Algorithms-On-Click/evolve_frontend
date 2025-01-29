@@ -18,12 +18,12 @@ export default function Preview({
 }) {
     // Section will have a div representing selected values.
     return (
-        <div className="flex flex-col items-start border border-gray-400 rounded-2xl p-4 min-w-16 h-fit md:sticky top-4 bg-white text-black">
+        <div className="flex flex-col items-start p-4 min-w-16 h-fit md:sticky top-4 bg-grey-100 bg-opacity-70 text-black">
             <h3 className="text-xl font-bold">Config Summary</h3>
             <div className="flex flex-col">
                 <div className="mt-4">
-                    <h4 className="text-lg font-semibold">Algorithm</h4>
-                    <code className="bg-foreground p-1 rounded-lg text-background">
+                    <h4 className="text-lg font-semibold mb-1">Algorithm</h4>
+                    <code className="border border-blue-400 py-1 px-3 rounded-full text-foreground">
                         {algo || "None"}
                     </code>
                 </div>
@@ -32,7 +32,7 @@ export default function Preview({
 
                 {parameters && (
                     <div className="mt-4">
-                        <h4 className="text-lg font-semibold">Weights</h4>
+                        <h4 className="text-lg font-semibold mb-1">Weights</h4>
                         {parameters.length > 0 ? (
                             <table className="w-full text-center">
                                 <tbody>
@@ -41,7 +41,7 @@ export default function Preview({
                                             key={index}
                                             className={
                                                 index % 2 === 0
-                                                    ? "bg-gray-100"
+                                                    ? "bg-blue-50"
                                                     : "bg-white"
                                             }
                                         >
@@ -67,10 +67,10 @@ export default function Preview({
 
                 {indGen && (
                     <div className="mt-4">
-                        <h4 className="text-lg font-semibold">
+                        <h4 className="text-lg font-semibold mb-1">
                             Individual Generator
                         </h4>
-                        <code className="bg-foreground p-1 rounded-lg text-background">
+                        <code className="border border-blue-400 py-1 px-2 rounded-xl text-foreground">
                             {indGen}
                         </code>
                     </div>
@@ -80,10 +80,10 @@ export default function Preview({
 
                 {indSize && (
                     <div className="mt-4">
-                        <h4 className="text-lg font-semibold">
+                        <h4 className="text-lg font-semibold mb-1">
                             Individual Size
                         </h4>
-                        <code className="bg-foreground p-1 rounded-lg text-background">
+                        <code className="border border-blue-400 py-1 px-2 rounded-xl text-foreground">
                             {indSize}
                         </code>
                     </div>
@@ -93,10 +93,10 @@ export default function Preview({
 
                 {popFunc && (
                     <div className="mt-4">
-                        <h4 className="text-lg font-semibold">
+                        <h4 className="text-lg font-semibold mb-1">
                             Population Function
                         </h4>
-                        <code className="bg-foreground p-1 rounded-lg text-background">
+                        <code className="border border-blue-400 py-1 px-2 rounded-xl text-foreground">
                             {popFunc}
                         </code>
                     </div>
@@ -106,10 +106,10 @@ export default function Preview({
 
                 {mateFunc && (
                     <div className="mt-4">
-                        <h4 className="text-lg font-semibold">
+                        <h4 className="text-lg font-semibold mb-1">
                             Mating Function
                         </h4>
-                        <code className="bg-foreground p-1 rounded-lg text-background">
+                        <code className="border border-blue-400 py-1 px-2 rounded-xl text-foreground">
                             {mateFunc}
                         </code>
                     </div>
@@ -119,10 +119,10 @@ export default function Preview({
 
                 {mutateFunc && (
                     <div className="mt-4">
-                        <h4 className="text-lg font-semibold">
+                        <h4 className="text-lg font-semibold mb-1">
                             Mutation Function
                         </h4>
-                        <code className="bg-foreground p-1 rounded-lg text-background">
+                        <code className="border border-blue-400 py-1 px-2 rounded-xl text-foreground">
                             {mutateFunc}
                         </code>
                     </div>
@@ -132,10 +132,10 @@ export default function Preview({
 
                 {selectFunc && (
                     <div className="mt-4">
-                        <h4 className="text-lg font-semibold">
+                        <h4 className="text-lg font-semibold mb-1">
                             Selection Function
                         </h4>
-                        <code className="bg-foreground p-1 rounded-lg text-background">
+                        <code className="border border-blue-400 py-1 px-2 rounded-xl text-foreground">
                             {selectFunc}
                         </code>
                         {selectFunc === "selTournament" && (
@@ -150,10 +150,10 @@ export default function Preview({
 
                 {evalFunc && (
                     <div className="mt-4">
-                        <h4 className="text-lg font-semibold">
+                        <h4 className="text-lg font-semibold mb-1">
                             Evaluation Function
                         </h4>
-                        <code className="bg-foreground p-1 rounded-lg text-background">
+                        <code className="border border-blue-400 py-1 px-2 rounded-xl text-foreground">
                             {evalFunc}
                         </code>
                     </div>
@@ -165,10 +165,10 @@ export default function Preview({
 
                         {populationSize && (
                             <div className="mt-4">
-                                <h4 className="text-lg font-semibold">
+                                <h4 className="text-lg font-semibold mb-1">
                                     Population Size
                                 </h4>
-                                <code className="bg-foreground p-1 rounded-lg text-background">
+                                <code className="border border-blue-400 py-1 px-2 rounded-xl text-foreground">
                                     {populationSize}
                                 </code>
                             </div>
@@ -178,10 +178,10 @@ export default function Preview({
 
                         {generations && (
                             <div className="mt-4">
-                                <h4 className="text-lg font-semibold">
+                                <h4 className="text-lg font-semibold mb-1">
                                     Generations
                                 </h4>
-                                <code className="bg-foreground p-1 rounded-lg text-background">
+                                <code className="border border-blue-400 py-1 px-2 rounded-xl text-foreground">
                                     {generations}
                                 </code>
                             </div>
@@ -191,10 +191,10 @@ export default function Preview({
 
                         {cxpb && (
                             <div className="mt-4">
-                                <h4 className="text-lg font-semibold">
+                                <h4 className="text-lg font-semibold mb-1">
                                     Crossover Probability
                                 </h4>
-                                <code className="bg-foreground p-1 rounded-lg text-background">
+                                <code className="border border-blue-400 py-1 px-2 rounded-xl text-foreground">
                                     {cxpb}
                                 </code>
                             </div>
@@ -204,10 +204,10 @@ export default function Preview({
 
                         {mutpb && (
                             <div className="mt-4">
-                                <h4 className="text-lg font-semibold">
+                                <h4 className="text-lg font-semibold mb-1">
                                     Mutation Probability
                                 </h4>
-                                <code className="bg-foreground p-1 rounded-lg text-background">
+                                <code className="border border-blue-400 py-1 px-2 rounded-xl text-foreground">
                                     {mutpb}
                                 </code>
                             </div>
@@ -217,10 +217,10 @@ export default function Preview({
 
                         {hofSize && (
                             <div className="mt-4">
-                                <h4 className="text-lg font-semibold">
+                                <h4 className="text-lg font-semibold mb-1">
                                     Hall of Fame Size
                                 </h4>
-                                <code className="bg-foreground p-1 rounded-lg text-background">
+                                <code className="border border-blue-400 py-1 px-2 rounded-xl text-foreground">
                                     {hofSize}
                                 </code>
                             </div>

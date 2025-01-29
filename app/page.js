@@ -5,12 +5,14 @@ export default function Home() {
     return (
         <div className="min-h-screen flex flex-col items-center justify-between p-8 sm:p-20 bg-background font-[family-name:var(--font-geist-mono)]">
             <main className="flex flex-col items-center gap-6 flex-grow justify-center">
-                <h1 className="text-4xl sm:text-5xl text-center font-bold text-foreground">
-                    Evolve OnClick
-                </h1>
-                <p className="text-lg text-center text-foreground">
-                    Run and Visualize algorithms with just a click.
-                </p>
+                <div className="flex items-center justify-center overflow-hidden h-60">
+                    <Image
+                        src="/LOGO.png"
+                        alt="EVOLVE OnClick logo"
+                        height={360}
+                        width={900}
+                    />
+                </div>
 
                 <div className="flex flex-col sm:flex-row gap-4 items-center">
                     <Link
