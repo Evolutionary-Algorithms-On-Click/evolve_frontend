@@ -210,7 +210,7 @@ export default function ConfigureGP() {
 
             <div className="flex flex-row gap-4">
                 <Link
-                    href="/create/gp"
+                    href="/create"
                     className="rounded-full border border-solid border-black/[.08] transition-colors flex items-center justify-center bg-background text-foreground hover:bg-[#000000] hover:text-background text-sm sm:text-base px-4 py-2 mt-8"
                 >
                     ← Go Back
