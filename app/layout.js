@@ -31,7 +31,7 @@ export const metadata = {
         url: "",
         images: [
             {
-                url: "/evoc.png", // LinkedIn preview image
+                url: "/EvOCicon.png", // LinkedIn preview image
                 width: 1200,
                 height: 630,
                 alt: "EVOLVE OnClick",
