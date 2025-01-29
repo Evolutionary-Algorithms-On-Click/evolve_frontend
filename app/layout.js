@@ -23,7 +23,6 @@ export const metadata = {
         apple: "/evoc.ico",
         shortcut: "/evoc.ico",
     },
-    themeColor: "#343434",
     openGraph: {
         type: "website",
         title: "EVOLVE OnClick",
@@ -39,6 +38,7 @@ export const metadata = {
             },
         ],
     },
+    metadataBase: new URL("https://evolve-frontend.vercel.app/"),
 };
 
 export default function RootLayout({ children }) {
