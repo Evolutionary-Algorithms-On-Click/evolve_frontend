@@ -19,9 +19,9 @@ export const metadata = {
         "EVOLVE, EVOLVE OnClick, Evolutionary Algorithms, Genetic Algorithms, Genetic Programming, GP, GA, ML, Machine Learning, EA, GECCO, 2025",
     author: "Ritwik Murali, Ashwin Narayanan S, Abhinav R, Ananya R, Hariharan A",
     icons: {
-        icon: "/evoc.ico",
-        apple: "/evoc.ico",
-        shortcut: "/evoc.ico",
+        icon: "/icon.ico",
+        apple: "/icon.ico",
+        shortcut: "/icon.ico",
     },
     openGraph: {
         type: "website",
