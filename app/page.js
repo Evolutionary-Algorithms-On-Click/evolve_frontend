@@ -5,9 +5,17 @@ export default function Home() {
     return (
         <div className="min-h-screen flex flex-col items-center justify-between p-8 sm:p-20 bg-background font-[family-name:var(--font-geist-mono)]">
             <main className="flex flex-col items-center gap-6 flex-grow justify-center">
-                <h1 className="text-4xl sm:text-5xl text-center font-bold text-foreground">
-                    Evolve OnClick
-                </h1>
+                <div className="flex flex-row justify-center items-center gap-4">
+                    <Image
+                        src="/ewok.png"
+                        alt="EVOLVE OnClick"
+                        width={100}
+                        height={100}
+                    />
+                    <h1 className="text-4xl sm:text-5xl text-center font-bold text-foreground">
+                        Evolve OnClick
+                    </h1>
+                </div>
                 <p className="text-lg text-center text-foreground">
                     Run and Visualize algorithms with just a click.
                 </p>
