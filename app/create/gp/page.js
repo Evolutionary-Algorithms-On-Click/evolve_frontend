@@ -38,8 +38,8 @@ export default function ConfigureGP() {
 
     // Tree Generator Expression
     const [treeGenExpression, setTreeGenExpression] = useState(null);
-    const [minHeight, setMinHeight] = useState(0);
-    const [maxHeight, setMaxHeight] = useState(0);
+    const [minHeight, setMinHeight] = useState(1);
+    const [maxHeight, setMaxHeight] = useState(2);
 
     // Individual Generator Function
     const [indGen, setIndGen] = useState(null);
@@ -55,16 +55,16 @@ export default function ConfigureGP() {
     const [mutateFunc, setMutateFunc] = useState(null);
     const [mode, setMode] = useState("one");
     const [mutExpr, setMutExpr] = useState(null);
-    const [mutMinHeight, setMutMinHeight] = useState(0);
-    const [mutMaxHeight, setMutMaxHeight] = useState(0);
+    const [mutMinHeight, setMutMinHeight] = useState(1);
+    const [mutMaxHeight, setMutMaxHeight] = useState(2);
 
     // Mating Function
     const [matingFunc, setMatingFunc] = useState(null);
     const [terminalProb, setTerminalProb] = useState(0.1);
 
     // Bloat Limits
-    const [mateHeightLimit, setMateHeightLimit] = useState(0);
-    const [mutateHeightLimit, setMutateHeightLimit] = useState(0);
+    const [mateHeightLimit, setMateHeightLimit] = useState(1);
+    const [mutateHeightLimit, setMutateHeightLimit] = useState(2);
 
     // Equation Parameters
     const [degree, setDegree] = useState(0);
@@ -409,7 +409,7 @@ export default function ConfigureGP() {
                             />
                         )}
 
-                        {currentStep >= 12 && (
+                        {currentStep >= 11 && (
                             <ConfigureEquation
                                 currentStep={currentStep}
                                 setCurrentStep={setCurrentStep}

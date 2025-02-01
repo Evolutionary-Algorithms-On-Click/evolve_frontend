@@ -58,8 +58,6 @@ export default function ChooseTreeGeneratorExpression({
                         generation.`}
                     </h5>
                     {!(
-                        minHeight &&
-                        maxHeight &&
                         !isNaN(minHeight) &&
                         !isNaN(maxHeight) &&
                         minHeight <= maxHeight
@@ -77,6 +75,7 @@ export default function ChooseTreeGeneratorExpression({
                             <input
                                 type="number"
                                 value={minHeight.toString()}
+                                min={0}
                                 className="border border-gray-300 p-2 rounded-lg"
                                 placeholder="Enter a number"
                                 onChange={(e) => {
@@ -84,8 +83,6 @@ export default function ChooseTreeGeneratorExpression({
                                     setMinHeight(_minHeight);
 
                                     if (
-                                        maxHeight &&
-                                        _minHeight &&
                                         !isNaN(_minHeight) &&
                                         !isNaN(maxHeight) &&
                                         _minHeight <= maxHeight
@@ -105,6 +102,7 @@ export default function ChooseTreeGeneratorExpression({
                             </h6>
                             <input
                                 type="number"
+                                min={1}
                                 value={maxHeight.toString()}
                                 className="border border-gray-300 p-2 rounded-lg"
                                 placeholder="Enter a number"
@@ -113,8 +111,6 @@ export default function ChooseTreeGeneratorExpression({
                                     setMaxHeight(_maxHeight);
 
                                     if (
-                                        minHeight &&
-                                        _maxHeight &&
                                         !isNaN(minHeight) &&
                                         !isNaN(_maxHeight) &&
                                         minHeight <= _maxHeight
