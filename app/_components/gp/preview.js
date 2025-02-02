@@ -48,7 +48,7 @@ export default function PreviewGP({
 
             {parameters ? <hr className="my-4" /> : null}
 
-            {parameters && (
+            {parameters && parameters.length > 0 && (
                 <div className="mt-4">
                     <h4 className="text-lg font-semibold mb-1">Weights</h4>
                     {parameters.length > 0 ? (
@@ -75,31 +75,28 @@ export default function PreviewGP({
                                 ))}
                             </tbody>
                         </table>
-                    ) : (
-                        <p>None</p>
-                    )}
+                    ) : null}
                 </div>
             )}
 
-            {primitiveSet ? <hr className="mt-4" /> : null}
+            {primitiveSet ? <hr className="mt-8" /> : null}
 
             {primitiveSet && primitiveSet.length > 0 && (
-                <h4 className="text-lg font-semibold" mb-1>
-                    Primitive Set
-                </h4>
+                <h4 className="text-lg font-semibold">Primitive Set</h4>
             )}
 
             {primitiveSet && (
                 <div className="mt-4 flex flex-row flex-wrap gap-1 max-w-[196px]">
-                    {primitiveSet.length > 0 &&
-                        primitiveSet.map((prim, index) => (
-                            <code
-                                key={index}
-                                className="border border-blue-400 py-1 px-2 rounded-xl text-foreground"
-                            >
-                                {prim}
-                            </code>
-                        ))}
+                    {primitiveSet.length > 0
+                        ? primitiveSet.map((prim, index) => (
+                              <code
+                                  key={index}
+                                  className="border border-blue-400 py-1 px-2 rounded-xl text-foreground"
+                              >
+                                  {prim}
+                              </code>
+                          ))
+                        : null}
                 </div>
             )}
 
@@ -117,11 +114,15 @@ export default function PreviewGP({
                     <div className="flex flex-wrap mt-2">
                         <div className="w-1/2">
                             <p className="font-semibold">Min Height</p>
-                            <p className="font-extralight">{minHeight}</p>
+                            <p className="font-extralight">
+                                {minHeight.toString()}
+                            </p>
                         </div>
                         <div className="w-1/2">
                             <p className="font-semibold">Max Height</p>
-                            <p className="font-extralight">{maxHeight}</p>
+                            <p className="font-extralight">
+                                {maxHeight.toString()}
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -238,7 +239,7 @@ export default function PreviewGP({
 
             {mateHeightLimit ? <hr className="mt-4" /> : null}
 
-            {mateHeightLimit && (
+            {currentStep >= 11 && mateHeightLimit ? (
                 <div className="mt-4">
                     <h4 className="text-lg font-semibold">Bloat Limit</h4>
                     <div>
@@ -250,9 +251,9 @@ export default function PreviewGP({
                         <p className="font-extralight">{mutateHeightLimit}</p>
                     </div>
                 </div>
-            )}
+            ) : null}
 
-            {currentStep >= 13 && (
+            {currentStep >= 13 ? (
                 <>
                     {populationSize ? <hr className="mt-4" /> : null}
 
@@ -319,7 +320,7 @@ export default function PreviewGP({
                         </div>
                     )}
                 </>
-            )}
+            ) : null}
         </div>
     );
 }

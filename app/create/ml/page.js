@@ -124,7 +124,7 @@ export default function OptimizeMLModelWithEA() {
         <Loader type={"full"} message={"Optimizing your ML Model..."} />
     ) : (
         <main className="flex flex-col justify-center items-center justify-items-center min-h-screen font-[family-name:var(--font-geist-mono)] p-8">
-            <div>
+            <div className="text-center">
                 <h1 className="text-3xl sm:text-4xl font-bold">
                     Evolve OnClick
                 </h1>
@@ -232,7 +232,7 @@ export default function OptimizeMLModelWithEA() {
                             </p>
                             <textarea
                                 value={mlImportCodeString}
-                                className="border border-gray-300 p-2 rounded-lg text-background bg-foreground min-h-[100px] h-fit w-full"
+                                className="border border-gray-300 p-2 rounded-lg text-foreground bg-background min-h-[100px] h-fit w-full"
                                 placeholder="Enter ML Import Code"
                                 onChange={(e) => {
                                     setMLImportCodeString(e.target.value);
@@ -250,7 +250,7 @@ export default function OptimizeMLModelWithEA() {
                             </p>
                             <textarea
                                 value={mlEvalFunctionCodeString}
-                                className="border border-gray-300 p-2 rounded-lg text-background bg-foreground min-h-[310px] h-fit w-full"
+                                className="border border-gray-300 p-2 rounded-lg text-foreground bg-background min-h-[310px] h-fit w-full"
                                 placeholder="Enter ML Evaluation Function Code"
                                 onChange={(e) => {
                                     setMLEvalFunctionCodeString(e.target.value);

@@ -31,7 +31,7 @@ export default function ConfigureBloatLimits({
                                 e.target.value = 0;
                             }
                             setMateHeight(e.target.value);
-                            if (e.target.value > 0 && mutHeight > 0) {
+                            if (e.target.value >= 0 && mutHeight >= 0) {
                                 setCurrentStep(
                                     currentStep < nextStep
                                         ? nextStep
@@ -58,7 +58,7 @@ export default function ConfigureBloatLimits({
                                 e.target.value = 0;
                             }
                             setMutHeight(e.target.value);
-                            if (e.target.value > 0 && mateHeight > 0) {
+                            if (e.target.value >= 0 && mateHeight >= 0) {
                                 setCurrentStep(
                                     currentStep < nextStep
                                         ? nextStep
