@@ -9,6 +9,8 @@ import { ChooseAlgo } from "../_components/chooseAlgorithm";
 import { algorithmData } from "@/app/_data/pso";
 import { GetDimensions } from "./_components/getDimensions";
 import { ConfigureParticle } from "./_components/configureParticle";
+import { ConfigureCognitiveAndSocialCoeff } from "./_components/cogAndSocialCoeff";
+import { benchmarkData } from "@/app/_data/benchmarks";
 
 // The rest of the code remains unchanged
 
@@ -28,6 +30,11 @@ export default function ConfigureGP() {
 
     const [minSpeed, setMinSpeed] = useState(-3);
     const [maxSpeed, setMaxSpeed] = useState(3);
+
+    const [phi1, setPhi1] = useState(2.0);
+    const [phi2, setPhi2] = useState(2.0);
+
+    const [benchmark, setBenchmark] = useState("");
 
     const router = useRouter();
 
@@ -143,6 +150,30 @@ export default function ConfigureGP() {
                                 currentStep={currentStep}
                                 nextStep={5}
                                 setCurrentStep={setCurrentStep}
+                            />
+                        )}
+
+                        {currentStep >= 5 && (
+                            <ConfigureCognitiveAndSocialCoeff
+                                phi1={phi1}
+                                phi2={phi2}
+                                setPhi1={setPhi1}
+                                setPhi2={setPhi2}
+                                currentStep={currentStep}
+                                nextStep={6}
+                                setCurrentStep={setCurrentStep}
+                            />
+                        )}
+
+                        {currentStep >= 6 && (
+                            <ChooseAlgo
+                                title="Step 6: Choose an evaluation function."
+                                chosenAlgo={benchmark}
+                                setChosenAlgo={setBenchmark}
+                                currentStep={currentStep}
+                                nextStep={7}
+                                setCurrentStep={setCurrentStep}
+                                algoData={benchmarkData}
                             />
                         )}
 
