@@ -7,6 +7,8 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ChooseAlgo } from "../_components/chooseAlgorithm";
 import { algorithmData } from "@/app/_data/pso";
+import { GetDimensions } from "./_components/getDimensions";
+import { ConfigureParticle } from "./_components/configureParticle";
 
 // The rest of the code remains unchanged
 
@@ -18,6 +20,14 @@ export default function ConfigureGP() {
 
     // Weights Parameters
     const [parameters, setParameters] = useState([]);
+
+    const [dimensions, setDimensions] = useState(2);
+
+    const [minPos, setMinPos] = useState(-6);
+    const [maxPos, setMaxPos] = useState(6);
+
+    const [minSpeed, setMinSpeed] = useState(-3);
+    const [maxSpeed, setMaxSpeed] = useState(3);
 
     const router = useRouter();
 
@@ -107,6 +117,32 @@ export default function ConfigureGP() {
                                 nextStep={3}
                                 parameters={parameters}
                                 setParameters={setParameters}
+                            />
+                        )}
+
+                        {currentStep >= 3 && (
+                            <GetDimensions
+                                dimensions={dimensions}
+                                setDimensions={setDimensions}
+                                currentStep={currentStep}
+                                nextStep={4}
+                                setCurrentStep={setCurrentStep}
+                            />
+                        )}
+
+                        {currentStep >= 4 && (
+                            <ConfigureParticle
+                                minPos={minPos}
+                                setMinPos={setMinPos}
+                                maxPos={maxPos}
+                                setMaxPos={setMaxPos}
+                                minSpeed={minSpeed}
+                                setMinSpeed={setMinSpeed}
+                                maxSpeed={maxSpeed}
+                                setMaxSpeed={setMaxSpeed}
+                                currentStep={currentStep}
+                                nextStep={5}
+                                setCurrentStep={setCurrentStep}
                             />
                         )}
 
