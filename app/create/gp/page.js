@@ -158,7 +158,7 @@ export default function ConfigureGP() {
 
         const response = await fetch(
             (process.env.NEXT_PUBLIC_BACKEND_BASE_URL ??
-                "http://localhost:8000") + "/api/runGpAlgo",
+                "http://localhost:5002") + "/api/gp",
             {
                 method: "POST",
                 headers: {
