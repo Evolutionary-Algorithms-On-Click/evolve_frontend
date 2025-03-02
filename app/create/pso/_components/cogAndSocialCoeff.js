@@ -10,7 +10,7 @@ export function ConfigureCognitiveAndSocialCoeff({
     return (
         <div className="mt-16">
             <h4 className="text-lg font-bold mb-4">
-                Step 4: Configure particle parameters.
+                Step 5: Configure particle parameters.
             </h4>
 
             {/* phi1 Input */}

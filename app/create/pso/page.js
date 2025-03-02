@@ -11,6 +11,7 @@ import { GetDimensions } from "./_components/getDimensions";
 import { ConfigureParticle } from "./_components/configureParticle";
 import { ConfigureCognitiveAndSocialCoeff } from "./_components/cogAndSocialCoeff";
 import { benchmarkData } from "@/app/_data/benchmarks";
+import { ConfigurePopulationSizeAndGenerations } from "./_components/popSizeAndGenerations";
 
 // The rest of the code remains unchanged
 
@@ -36,25 +37,44 @@ export default function ConfigureGP() {
 
     const [benchmark, setBenchmark] = useState("");
 
+    const [populationSize, setPopulationSize] = useState(50);
+    const [generations, setGenerations] = useState(100);
+
     const router = useRouter();
 
     const runPSO = async () => {
         const inputData = {
+            algorithm: algorithm,
+            dimensions: dimensions,
             weights: parameters.map((x) => parseFloat(x)) ?? [1.0],
+            minPosition: minPos,
+            maxPosition: maxPos,
+            minSpeed: minSpeed,
+            maxSpeed: maxSpeed,
+            phi1: phi1,
+            phi2: phi2,
+            benchmark: benchmark,
+            populationSize: populationSize,
+            generations: generations,
         };
 
-        const response = await fetch("/api/pso", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
+        const response = await fetch(
+            (process.env.NEXT_PUBLIC_BACKEND_BASE_URL ??
+                "http://localhost:5002") + "/api/pso",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(inputData),
             },
-            body: JSON.stringify(inputData),
-        });
+        );
 
         switch (response.status) {
             case 200:
                 let data = await response.json();
                 console.log(data);
+
                 break;
             default:
                 alert("Error running algorithm.");
@@ -177,7 +197,19 @@ export default function ConfigureGP() {
                             />
                         )}
 
-                        {currentStep >= 13 && (
+                        {currentStep >= 7 && (
+                            <ConfigurePopulationSizeAndGenerations
+                                populationSize={populationSize}
+                                generations={generations}
+                                setPopulationSize={setPopulationSize}
+                                setGenerations={setGenerations}
+                                currentStep={currentStep}
+                                nextStep={8}
+                                setCurrentStep={setCurrentStep}
+                            />
+                        )}
+
+                        {currentStep >= 7 && (
                             // TODO: Disable button if any of the fields are absent.
                             <div className="mt-4">
                                 <button

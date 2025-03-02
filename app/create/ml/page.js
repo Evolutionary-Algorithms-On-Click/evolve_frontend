@@ -81,7 +81,7 @@ export default function OptimizeMLModelWithEA() {
 
         const response = await fetch(
             (process.env.NEXT_PUBLIC_BACKEND_BASE_URL ??
-                "http://localhost:8000") + "/api/runMlAlgo",
+                "http://localhost:5002") + "/api/ml",
             {
                 method: "POST",
                 headers: {
