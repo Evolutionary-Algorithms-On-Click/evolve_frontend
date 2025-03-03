@@ -127,7 +127,7 @@ export default function ConfigureNonGP() {
 
         const response = await fetch(
             (process.env.NEXT_PUBLIC_BACKEND_BASE_URL ??
-                "http://localhost:8000") + "/api/runAlgo",
+                "http://localhost:5002") + "/api/ea",
             {
                 method: "POST",
                 headers: {
@@ -152,10 +152,10 @@ export default function ConfigureNonGP() {
                 ]
             },
             "plots": {
-                "fitnessPlot": "http://localhost:8000/api/plots/614ae929-f585-4140-84f8-abaf41644661/fitness_plot.png",
-                "mutationCrossoverEffectPlot": "http://localhost:8000/api/plots/614ae929-f585-4140-84f8-abaf41644661/mutation_crossover_effect.png"
+                "fitnessPlot": "http://localhost:5002/api/plots/614ae929-f585-4140-84f8-abaf41644661/fitness_plot.png",
+                "mutationCrossoverEffectPlot": "http://localhost:5002/api/plots/614ae929-f585-4140-84f8-abaf41644661/mutation_crossover_effect.png"
             },
-            "population": "http://localhost:8000/api/population/614ae929-f585-4140-84f8-abaf41644661/population.pkl",
+            "population": "http://localhost:5002/api/population/614ae929-f585-4140-84f8-abaf41644661/population.pkl",
             "hallOfFame": [
                 {
                     "individual": [

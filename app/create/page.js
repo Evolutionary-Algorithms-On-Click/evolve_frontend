@@ -1,56 +1,85 @@
+"use client";
+
 import Link from "next/link";
-import Image from "next/image";
 
 export default function ChooseGpOrNotGp() {
     return (
-        <main className="flex items-center justify-center min-h-screen font-[family-name:var(--font-geist-mono)] p-8 bg-gray-100">
-            <div className="text-center">
-                <h1 className="text-3xl font-bold mb-8">Choose Your Path</h1>
-                <p className="mb-8 text-lg text-gray-700 max-w-2xl">
-                    Select whether you want to use Genetic Programming (GP) for
-                    your project or skip it.
-                </p>
-                <div className="flex flex-wrap mt-8 gap-2 justify-center">
+        <main className="flex items-center justify-center min-h-screen p-8 bg-gradient-to-br from-gray-100 to-gray-200 font-[family-name:var(--font-geist-mono)]">
+            <div className="w-full max-w-5xl mx-auto">
+                <h1 className="text-4xl font-bold mb-8 text-center text-gray-800">
+                    Choose Your Path
+                </h1>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     <Link
                         href="/create/non-gp"
-                        className="rounded-full border border-solid border-black/[.08] transition-colors flex items-center justify-center bg-background text-foreground gap-2 hover:bg-[#dddddd] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
+                        className="rounded-2xl border border-black shadow-md flex flex-col items-center justify-between p-6 hover:shadow-lg transition-shadow duration-300 bg-gray-50 hover:bg-white"
                     >
-                        Skip
+                        <div className="flex flex-col items-center">
+                            <div className="text-5xl mb-3">🚀</div>
+                            <div className="font-bold text-lg text-center text-gray-700">
+                                Evolutionary Algorithm (EA)
+                            </div>
+                        </div>
+                        <div className="text-sm text-gray-500 text-center mt-4">
+                            Non-GP Approach
+                        </div>
                     </Link>
                     <Link
                         href="/create/gp"
-                        className="rounded-full border border-solid border-black/[.08] transition-colors flex items-center justify-center bg-background text-foreground gap-2 hover:bg-[#dddddd] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
+                        className="rounded-2xl border border-black shadow-md flex flex-col items-center justify-between p-6 hover:shadow-lg transition-shadow duration-300 bg-green-50 hover:bg-green-100"
                     >
-                        I want to use Genetic Programming (GP)
+                        <div className="flex flex-col items-center">
+                            <div className="text-5xl mb-3">🧬</div>
+                            <div className="font-bold text-lg text-center text-gray-700">
+                                Genetic Programming (GP)
+                            </div>
+                        </div>
+                        <div className="text-sm text-gray-500 text-center mt-4">
+                            Evolve Programs
+                        </div>
+                    </Link>
+                    <Link
+                        href="/create/pso"
+                        className="rounded-2xl border border-black shadow-md flex flex-col items-center justify-between p-6 hover:shadow-lg transition-shadow duration-300 bg-blue-50 hover:bg-blue-100"
+                    >
+                        <div className="flex flex-col items-center">
+                            <div className="text-5xl mb-3">🕊️</div>
+                            <div className="font-bold text-lg text-center text-gray-700">
+                                Particle Swarm Optimization (PSO)
+                            </div>
+                        </div>
+                        <div className="text-sm text-gray-500 text-center mt-4">
+                            Swarm Intelligence
+                        </div>
                     </Link>
                     <Link
                         href="/create/ml"
-                        className="rounded-full border border-solid border-black/[.08] transition-colors flex items-center justify-center bg-background text-foreground gap-2 hover:bg-[#dddddd] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
+                        className="rounded-2xl border border-black shadow-md flex flex-col items-center justify-between p-6 hover:shadow-lg transition-shadow duration-300 bg-yellow-50 hover:bg-yellow-100"
                     >
-                        Optimize ML Model with EA →
+                        <div className="flex flex-col items-center">
+                            <div className="text-5xl mb-3">🤖</div>
+                            <div className="font-bold text-lg text-center text-gray-700">
+                                EA for ML Model Tuning
+                            </div>
+                        </div>
+                        <div className="text-sm text-gray-500 text-center mt-4">
+                            Fine-tune ML models with EA
+                        </div>
                     </Link>
                 </div>
-                <div className="mt-16">
-                    <Image
-                        src="/gemini_ga.jpg"
-                        alt="Genetic Programming"
-                        width={500}
-                        height={300}
-                        className="mx-auto rounded-2xl"
-                    />
-                </div>
-                <div className="mt-16 flex flex-wrap gap-4 justify-center">
+                <div className="mt-12 flex justify-center space-x-4">
                     <Link
                         href="/"
-                        className="rounded-full border border-solid border-black/[.08] transition-colors flex items-center justify-center bg-foreground text-background hover:bg-[#dddddd] hover:text-foreground text-sm sm:text-base px-4 py-2 mt-8"
+                        className="rounded-full border border-solid border-gray-300 transition-colors flex items-center justify-center bg-white text-gray-700 hover:bg-gray-100 hover:text-gray-900 text-sm sm:text-base px-6 py-3"
                     >
-                        ← Go Back
+                        ← Back to Home
                     </Link>
                     <Link
                         href="/bin"
-                        className="rounded-full border border-solid border-black/[.08] transition-colors flex items-center justify-center bg-foreground text-background hover:bg-[#dddddd] hover:text-foreground text-sm sm:text-base px-4 py-2 mt-8"
+                        className="rounded-full border border-solid border-gray-300 transition-colors flex items-center justify-center bg-white text-gray-700 hover:bg-gray-100 hover:text-gray-900 text-sm sm:text-base px-6 py-3"
                     >
-                        View Previous Runs →
+                        Previous Runs →
                     </Link>
                 </div>
             </div>

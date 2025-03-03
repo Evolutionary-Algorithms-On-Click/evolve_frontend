@@ -27,7 +27,7 @@ export default function UploadPage() {
         try {
             const res = await fetch(
                 (process.env.NEXT_PUBLIC_BACKEND_BASE_URL ??
-                    "http://localhost:8000") + "/api/unpickleFile/",
+                    "http://localhost:5002") + "/api/unpickleFile/",
                 {
                     method: "POST",
                     headers: {
