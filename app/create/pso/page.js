@@ -1,7 +1,7 @@
 "use client";
 
 import Loader from "@/app/_components/Loader";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ChooseWeights from "../_components/chooseWeights";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -12,10 +12,27 @@ import { ConfigureParticle } from "./_components/configureParticle";
 import { ConfigureCognitiveAndSocialCoeff } from "./_components/cogAndSocialCoeff";
 import { benchmarkData } from "@/app/_data/benchmarks";
 import { ConfigurePopulationSizeAndGenerations } from "./_components/popSizeAndGenerations";
+import { LogOut } from "lucide-react";
 
 // The rest of the code remains unchanged
 
 export default function ConfigureGP() {
+    const [userData, setUserData] = useState({});
+
+    useEffect(() => {
+        if (!localStorage.getItem("id")) {
+            window.location.href = "/auth";
+            return;
+        } else {
+            setUserData({
+                email: localStorage.getItem("email"),
+                userName: localStorage.getItem("userName"),
+                fullName: localStorage.getItem("fullName"),
+                id: localStorage.getItem("id"),
+            });
+        }
+    }, []);
+
     const [currentStep, setCurrentStep] = useState(1);
     const [isLoading, setIsLoading] = useState(false);
 
@@ -92,6 +109,25 @@ export default function ConfigureGP() {
                 </h1>
                 <p>Run and Visualize algorithms with just a click.</p>
             </div>
+
+            {userData.fullName && (
+                <div className="mt-4 flex flex-row gap-2 bg-gray-900 rounded-full px-4 text-[#6eff39] items-center">
+                    <div className="py-2">
+                        <p className="text-xs">
+                            {userData.fullName} {"</>"} @{userData.userName}
+                        </p>
+                    </div>
+                    <button
+                        onClick={() => {
+                            localStorage.clear();
+                            window.location.href = "/auth";
+                        }}
+                        className="text-[#ff2e2e] font-semibold border-l border-[#ffffff] pl-3 py-2 flex flex-row justify-center items-center"
+                    >
+                        <LogOut className="mx-1" size={16} />
+                    </button>
+                </div>
+            )}
 
             <div className="flex flex-row gap-4">
                 <Link
