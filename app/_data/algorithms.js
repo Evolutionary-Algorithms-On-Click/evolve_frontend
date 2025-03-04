@@ -26,6 +26,12 @@ export const algorithmData = [
         },
     },
     {
+        name: "de",
+        description:
+            "Storn R and Price K, “Differential Evolution — a Simple and Efficient Heuristic for Global Optimization over Continuous Spaces”, Journal of Global Optimization, 11, 341-359, 1997.",
+        parameters: {},
+    },
+    {
         name: "eaMuPlusLambda",
         description: "An evolutionary algorithm that uses a mu+lambda model.",
         parameters: {

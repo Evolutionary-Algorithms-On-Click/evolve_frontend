@@ -8,7 +8,7 @@ export function GetIndividualSize({
     return (
         <div className="mt-16">
             <h4 className="text-lg font-bold mb-4">
-                Step 4: Size of the Individual list?
+                Step 4: Number of dimensions for the problem? (Individual Size)
             </h4>
             <input
                 type="number"
