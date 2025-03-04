@@ -3,8 +3,25 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { LogOut } from "lucide-react";
 
 export default function CachedResults() {
+    const [userData, setUserData] = useState({});
+
+    useEffect(() => {
+        if (!localStorage.getItem("id")) {
+            window.location.href = "/auth";
+            return;
+        } else {
+            setUserData({
+                email: localStorage.getItem("email"),
+                userName: localStorage.getItem("userName"),
+                fullName: localStorage.getItem("fullName"),
+                id: localStorage.getItem("id"),
+            });
+        }
+    }, []);
+
     const [cacheData, setCacheData] = useState({});
     const [activeTab, setActiveTab] = useState("gp");
 
@@ -50,14 +67,41 @@ export default function CachedResults() {
                 </p>
             </div>
 
-            <Link
-                href="/create"
-                className="rounded-full border border-solid border-black/[.08] transition-colors flex items-center justify-center bg-foreground text-background hover:bg-[#dddddd] hover:text-foreground text-sm sm:text-base px-4 py-2 my-8 w-fit ml-auto mr-auto"
-            >
-                ← Go Back
-            </Link>
+            {userData.fullName && (
+                <div className="mt-4 flex flex-row gap-2 bg-gray-900 rounded-full px-4 text-[#6eff39] items-center w-fit ml-auto mr-auto">
+                    <div className="py-2">
+                        <p className="text-xs">
+                            {userData.fullName} {"</>"} @{userData.userName}
+                        </p>
+                    </div>
+                    <button
+                        onClick={() => {
+                            localStorage.clear();
+                            window.location.href = "/auth";
+                        }}
+                        className="text-[#ff2e2e] font-semibold border-l border-[#ffffff] pl-3 py-2 flex flex-row justify-center items-center"
+                    >
+                        <LogOut className="mx-1" size={16} />
+                    </button>
+                </div>
+            )}
 
-            <h1 className="text-xl font-bold text-center mb-8">
+            <div className="flex flex-row gap-4 mt-4 mb-8 ml-auto mr-auto">
+                <Link
+                    href="/create"
+                    className="rounded-full border border-solid border-black/[.08] transition-colors flex items-center justify-center bg-background text-foreground hover:bg-[#000000] hover:text-background text-sm sm:text-base px-4 py-2 mt-8"
+                >
+                    ← Go Back
+                </Link>
+                <Link
+                    href="/create"
+                    className="rounded-full border border-solid border-black/[.08] transition-colors flex items-center justify-center bg-background text-foreground hover:bg-[#000000] hover:text-background text-sm sm:text-base px-4 py-2 mt-8"
+                >
+                    {"Create ->"}
+                </Link>
+            </div>
+
+            <h1 className="text-xl font-bold text-center">
                 Previous Algorithm Runs
             </h1>
 
@@ -68,14 +112,14 @@ export default function CachedResults() {
                         No previous runs found.
                     </p>
                     <Link
-                        className="rounded-full border border-solid transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-gray-700 text-sm sm:text-base px-6 py-2 sm:px-8 shadow-md w-fit"
+                        className="rounded-full border border-solid transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-gray-700 text-sm sm:text-base px-6 py-2 sm:px-8 shadow-md w-fit mt-16"
                         href="/create"
                     >
                         Create New Run
                     </Link>
                 </div>
             ) : (
-                <div className="flex flex-col items-center gap-8">
+                <div className="flex flex-col items-center gap-8 mt-8">
                     {/* Tab Buttons */}
                     <div className="flex flex-wrap gap-4 mb-8 justify-center items-center">
                         <button

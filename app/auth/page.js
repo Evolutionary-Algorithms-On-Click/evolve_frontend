@@ -33,7 +33,14 @@ export default function Auth() {
         switch (response.status) {
             case 200:
                 let data = await response.json();
-                console.log(data);
+
+                localStorage.setItem("email", data.data.email);
+                localStorage.setItem("userName", data.data.userName);
+                localStorage.setItem("fullName", data.data.fullName);
+                localStorage.setItem("id", data.data.id);
+
+                window.location.href = "/create";
+
                 break;
             case 400:
                 let error = await response.json();
