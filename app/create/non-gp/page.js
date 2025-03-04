@@ -18,6 +18,7 @@ import { mutationData } from "@/app/_data/mutation";
 import { mateData } from "@/app/_data/mate";
 import Link from "next/link";
 import { LogOut } from "lucide-react";
+import { ConfigureDEParams } from "./_components/chooseDEParams";
 
 export default function ConfigureNonGP() {
     const [userData, setUserData] = useState({});
@@ -43,6 +44,8 @@ export default function ConfigureNonGP() {
     const [chosenAlgo, setChosenAlgo] = useState(null);
     const [mu, setMu] = useState(0);
     const [lambda, setLambda] = useState(0);
+    const [crossOverRate, setCrossOverRate] = useState(0.25);
+    const [scalingFactor, setScalingFactor] = useState(1);
 
     // Weights parameters.
     const [parameters, setParameters] = useState([]);
@@ -140,6 +143,8 @@ export default function ConfigureNonGP() {
             mu: parseInt(mu ?? 1),
             lambda_: parseInt(lambda ?? 1),
             hofSize: parseInt(hof ?? 5),
+            crossOverRate: parseFloat(crossOverRate ?? 0.25),
+            scalingFactor: parseFloat(scalingFactor ?? 1),
         };
 
         const response = await fetch(
@@ -303,6 +308,18 @@ export default function ConfigureNonGP() {
                                 setMu={setMu}
                                 lambda={lambda}
                                 setLambda={setLambda}
+                            />
+                        )}
+
+                        {chosenAlgo === "de" && currentStep >= 2 && (
+                            <ConfigureDEParams
+                                phi1={crossOverRate}
+                                phi2={scalingFactor}
+                                setPhi1={setCrossOverRate}
+                                setPhi2={setScalingFactor}
+                                currentStep={currentStep}
+                                nextStep={3}
+                                setCurrentStep={setCurrentStep}
                             />
                         )}
 
