@@ -15,6 +15,37 @@ export const mutationData = [
     },
 ];
 
+export const deMutationData = [
+    {
+        name: "DE/rand/1",
+        description: "DE/rand/1 mutation strategy",
+    },
+    {
+        name: "DE/rand/2",
+        description: "DE/rand/2 mutation strategy",
+    },
+    {
+        name: "DE/best/1",
+        description: "DE/best/1 mutation strategy",
+    },
+    {
+        name: "DE/best/2",
+        description: "DE/best/2 mutation strategy",
+    },
+    {
+        name: "DE/current-to-best/1",
+        description: "DE/current-to-best/1 mutation strategy",
+    },
+    {
+        name: "DE/current-to-rand/1",
+        description: "DE/current-to-rand/1 mutation strategy",
+    },
+    {
+        name: "DE/rand-to-best/1",
+        description: "DE/rand-to-best/1 mutation strategy",
+    },
+];
+
 // TODO: Update descriptions.
 export const gpMutationData = [
     {
