@@ -14,8 +14,8 @@ import ChooseEvalFunction from "./_components/chooseEvaluationFunction";
 import ConfigureAlgoParams from "../_components/configureAlgoParams";
 import Preview from "../../_components/non-gp/preview";
 import ChooseMutationFunction from "../_components/chooseMutateFunction";
-import { mutationData } from "@/app/_data/mutation";
-import { mateData } from "@/app/_data/mate";
+import { deMutationData, mutationData } from "@/app/_data/mutation";
+import { deMateData, mateData } from "@/app/_data/mate";
 import Link from "next/link";
 import { LogOut } from "lucide-react";
 import { ConfigureDEParams } from "./_components/chooseDEParams";
@@ -374,7 +374,9 @@ export default function ConfigureNonGP() {
 
                         {currentStep >= 6 && popFunc && (
                             <ChooseMatingFunction
-                                mateData={mateData}
+                                mateData={
+                                    chosenAlgo === "de" ? deMateData : mateData
+                                }
                                 mateFunc={matingFunc}
                                 setMateFunc={setMatingFunc}
                                 currentStep={currentStep}
@@ -385,7 +387,11 @@ export default function ConfigureNonGP() {
 
                         {currentStep >= 7 && matingFunc && (
                             <ChooseMutationFunction
-                                mutationData={mutationData}
+                                mutationData={
+                                    chosenAlgo === "de"
+                                        ? deMutationData
+                                        : mutationData
+                                }
                                 mutateFunc={mutateFunc}
                                 setMutateFunc={setMutateFunc}
                                 currentStep={currentStep}

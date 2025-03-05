@@ -35,6 +35,18 @@ export const mateData = [
     },
 ];
 
+export const deMateData = [
+    {
+        name: "cxBinomial",
+        description: "Executes a binomial crossover on the input individuals.",
+    },
+    {
+        name: "cxExponential",
+        description:
+            "Executes an exponential crossover on the input individuals.",
+    },
+];
+
 export const gpMateData = [
     {
         name: "cxOnePoint",
