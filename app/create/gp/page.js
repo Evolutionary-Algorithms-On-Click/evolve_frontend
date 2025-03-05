@@ -19,6 +19,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import PreviewGP from "@/app/_components/gp/preview";
 import { LogOut } from "lucide-react";
+import { algorithmData } from "@/app/_data/algorithms";
 
 // The rest of the code remains unchanged
 
@@ -309,6 +310,9 @@ export default function ConfigureGP() {
 
                         {currentStep >= 1 && (
                             <ChooseAlgo
+                                algoData={algorithmData.filter(
+                                    (x) => x.name !== "de",
+                                )}
                                 chosenAlgo={chosenAlgo}
                                 setChosenAlgo={setChosenAlgo}
                                 currentStep={currentStep}

@@ -301,6 +301,9 @@ export default function OptimizeMLModelWithEA() {
                         {currentStep >= 2 && (
                             <ChooseAlgo
                                 title="Step 6: Choose Algorithm."
+                                algoData={algorithmData.filter(
+                                    (x) => x.name !== "de",
+                                )}
                                 chosenAlgo={chosenAlgo}
                                 setChosenAlgo={setChosenAlgo}
                                 currentStep={currentStep}
