@@ -11,10 +11,10 @@ import ChooseSelectionFunction from "../_components/chooseSelectionFunction";
 import { mutationData } from "@/app/_data/mutation";
 import { mateData } from "@/app/_data/mate";
 import ConfigureAlgoParams from "../_components/configureAlgoParams";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { LogOut } from "lucide-react";
 import { algorithmData } from "@/app/_data/algorithms";
+import PreviewML from "@/app/_components/ml/preview";
 
 export default function OptimizeMLModelWithEA() {
     const [userData, setUserData] = useState({});
@@ -166,9 +166,30 @@ export default function OptimizeMLModelWithEA() {
                 </Link>
             </div>
 
-            <div className="flex flex-wrap gap-4 justify-center items-center">
-                {/* TODO: Add Preview. */}
-                <div className="border border-gray-400 rounded-2xl p-4 w-[75%]">
+            <div className="flex gap-0 mt-16 border border-gray-400 rounded-2xl bg-gray-100 bg-opacity-70">
+                <PreviewML
+                    datasetURL={datasetURL}
+                    targetColumnName={targetColumnName}
+                    sep={sep}
+                    mlImportCodeString={mlImportCodeString}
+                    mlEvalFunctionCodeString={mlEvalFunctionCodeString}
+                    chosenAlgo={chosenAlgo}
+                    mu={mu}
+                    lambda={lambda}
+                    populationSize={populationSize}
+                    generations={generations}
+                    cxpb={cxpb}
+                    mutpb={mutpb}
+                    hof={hof}
+                    parameters={parameters}
+                    matingFunc={matingFunc}
+                    mutateFunc={mutateFunc}
+                    selectFunc={selectFunc}
+                    tempTourSize={tempTourSize}
+                    currentStep={currentStep}
+                />
+
+                <div className="border border-gray-400 rounded-2xl p-4 bg-white max-w-[75%]">
                     <form
                         onSubmit={(e) => {
                             e.preventDefault();

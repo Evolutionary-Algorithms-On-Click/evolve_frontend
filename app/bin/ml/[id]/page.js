@@ -1,5 +1,6 @@
 "use client";
 
+import PreviewML from "@/app/_components/ml/preview";
 import { BadgeX, Share2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -217,14 +218,37 @@ export default function MLExecResult() {
             <div className="flex flex-wrap mt-8 gap-4">
                 {inputParams && codeContent ? (
                     <div className="flex flex-wrap gap-4 border border-gray-400 rounded-2xl bg-white bg-opacity-70">
-                        <div className="flex flex-col items-start border border-gray-400 rounded-2xl p-4 bg-white shadow-lg max-w-[80%]">
+                        <PreviewML
+                            datasetURL={inputParams.googleDriveUrl}
+                            targetColumnName={inputParams.targetColumnName}
+                            sep={inputParams.sep}
+                            mlImportCodeString={inputParams.mlImportCodeString}
+                            mlEvalFunctionCodeString={
+                                inputParams.mlEvalFunctionCodeString
+                            }
+                            chosenAlgo={inputParams.algorithm}
+                            mu={inputParams.mu}
+                            lambda={inputParams.lambda}
+                            populationSize={inputParams.populationSize}
+                            generations={inputParams.generations}
+                            cxpb={inputParams.cxpb}
+                            mutpb={inputParams.mutpb}
+                            hof={inputParams.hof}
+                            parameters={inputParams.weights}
+                            matingFunc={inputParams.crossoverFunction}
+                            mutateFunc={inputParams.mutationFunction}
+                            selectFunc={inputParams.selectionFunction}
+                            tempTourSize={inputParams.tournamentSize}
+                            currentStep={13}
+                        />
+                        <div className="flex flex-col items-start border border-gray-400 rounded-2xl p-4 bg-white shadow-lg max-w-[75%]">
                             {showCode ? (
                                 <div>
                                     <h3 className="text-xl font-bold text-gray-800">
                                         Code
                                     </h3>
-                                    <pre className="bg-gray-200 p-4 rounded-lg overflow-auto text-sm mt-4">
-                                        <code className="overflow-auto text-wrap">
+                                    <pre className="bg-gray-200 p-4 rounded-lg overflow-auto text-sm mt-4 w-[900px]">
+                                        <code className="overflow-auto text-wrap w-[900px]">
                                             {codeContent}
                                         </code>
                                     </pre>
@@ -252,8 +276,10 @@ export default function MLExecResult() {
                                     >
                                         Download Logs
                                     </button>
-                                    <pre className="rounded-lg text-sm mt-4">
-                                        <code>{logsContent}</code>
+                                    <pre className="rounded-lg text-sm mt-4 w-[900px]">
+                                        <code className="w-[900px]">
+                                            {logsContent}
+                                        </code>
                                     </pre>
                                 </div>
                             ) : data && data.status === "completed" ? (
