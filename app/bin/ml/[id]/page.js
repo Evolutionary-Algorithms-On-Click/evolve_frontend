@@ -1,5 +1,7 @@
 "use client";
 
+import PreviewML from "@/app/_components/ml/preview";
+import { BadgeX, Share2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
@@ -15,6 +17,9 @@ export default function MLExecResult() {
 
     const [showCode, setShowCode] = useState(false);
     const [showLogs, setShowLogs] = useState(false);
+
+    const [showSharePopup, setShowSharePopup] = useState(false);
+    const [shareEmails, setShareEmails] = useState("");
 
     const { id } = useParams();
     const router = useRouter();
@@ -90,6 +95,44 @@ export default function MLExecResult() {
         fetchCodeContent();
     }, [router, id]);
 
+    const handleShareSubmit = (e) => {
+        e.preventDefault();
+
+        fetch("http://localhost:5002/api/runs/share", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            credentials: "include",
+            body: JSON.stringify({
+                runID: id,
+                userEmailList: shareEmails
+                    .split(",")
+                    .map((email) => email.trim()),
+            }),
+        }).then(async (response) => {
+            if (response.status === 200) {
+                alert("Run shared successfully");
+                return;
+            }
+
+            if (response.status === 401) {
+                alert("Unauthorized");
+                return;
+            }
+
+            if (response.status === 400) {
+                const data = await response.json();
+                alert(data.message);
+            }
+
+            return;
+        });
+
+        setShowSharePopup(false);
+        setShareEmails("");
+    };
+
     return (
         <main className="flex flex-col items-center justify-center min-h-screen font-[family-name:var(--font-geist-mono)] p-8 bg-gray-100">
             <div className="text-center mb-8">
@@ -154,6 +197,16 @@ export default function MLExecResult() {
                 >
                     {showLogs ? "Hide Logs (x)" : "Show Logs (-)"}
                 </button>
+                <button
+                    className="rounded-full border border-solid border-gray-300 transition-colors flex items-center justify-center bg-white text-gray-900 hover:bg-gray-200 text-sm sm:text-base px-4 py-2 mt-8"
+                    onClick={(e) => {
+                        e.preventDefault();
+                        setShowSharePopup(true);
+                    }}
+                >
+                    <Share2 size={16} className="mr-2" />
+                    Share Run
+                </button>
                 <Link
                     href="/bin"
                     className="rounded-full border border-solid border-black/[.08] transition-colors flex items-center justify-center bg-background text-foreground hover:bg-[#000000] hover:text-background text-sm sm:text-base px-4 py-2 mt-8"
@@ -165,14 +218,37 @@ export default function MLExecResult() {
             <div className="flex flex-wrap mt-8 gap-4">
                 {inputParams && codeContent ? (
                     <div className="flex flex-wrap gap-4 border border-gray-400 rounded-2xl bg-white bg-opacity-70">
-                        <div className="flex flex-col items-start border border-gray-400 rounded-2xl p-4 bg-white shadow-lg max-w-[80%]">
+                        <PreviewML
+                            datasetURL={inputParams.googleDriveUrl}
+                            targetColumnName={inputParams.targetColumnName}
+                            sep={inputParams.sep}
+                            mlImportCodeString={inputParams.mlImportCodeString}
+                            mlEvalFunctionCodeString={
+                                inputParams.mlEvalFunctionCodeString
+                            }
+                            chosenAlgo={inputParams.algorithm}
+                            mu={inputParams.mu}
+                            lambda={inputParams.lambda}
+                            populationSize={inputParams.populationSize}
+                            generations={inputParams.generations}
+                            cxpb={inputParams.cxpb}
+                            mutpb={inputParams.mutpb}
+                            hof={inputParams.hof}
+                            parameters={inputParams.weights}
+                            matingFunc={inputParams.crossoverFunction}
+                            mutateFunc={inputParams.mutationFunction}
+                            selectFunc={inputParams.selectionFunction}
+                            tempTourSize={inputParams.tournamentSize}
+                            currentStep={13}
+                        />
+                        <div className="flex flex-col items-start border border-gray-400 rounded-2xl p-4 bg-white shadow-lg max-w-[75%]">
                             {showCode ? (
                                 <div>
                                     <h3 className="text-xl font-bold text-gray-800">
                                         Code
                                     </h3>
-                                    <pre className="bg-gray-200 p-4 rounded-lg overflow-auto text-sm mt-4">
-                                        <code className="overflow-auto text-wrap">
+                                    <pre className="bg-gray-200 p-4 rounded-lg overflow-auto text-sm mt-4 w-[900px]">
+                                        <code className="overflow-auto text-wrap w-[900px]">
                                             {codeContent}
                                         </code>
                                     </pre>
@@ -200,8 +276,10 @@ export default function MLExecResult() {
                                     >
                                         Download Logs
                                     </button>
-                                    <pre className="rounded-lg text-sm mt-4">
-                                        <code>{logsContent}</code>
+                                    <pre className="rounded-lg text-sm mt-4 w-[900px]">
+                                        <code className="w-[900px]">
+                                            {logsContent}
+                                        </code>
                                     </pre>
                                 </div>
                             ) : data && data.status === "completed" ? (
@@ -286,6 +364,49 @@ export default function MLExecResult() {
                     </div>
                 )}
             </div>
+
+            {/* Share Run Popup */}
+            {showSharePopup && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+                    <div className="bg-white rounded-3xl p-6 w-[60%] relative">
+                        <button
+                            onClick={() => setShowSharePopup(false)}
+                            className="absolute top-2 right-2 rounded-full p-2"
+                        >
+                            <BadgeX size={32} />
+                        </button>
+                        <h3 className="text-xl font-bold mb-4">Share Run</h3>
+                        <form onSubmit={handleShareSubmit}>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Enter email IDs (comma separated):
+                            </label>
+                            <input
+                                type="text"
+                                value={shareEmails}
+                                onChange={(e) => setShareEmails(e.target.value)}
+                                className="w-full border border-gray-300 rounded-md p-2 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                placeholder="example1@mail.com, example2@mail.com"
+                                required
+                            />
+                            <div className="flex justify-end gap-4">
+                                <button
+                                    type="button"
+                                    onClick={() => setShowSharePopup(false)}
+                                    className="rounded-full transition-colors flex items-center justify-center bg-white text-black hover:text-white hover:bg-black text-sm sm:text-base h-12 p-4 w-full  border border-black gap-2"
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    type="submit"
+                                    className="rounded-full transition-colors flex items-center justify-center bg-yellow-400 text-black hover:bg-yellow-50 text-sm sm:text-base h-12 p-4 w-full   border border-black gap-2"
+                                >
+                                    Share
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
         </main>
     );
 }

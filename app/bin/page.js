@@ -263,6 +263,13 @@ export default function Results() {
                                                         </p>
                                                     )}
 
+                                                    {run.isShared ===
+                                                        "true" && (
+                                                        <p className="text-blue-600 text-xs mt-2">
+                                                            Shared Run
+                                                        </p>
+                                                    )}
+
                                                     <p className="text-gray-500 text-xs mt-2 mb-6">
                                                         Created At:{" "}
                                                         {
