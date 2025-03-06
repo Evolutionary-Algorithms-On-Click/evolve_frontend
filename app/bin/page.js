@@ -234,6 +234,32 @@ export default function CachedResults() {
                                                         {run.name.split("-")[1]}{" "}
                                                         individuals
                                                     </p>
+
+                                                    {run.status ===
+                                                        "completed" && (
+                                                        <p className="text-green-600 text-xs mt-2">
+                                                            {run.status}
+                                                        </p>
+                                                    )}
+                                                    {run.status ===
+                                                        "running" && (
+                                                        <p className="text-yellow-600 text-xs mt-2">
+                                                            {run.status}
+                                                        </p>
+                                                    )}
+                                                    {run.status ===
+                                                        "pending" && (
+                                                        <p className="text-orange-600 text-xs mt-2">
+                                                            {run.status}
+                                                        </p>
+                                                    )}
+                                                    {run.status ===
+                                                        "failed" && (
+                                                        <p className="text-red-600 text-xs mt-2">
+                                                            {run.status}
+                                                        </p>
+                                                    )}
+
                                                     <p className="text-gray-500 text-xs mt-2 mb-6">
                                                         Created At:{" "}
                                                         {

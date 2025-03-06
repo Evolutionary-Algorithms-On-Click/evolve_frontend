@@ -123,6 +123,17 @@ export default function Execution() {
                           ? "Running..."
                           : "Error"}
                 </p>
+                {executionStatus === "running" && (
+                    <div className="animate-pulse text-gray-500">
+                        Fetching results, please wait...
+                    </div>
+                )}
+                {executionStatus === "error" && (
+                    <div className="text-red-500">
+                        An error occurred during execution. Please check the
+                        logs or try again.
+                    </div>
+                )}
             </div>
 
             <div className="flex flex-row items-center gap-4 mt-4">
@@ -280,12 +291,56 @@ export default function Execution() {
                                     </div>
                                 </>
                             ) : (
-                                <p className="text-gray-600">Running...</p>
+                                <div className="flex items-center gap-2 text-gray-600">
+                                    <svg
+                                        className="animate-spin h-5 w-5 text-gray-600"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <circle
+                                            className="opacity-25"
+                                            cx="12"
+                                            cy="12"
+                                            r="10"
+                                            stroke="currentColor"
+                                            strokeWidth="4"
+                                        ></circle>
+                                        <path
+                                            className="opacity-75"
+                                            fill="currentColor"
+                                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                        ></path>
+                                    </svg>
+                                    Running...
+                                </div>
                             )}
                         </div>
                     </div>
                 ) : (
-                    <p className="text-gray-600">Running...</p>
+                    <div className="flex items-center gap-2 text-gray-600">
+                        <svg
+                            className="animate-spin h-5 w-5 text-gray-600"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                        >
+                            <circle
+                                className="opacity-25"
+                                cx="12"
+                                cy="12"
+                                r="10"
+                                stroke="currentColor"
+                                strokeWidth="4"
+                            ></circle>
+                            <path
+                                className="opacity-75"
+                                fill="currentColor"
+                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                            ></path>
+                        </svg>
+                        Running...
+                    </div>
                 )}
             </div>
         </main>

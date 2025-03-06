@@ -190,25 +190,8 @@ export default function ConfigureGP() {
         switch (response.status) {
             case 200:
                 let data = await response.json();
-                let executionHistory = localStorage.getItem("executionHistory");
 
-                inputData.runType = "gp";
-                inputData.runId = data.runId;
-                inputData.timestamp = new Date().toISOString();
-                data.inputData = inputData;
-
-                if (executionHistory) {
-                    executionHistory = JSON.parse(executionHistory);
-                    executionHistory.push(data);
-                }
-
-                localStorage.setItem(
-                    "executionHistory",
-                    JSON.stringify(executionHistory ?? [data]),
-                );
-                localStorage.setItem(data.runId, JSON.stringify(data));
-
-                router.push(`/bin/gp/${data.runId}`);
+                router.push(`/bin/gp/${data.data.runID}`);
 
                 break;
             default:
