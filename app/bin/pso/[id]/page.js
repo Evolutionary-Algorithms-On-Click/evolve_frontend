@@ -1,6 +1,7 @@
 "use client";
 
 import PreviewPSO from "@/app/_components/pso/preview";
+import { BadgeX, Share2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
@@ -16,6 +17,9 @@ export default function PSOExecResult() {
 
     const [showCode, setShowCode] = useState(false);
     const [showLogs, setShowLogs] = useState(false);
+
+    const [showSharePopup, setShowSharePopup] = useState(false);
+    const [shareEmails, setShareEmails] = useState("");
 
     const { id } = useParams();
     const router = useRouter();
@@ -91,6 +95,44 @@ export default function PSOExecResult() {
         fetchCodeContent();
     }, [router, id]);
 
+    const handleShareSubmit = (e) => {
+        e.preventDefault();
+
+        fetch("http://localhost:5002/api/runs/share", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            credentials: "include",
+            body: JSON.stringify({
+                runID: id,
+                userEmailList: shareEmails
+                    .split(",")
+                    .map((email) => email.trim()),
+            }),
+        }).then(async (response) => {
+            if (response.status === 200) {
+                alert("Run shared successfully");
+                return;
+            }
+
+            if (response.status === 401) {
+                alert("Unauthorized");
+                return;
+            }
+
+            if (response.status === 400) {
+                const data = await response.json();
+                alert(data.message);
+            }
+
+            return;
+        });
+
+        setShowSharePopup(false);
+        setShareEmails("");
+    };
+
     return (
         <main className="flex flex-col items-center justify-center min-h-screen font-[family-name:var(--font-geist-mono)] p-8 bg-gray-100">
             <div className="text-center mb-8">
@@ -154,6 +196,16 @@ export default function PSOExecResult() {
                     }}
                 >
                     {showLogs ? "Hide Logs (x)" : "Show Logs (-)"}
+                </button>
+                <button
+                    className="rounded-full border border-solid border-gray-300 transition-colors flex items-center justify-center bg-white text-gray-900 hover:bg-gray-200 text-sm sm:text-base px-4 py-2 mt-8"
+                    onClick={(e) => {
+                        e.preventDefault();
+                        setShowSharePopup(true);
+                    }}
+                >
+                    <Share2 size={16} className="mr-2" />
+                    Share Run
                 </button>
                 <Link
                     href="/bin"
@@ -243,36 +295,12 @@ export default function PSOExecResult() {
                                                 </h3>
                                                 <Image
                                                     src={`http://localhost:9000/code/${id}/pso_animation.gif`}
-                                                    alt="Fitness Plot"
+                                                    alt="PSO Animation"
                                                     width={800}
                                                     height={100}
                                                     className="mt-2 rounded-lg shadow-sm border"
                                                 />
                                             </div>
-                                            {/* <div className="mt-4">
-                                                <h3 className="text-lg font-bold text-gray-800">
-                                                    Fitness Plot
-                                                </h3>
-                                                <Image
-                                                    src={`http://localhost:9000/code/${id}/fitness_plot.png`}
-                                                    alt="Fitness Plot"
-                                                    width={800}
-                                                    height={100}
-                                                    className="mt-2 rounded-lg shadow-sm border"
-                                                />
-                                            </div>
-                                            <div className="mt-4">
-                                                <h3 className="text-lg font-bold text-gray-800">
-                                                    Mutation Crossover Effect plot
-                                                </h3>
-                                                <Image
-                                                    src={`http://localhost:9000/code/${id}/mutation_crossover_effect.png`}
-                                                    alt="Fitness Plot"
-                                                    width={800}
-                                                    height={100}
-                                                    className="mt-2 rounded-lg shadow-sm border"
-                                                />
-                                            </div> */}
                                         </div>
                                     )}
                                 </>
@@ -329,6 +357,49 @@ export default function PSOExecResult() {
                     </div>
                 )}
             </div>
+
+            {/* Share Run Popup */}
+            {showSharePopup && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+                    <div className="bg-white rounded-3xl p-6 w-[60%] relative">
+                        <button
+                            onClick={() => setShowSharePopup(false)}
+                            className="absolute top-2 right-2 rounded-full p-2"
+                        >
+                            <BadgeX size={32} />
+                        </button>
+                        <h3 className="text-xl font-bold mb-4">Share Run</h3>
+                        <form onSubmit={handleShareSubmit}>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Enter email IDs (comma separated):
+                            </label>
+                            <input
+                                type="text"
+                                value={shareEmails}
+                                onChange={(e) => setShareEmails(e.target.value)}
+                                className="w-full border border-gray-300 rounded-md p-2 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                placeholder="example1@mail.com, example2@mail.com"
+                                required
+                            />
+                            <div className="flex justify-end gap-4">
+                                <button
+                                    type="button"
+                                    onClick={() => setShowSharePopup(false)}
+                                    className="rounded-full transition-colors flex items-center justify-center bg-white text-black hover:text-white hover:bg-black text-sm sm:text-base h-12 p-4 w-full  border border-black gap-2"
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    type="submit"
+                                    className="rounded-full transition-colors flex items-center justify-center bg-yellow-400 text-black hover:bg-yellow-50 text-sm sm:text-base h-12 p-4 w-full   border border-black gap-2"
+                                >
+                                    Share
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
         </main>
     );
 }
