@@ -14,6 +14,8 @@ export default function Preview({
     cxpb,
     mutpb,
     hofSize,
+    crossOverProb = 0.25,
+    scalingFactor = 1,
     currentStep,
 }) {
     // Section will have a div representing selected values.
@@ -172,6 +174,23 @@ export default function Preview({
                                     {populationSize}
                                 </code>
                             </div>
+                        )}
+
+                        {algo === "de" && (
+                            <>
+                                <hr className="mt-4" />
+                                <div className="mt-4">
+                                    <h4 className="text-lg font-semibold mb-1">
+                                        DE Parameters
+                                    </h4>
+                                    <code className="border border-blue-400 py-1 px-2 rounded-xl text-foreground">
+                                        {crossOverProb}
+                                    </code>
+                                    <code className="border border-blue-400 py-1 px-2 rounded-xl text-foreground ml-2">
+                                        {scalingFactor}
+                                    </code>
+                                </div>
+                            </>
                         )}
 
                         {generations ? <hr className="mt-4" /> : null}

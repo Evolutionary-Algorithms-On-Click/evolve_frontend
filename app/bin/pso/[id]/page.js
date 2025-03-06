@@ -1,11 +1,12 @@
 "use client";
 
+import PreviewPSO from "@/app/_components/pso/preview";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-export default function MLExecResult() {
+export default function PSOExecResult() {
     const [data, setData] = useState(null);
     const [inputParams, setInputParams] = useState(null);
     const [codeContent, setCodeContent] = useState("");
@@ -129,7 +130,7 @@ export default function MLExecResult() {
 
             <div className="flex flex-row items-center gap-4 mt-4">
                 <Link
-                    href="/create/ml"
+                    href="/create/pso"
                     className="rounded-full border border-solid border-black/[.08] transition-colors flex items-center justify-center bg-background text-foreground hover:bg-[#000000] hover:text-background text-sm sm:text-base px-4 py-2 mt-8"
                 >
                     ← Go Back
@@ -164,7 +165,22 @@ export default function MLExecResult() {
 
             <div className="flex flex-wrap mt-8 gap-4">
                 {inputParams && codeContent ? (
-                    <div className="flex flex-wrap gap-4 border border-gray-400 rounded-2xl bg-white bg-opacity-70">
+                    <div className="flex flex-wrap border border-gray-400 rounded-2xl bg-white bg-opacity-70">
+                        <PreviewPSO
+                            algorithm={inputParams.algorithm}
+                            dimensions={inputParams.dimensions}
+                            weights={inputParams.weights}
+                            minPosition={inputParams.minPosition}
+                            maxPosition={inputParams.maxPosition}
+                            minSpeed={inputParams.minSpeed}
+                            maxSpeed={inputParams.maxSpeed}
+                            phi1={inputParams.phi1}
+                            phi2={inputParams.phi2}
+                            benchmark={inputParams.benchmark}
+                            populationSize={inputParams.populationSize}
+                            generations={inputParams.generations}
+                            currentStep={11}
+                        />
                         <div className="flex flex-col items-start border border-gray-400 rounded-2xl p-4 bg-white shadow-lg max-w-[80%]">
                             {showCode ? (
                                 <div>
@@ -219,17 +235,44 @@ export default function MLExecResult() {
                                         </>
                                     )}
                                     {data && data.status === "completed" && (
-                                        <div className="mt-4">
-                                            <h3 className="text-lg font-bold text-gray-800">
-                                                Fitness Plot
-                                            </h3>
-                                            <Image
-                                                src={`http://localhost:9000/code/${id}/fitness_plot.png`}
-                                                alt="Fitness Plot"
-                                                width={800}
-                                                height={100}
-                                                className="mt-2 rounded-lg shadow-sm border"
-                                            />
+                                        <div>
+                                            <div className="mt-4">
+                                                <h3 className="text-lg font-bold text-gray-800">
+                                                    PSO Visualization -
+                                                    Animation
+                                                </h3>
+                                                <Image
+                                                    src={`http://localhost:9000/code/${id}/pso_animation.gif`}
+                                                    alt="Fitness Plot"
+                                                    width={800}
+                                                    height={100}
+                                                    className="mt-2 rounded-lg shadow-sm border"
+                                                />
+                                            </div>
+                                            {/* <div className="mt-4">
+                                                <h3 className="text-lg font-bold text-gray-800">
+                                                    Fitness Plot
+                                                </h3>
+                                                <Image
+                                                    src={`http://localhost:9000/code/${id}/fitness_plot.png`}
+                                                    alt="Fitness Plot"
+                                                    width={800}
+                                                    height={100}
+                                                    className="mt-2 rounded-lg shadow-sm border"
+                                                />
+                                            </div>
+                                            <div className="mt-4">
+                                                <h3 className="text-lg font-bold text-gray-800">
+                                                    Mutation Crossover Effect plot
+                                                </h3>
+                                                <Image
+                                                    src={`http://localhost:9000/code/${id}/mutation_crossover_effect.png`}
+                                                    alt="Fitness Plot"
+                                                    width={800}
+                                                    height={100}
+                                                    className="mt-2 rounded-lg shadow-sm border"
+                                                />
+                                            </div> */}
                                         </div>
                                     )}
                                 </>

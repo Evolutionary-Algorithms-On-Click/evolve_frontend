@@ -3,10 +3,11 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { LogOut } from "lucide-react";
+import { DnaIcon, Loader2, LogOut } from "lucide-react";
 
-export default function CachedResults() {
+export default function Results() {
     const [userData, setUserData] = useState({});
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         if (!localStorage.getItem("id")) {
@@ -19,37 +20,55 @@ export default function CachedResults() {
                 fullName: localStorage.getItem("fullName"),
                 id: localStorage.getItem("id"),
             });
+
+            // Fetch the run data
+            fetch(
+                (process.env.NEXT_PUBLIC_BACKEND_BASE_URL ??
+                    "http://localhost:5002") + "/api/runs",
+                {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    credentials: "include",
+                },
+            )
+                .then((res) => {
+                    switch (res.status) {
+                        case 200:
+                            res.json().then((data) => {
+                                // Group the runs by type
+                                const groupedData = {};
+                                data.data.forEach((run) => {
+                                    if (groupedData[run.type]) {
+                                        groupedData[run.type].push(run);
+                                    } else {
+                                        groupedData[run.type] = [run];
+                                    }
+                                });
+                                setRunData(groupedData);
+                            });
+                            break;
+                        case 401:
+                            localStorage.clear();
+                            window.location.href = "/auth";
+                            break;
+                        default:
+                            console.error("Failed to fetch run data.");
+                            break;
+                    }
+                })
+                .catch((err) => {
+                    console.error("Failed to fetch run data.", err);
+                })
+                .finally(() => {
+                    setIsLoading(false);
+                });
         }
     }, []);
 
-    const [cacheData, setCacheData] = useState({});
+    const [runData, setRunData] = useState({});
     const [activeTab, setActiveTab] = useState("gp");
-
-    useEffect(() => {
-        const storedData = JSON.parse(
-            localStorage.getItem("executionHistory") || "[]",
-        );
-        const groupedData = storedData.reduce((acc, data) => {
-            const {
-                inputData: { runType },
-            } = data;
-            if (!acc[runType]) {
-                acc[runType] = [];
-            }
-            acc[runType].push(data);
-            return acc;
-        }, {});
-
-        // Sort each group by timestamp
-        Object.keys(groupedData).forEach((runType) => {
-            groupedData[runType].sort(
-                (a, b) =>
-                    new Date(b.inputData.timestamp) -
-                    new Date(a.inputData.timestamp),
-            );
-        });
-        setCacheData(groupedData);
-    }, []);
 
     const formatDate = (dateString) => {
         const date = new Date(dateString);
@@ -105,8 +124,15 @@ export default function CachedResults() {
                 Previous Algorithm Runs
             </h1>
 
+            {isLoading && (
+                <div className="flex flex-col text-center justify-center items-center mt-8">
+                    <Loader2 size={32} />
+                    <p className="text-gray-600 mt-4">Loading runs...</p>
+                </div>
+            )}
+
             {/* Display grouped run cards */}
-            {Object.keys(cacheData).length === 0 ? (
+            {!isLoading && Object.keys(runData).length === 0 ? (
                 <div className="flex flex-col text-center justify-center items-center">
                     <p className="text-gray-600 mb-4">
                         No previous runs found.
@@ -119,137 +145,147 @@ export default function CachedResults() {
                     </Link>
                 </div>
             ) : (
-                <div className="flex flex-col items-center gap-8 mt-8">
-                    {/* Tab Buttons */}
-                    <div className="flex flex-wrap gap-4 mb-8 justify-center items-center">
-                        <button
-                            className={`rounded-full border border-solid transition-colors flex items-center justify-center gap-2 text-sm sm:text-base px-6 py-2 sm:px-8 shadow-md ${activeTab === "gp" ? "bg-foreground text-background" : "bg-background text-foreground"}`}
-                            onClick={() => setActiveTab("gp")}
-                        >
-                            Genetic Programming
-                        </button>
-                        <button
-                            className={`rounded-full border border-solid transition-colors flex items-center justify-center gap-2 text-sm sm:text-base px-6 py-2 sm:px-8 shadow-md ${activeTab === "non-gp" ? "bg-foreground text-background" : "bg-background text-foreground"}`}
-                            onClick={() => setActiveTab("non-gp")}
-                        >
-                            Without Genetic Programming
-                        </button>
-                        <button
-                            className={`rounded-full border border-solid transition-colors flex items-center justify-center gap-2 text-sm sm:text-base px-6 py-2 sm:px-8 shadow-md ${activeTab === "ml" ? "bg-foreground text-background" : "bg-background text-foreground"}`}
-                            onClick={() => setActiveTab("ml")}
-                        >
-                            Optimized ML Models with EA
-                        </button>
-                    </div>
-                    {Object.keys(cacheData).map(
-                        (runType) =>
-                            activeTab === runType && (
-                                <div key={runType} className="w-full max-w-4xl">
-                                    <h2 className="text-lg font-bold text-center mb-4">
-                                        {runType === "gp"
-                                            ? "Genetic Programming"
-                                            : "Without Genetic Programming"}
-                                    </h2>
-                                    <div className="flex flex-wrap justify-center gap-8">
-                                        {cacheData[runType].map((data) => {
-                                            const {
-                                                inputData,
-                                                hallOfFame,
-                                                inputData: {
-                                                    algorithm,
-                                                    runId,
-                                                    timestamp,
-                                                },
-                                                plots: { treePlot },
-                                            } = data;
-
-                                            return (
+                !isLoading && (
+                    <div className="flex flex-col items-center gap-8 mt-8">
+                        {/* Tab Buttons */}
+                        <div className="flex flex-wrap gap-4 mb-8 justify-center items-center">
+                            <button
+                                className={`rounded-full border border-solid transition-colors flex items-center justify-center gap-2 text-sm sm:text-base px-6 py-2 sm:px-8 shadow-md ${activeTab === "gp" ? "bg-foreground text-background" : "bg-background text-foreground"}`}
+                                onClick={() => setActiveTab("gp")}
+                            >
+                                Genetic Programming
+                            </button>
+                            <button
+                                className={`rounded-full border border-solid transition-colors flex items-center justify-center gap-2 text-sm sm:text-base px-6 py-2 sm:px-8 shadow-md ${activeTab === "ea" ? "bg-foreground text-background" : "bg-background text-foreground"}`}
+                                onClick={() => setActiveTab("ea")}
+                            >
+                                Without Genetic Programming
+                            </button>
+                            <button
+                                className={`rounded-full border border-solid transition-colors flex items-center justify-center gap-2 text-sm sm:text-base px-6 py-2 sm:px-8 shadow-md ${activeTab === "pso" ? "bg-foreground text-background" : "bg-background text-foreground"}`}
+                                onClick={() => setActiveTab("pso")}
+                            >
+                                Particle Swarm Optimization
+                            </button>
+                            <button
+                                className={`rounded-full border border-solid transition-colors flex items-center justify-center gap-2 text-sm sm:text-base px-6 py-2 sm:px-8 shadow-md ${activeTab === "ml" ? "bg-foreground text-background" : "bg-background text-foreground"}`}
+                                onClick={() => setActiveTab("ml")}
+                            >
+                                Optimized ML Models with EA
+                            </button>
+                        </div>
+                        {Object.keys(runData).map(
+                            (runType) =>
+                                activeTab === runType && (
+                                    <div key={runType} className="w-full">
+                                        <h2 className="text-lg font-bold text-center mb-4">
+                                            {runType === "gp"
+                                                ? "Genetic Programming"
+                                                : runType === "ea"
+                                                  ? "Without Genetic Programming"
+                                                  : runType === "pso"
+                                                    ? "Particle Swarm Optimization"
+                                                    : runType === "ml"
+                                                      ? "Optimized ML Models with EA"
+                                                      : "Unknown Run Type"}
+                                        </h2>
+                                        <div className="flex flex-wrap justify-center gap-8">
+                                            {runData[runType].map((run) => (
                                                 <div
-                                                    key={runId}
-                                                    className="max-w-sm rounded-3xl border border-gray-300 p-4 shadow-lg bg-white"
+                                                    key={run.id}
+                                                    className="bg-white rounded-3xl shadow-md border-2 border-gray-400 hover:border-black transition-colors duration-300 p-4 w-72 flex flex-col"
                                                 >
-                                                    {runType === "gp" && (
-                                                        <div className="mb-4">
-                                                            <Image
-                                                                src={treePlot}
-                                                                alt="Fitness Plot"
-                                                                width={800}
-                                                                height={100}
-                                                                className="mt-2 rounded-2xl border"
-                                                            />
-                                                        </div>
-                                                    )}
-                                                    <h3 className="text-xl font-semibold mb-2">
-                                                        {algorithm}
-                                                    </h3>
-
-                                                    {/* Execution Date */}
-                                                    <p className="text-sm text-gray-600 mb-4">
-                                                        Execution Date:{" "}
-                                                        {formatDate(
-                                                            timestamp ||
-                                                                new Date().toISOString(),
-                                                        )}
+                                                    <div className="aspect-w-1 aspect-h-1 relative overflow-hidden rounded-md mb-4">
+                                                        <Image
+                                                            src={
+                                                                `http://localhost:9000/code/${run.id}/` +
+                                                                (runType ===
+                                                                "ea"
+                                                                    ? "fitness_plot.png"
+                                                                    : runType ===
+                                                                        "gp"
+                                                                      ? "graph.png"
+                                                                      : runType ===
+                                                                          "pso"
+                                                                        ? "pso_animation.gif"
+                                                                        : "fitness_plot.png")
+                                                            }
+                                                            alt={runType}
+                                                            width={300}
+                                                            height={300}
+                                                            style={{
+                                                                objectFit:
+                                                                    "cover",
+                                                            }}
+                                                            className="transition-transform duration-500 hover:scale-110"
+                                                        />
+                                                    </div>
+                                                    <p className="text-gray-600 text-sm truncate">
+                                                        {run.description}
+                                                    </p>
+                                                    <p className="text-gray-500 text-xs mt-2">
+                                                        {run.name.split("-")[0]}{" "}
+                                                        generations
+                                                    </p>
+                                                    <p className="text-gray-500 text-xs">
+                                                        {run.name.split("-")[1]}{" "}
+                                                        individuals
                                                     </p>
 
-                                                    {runType === "non-gp" && (
-                                                        <div className="mb-4">
-                                                            <h4 className="font-semibold">
-                                                                Best Fitness
-                                                                Score
-                                                            </h4>
-                                                            {hallOfFame &&
-                                                            hallOfFame.length >
-                                                                0 ? (
-                                                                <p>
-                                                                    Fitness:{" "}
-                                                                    {
-                                                                        hallOfFame[0]
-                                                                            .fitness[0]
-                                                                    }
-                                                                </p>
-                                                            ) : (
-                                                                <p>
-                                                                    No fitness
-                                                                    data
-                                                                    available.
-                                                                </p>
-                                                            )}
-                                                        </div>
+                                                    {run.status ===
+                                                        "completed" && (
+                                                        <p className="text-green-600 text-xs mt-2">
+                                                            {run.status}
+                                                        </p>
+                                                    )}
+                                                    {run.status ===
+                                                        "scheduled" && (
+                                                        <p className="text-yellow-600 text-xs mt-2">
+                                                            {run.status}
+                                                        </p>
+                                                    )}
+                                                    {run.status ===
+                                                        "running" && (
+                                                        <p className="text-yellow-600 text-xs mt-2">
+                                                            {run.status}
+                                                        </p>
+                                                    )}
+                                                    {run.status ===
+                                                        "pending" && (
+                                                        <p className="text-orange-600 text-xs mt-2">
+                                                            {run.status}
+                                                        </p>
+                                                    )}
+                                                    {run.status ===
+                                                        "failed" && (
+                                                        <p className="text-red-600 text-xs mt-2">
+                                                            {run.status}
+                                                        </p>
                                                     )}
 
-                                                    <div className="mb-4">
-                                                        <h4 className="font-semibold">
-                                                            Generation Data
-                                                        </h4>
-                                                        <p>
-                                                            Generations:{" "}
-                                                            {
-                                                                inputData.generations
-                                                            }
-                                                        </p>
-                                                        <p>
-                                                            Population Size:{" "}
-                                                            {
-                                                                inputData.populationSize
-                                                            }
-                                                        </p>
-                                                    </div>
-
+                                                    <p className="text-gray-500 text-xs mt-2 mb-6">
+                                                        Created At:{" "}
+                                                        {
+                                                            run.createdAt
+                                                                .toString()
+                                                                .split(".")[0]
+                                                        }
+                                                    </p>
                                                     <Link
-                                                        className="rounded-full border border-solid transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-gray-700 text-sm sm:text-base px-6 py-2 sm:px-8 shadow-md"
-                                                        href={`/bin/${runType}/${runId}`}
+                                                        className="rounded-full border border-solid border-yellow-900 transition-colors flex items-center justify-center bg-yellow-400 text-black hover:bg-yellow-50 gap-2 text-sm sm:text-base p-2 h-8 mt-auto w-full"
+                                                        href={`/bin/${runType}/${run.id}`}
                                                     >
-                                                        View Execution
+                                                        <DnaIcon size={24} />
+                                                        View Run
                                                     </Link>
                                                 </div>
-                                            );
-                                        })}
+                                            ))}
+                                        </div>
                                     </div>
-                                </div>
-                            ),
-                    )}
-                </div>
+                                ),
+                        )}
+                    </div>
+                )
             )}
         </main>
     );

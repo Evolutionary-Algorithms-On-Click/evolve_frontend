@@ -14,6 +14,7 @@ import ConfigureAlgoParams from "../_components/configureAlgoParams";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { LogOut } from "lucide-react";
+import { algorithmData } from "@/app/_data/algorithms";
 
 export default function OptimizeMLModelWithEA() {
     const [userData, setUserData] = useState({});
@@ -112,25 +113,7 @@ export default function OptimizeMLModelWithEA() {
         switch (response.status) {
             case 200:
                 let data = await response.json();
-                let executionHistory = localStorage.getItem("executionHistory");
-
-                inputData.runType = "ml";
-                inputData.runId = data.runId;
-                inputData.timestamp = new Date().toISOString();
-                data.inputData = inputData;
-
-                if (executionHistory) {
-                    executionHistory = JSON.parse(executionHistory);
-                    executionHistory.push(data);
-                }
-
-                localStorage.setItem(
-                    "executionHistory",
-                    JSON.stringify(executionHistory ?? [data]),
-                );
-                localStorage.setItem(data.runId, JSON.stringify(data));
-
-                router.push(`/bin/ml/${data.runId}`);
+                router.push(`/bin/ml/${data.data.runID}`);
 
                 break;
             default:

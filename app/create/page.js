@@ -74,7 +74,7 @@ export default function ChooseGpOrNotGp() {
                                 Evolutionary Algorithm (EA)
                             </div>
                             <div className="text-sm text-gray-500 text-center mt-2">
-                                Non-GP Approach
+                                DE & Non-GP Approach
                             </div>
                         </div>
                     </Link>
