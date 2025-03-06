@@ -177,10 +177,7 @@ export default function CachedResults() {
                         {Object.keys(runData).map(
                             (runType) =>
                                 activeTab === runType && (
-                                    <div
-                                        key={runType}
-                                        className="w-full max-w-4xl"
-                                    >
+                                    <div key={runType} className="w-full">
                                         <h2 className="text-lg font-bold text-center mb-4">
                                             {runType === "gp"
                                                 ? "Genetic Programming"
