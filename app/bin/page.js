@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { DnaIcon, Loader2, LogOut } from "lucide-react";
 
-export default function CachedResults() {
+export default function Results() {
     const [userData, setUserData] = useState({});
     const [isLoading, setIsLoading] = useState(true);
 
