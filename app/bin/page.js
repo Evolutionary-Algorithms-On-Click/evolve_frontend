@@ -239,6 +239,12 @@ export default function Results() {
                                                         </p>
                                                     )}
                                                     {run.status ===
+                                                        "scheduled" && (
+                                                        <p className="text-yellow-600 text-xs mt-2">
+                                                            {run.status}
+                                                        </p>
+                                                    )}
+                                                    {run.status ===
                                                         "running" && (
                                                         <p className="text-yellow-600 text-xs mt-2">
                                                             {run.status}

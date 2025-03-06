@@ -1,5 +1,6 @@
 "use client";
 
+import PreviewPSO from "@/app/_components/pso/preview";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
@@ -164,7 +165,22 @@ export default function PSOExecResult() {
 
             <div className="flex flex-wrap mt-8 gap-4">
                 {inputParams && codeContent ? (
-                    <div className="flex flex-wrap gap-4 border border-gray-400 rounded-2xl bg-white bg-opacity-70">
+                    <div className="flex flex-wrap border border-gray-400 rounded-2xl bg-white bg-opacity-70">
+                        <PreviewPSO
+                            algorithm={inputParams.algorithm}
+                            dimensions={inputParams.dimensions}
+                            weights={inputParams.weights}
+                            minPosition={inputParams.minPosition}
+                            maxPosition={inputParams.maxPosition}
+                            minSpeed={inputParams.minSpeed}
+                            maxSpeed={inputParams.maxSpeed}
+                            phi1={inputParams.phi1}
+                            phi2={inputParams.phi2}
+                            benchmark={inputParams.benchmark}
+                            populationSize={inputParams.populationSize}
+                            generations={inputParams.generations}
+                            currentStep={11}
+                        />
                         <div className="flex flex-col items-start border border-gray-400 rounded-2xl p-4 bg-white shadow-lg max-w-[80%]">
                             {showCode ? (
                                 <div>

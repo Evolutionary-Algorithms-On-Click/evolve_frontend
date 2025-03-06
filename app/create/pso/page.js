@@ -13,10 +13,9 @@ import { ConfigureCognitiveAndSocialCoeff } from "./_components/cogAndSocialCoef
 import { benchmarkData } from "@/app/_data/benchmarks";
 import { ConfigurePopulationSizeAndGenerations } from "./_components/popSizeAndGenerations";
 import { LogOut } from "lucide-react";
+import PreviewPSO from "@/app/_components/pso/preview";
 
-// The rest of the code remains unchanged
-
-export default function ConfigureGP() {
+export default function ConfigurePSO() {
     const [userData, setUserData] = useState({});
 
     useEffect(() => {
@@ -91,7 +90,7 @@ export default function ConfigureGP() {
         switch (response.status) {
             case 200:
                 let data = await response.json();
-                console.log(data);
+                router.push(`/bin/pso/${data.data.runID}`);
 
                 break;
             default:
@@ -145,6 +144,22 @@ export default function ConfigureGP() {
             </div>
 
             <div className="flex flex-wrap mt-16 gap-4 border border-gray-400 rounded-2xl bg-gray-100 bg-opacity-70">
+                <PreviewPSO
+                    algorithm={algorithm}
+                    dimensions={dimensions}
+                    weights={parameters}
+                    minPosition={minPos}
+                    maxPosition={maxPos}
+                    minSpeed={minSpeed}
+                    maxSpeed={maxSpeed}
+                    phi1={phi1}
+                    phi2={phi2}
+                    benchmark={benchmark}
+                    populationSize={populationSize}
+                    generations={generations}
+                    currentStep={currentStep}
+                />
+
                 <div className="border border-gray-400 rounded-2xl p-4 bg-white">
                     <form
                         onSubmit={(e) => {
