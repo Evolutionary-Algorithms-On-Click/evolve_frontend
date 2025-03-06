@@ -160,58 +160,10 @@ export default function ConfigureNonGP() {
             },
         );
 
-        /*
-        {
-            "message": "Run Algorithm",
-            "runId": "614ae929-f585-4140-84f8-abaf41644661",
-            "data": {
-                "generation": [
-                ],
-                "average": [
-                ],
-                "minimum": [
-                ],
-                "maximum": [
-                ]
-            },
-            "plots": {
-                "fitnessPlot": "http://localhost:5002/api/plots/614ae929-f585-4140-84f8-abaf41644661/fitness_plot.png",
-                "mutationCrossoverEffectPlot": "http://localhost:5002/api/plots/614ae929-f585-4140-84f8-abaf41644661/mutation_crossover_effect.png"
-            },
-            "population": "http://localhost:5002/api/population/614ae929-f585-4140-84f8-abaf41644661/population.pkl",
-            "hallOfFame": [
-                {
-                    "individual": [
-                    ],
-                    "fitness": [
-                    ]
-                }
-            ]
-        }
-        */
-
         switch (response.status) {
             case 200:
                 let data = await response.json();
-                let executionHistory = localStorage.getItem("executionHistory");
-
-                inputData.runType = "non-gp";
-                inputData.runId = data.runId;
-                inputData.timestamp = new Date().toISOString();
-                data.inputData = inputData;
-
-                if (executionHistory) {
-                    executionHistory = JSON.parse(executionHistory);
-                    executionHistory.push(data);
-                }
-
-                localStorage.setItem(
-                    "executionHistory",
-                    JSON.stringify(executionHistory ?? [data]),
-                );
-                localStorage.setItem(data.runId, JSON.stringify(data));
-
-                router.push(`/bin/non-gp/${data.runId}`);
+                router.push(`/bin/ea/${data.data.runID}`);
 
                 break;
             default:
@@ -251,7 +203,7 @@ export default function ConfigureNonGP() {
 
             <div className="flex flex-row gap-4">
                 <Link
-                    href="/create/gp"
+                    href="/create"
                     className="rounded-full border border-solid border-black/[.08] transition-colors flex items-center justify-center bg-background text-foreground hover:bg-[#000000] hover:text-background text-sm sm:text-base px-4 py-2 mt-8"
                 >
                     ← Go Back

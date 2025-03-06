@@ -62,17 +62,17 @@ export default function ConfigureGP() {
     const runPSO = async () => {
         const inputData = {
             algorithm: algorithm,
-            dimensions: dimensions,
+            dimensions: parseInt(dimensions.toString()),
             weights: parameters.map((x) => parseFloat(x)) ?? [1.0],
-            minPosition: minPos,
-            maxPosition: maxPos,
-            minSpeed: minSpeed,
-            maxSpeed: maxSpeed,
-            phi1: phi1,
-            phi2: phi2,
+            minPosition: parseFloat(minPos.toString()),
+            maxPosition: parseFloat(maxPos.toString()),
+            minSpeed: parseFloat(minSpeed.toString()),
+            maxSpeed: parseFloat(maxSpeed.toString()),
+            phi1: parseFloat(phi1.toString()),
+            phi2: parseFloat(phi2.toString()),
             benchmark: benchmark,
-            populationSize: populationSize,
-            generations: generations,
+            populationSize: parseInt(populationSize.toString()),
+            generations: parseInt(generations.toString()),
         };
 
         const response = await fetch(
