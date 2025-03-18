@@ -198,7 +198,7 @@ export default function Results() {
                                                     <div className="aspect-w-1 aspect-h-1 relative overflow-hidden rounded-md mb-4">
                                                         <Image
                                                             src={
-                                                                `http://localhost:9000/code/${run.id}/` +
+                                                                `${process.env.NEXT_PUBLIC_MINIO_BASE_URL ?? "http://localhost:9000"}/code/${run.id}/` +
                                                                 (runType ===
                                                                 "ea"
                                                                     ? "fitness_plot.png"

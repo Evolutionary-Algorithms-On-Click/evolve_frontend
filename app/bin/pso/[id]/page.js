@@ -26,14 +26,17 @@ export default function PSOExecResult() {
 
     useEffect(() => {
         const fetchData = () => {
-            fetch("http://localhost:5002/api/runs/run", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
+            fetch(
+                `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL ?? "http://localhost:5002"}/api/runs/run`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    credentials: "include",
+                    body: JSON.stringify({ runID: id }),
                 },
-                credentials: "include",
-                body: JSON.stringify({ runID: id }),
-            })
+            )
                 .then((response) => response.json())
                 .then((responseData) => {
                     setData(responseData.data);
@@ -55,7 +58,9 @@ export default function PSOExecResult() {
         };
 
         const fetchInputParams = () => {
-            fetch(`http://localhost:9000/code/${id}/input.json`)
+            fetch(
+                `${process.env.NEXT_PUBLIC_MINIO_BASE_URL ?? "http://localhost:9000"}/code/${id}/input.json`,
+            )
                 .then((response) => response.json())
                 .then((data) => setInputParams(data))
                 .catch((error) =>
@@ -64,7 +69,9 @@ export default function PSOExecResult() {
         };
 
         const fetchCodeContent = () => {
-            fetch(`http://localhost:9000/code/${id}/code.py`)
+            fetch(
+                `${process.env.NEXT_PUBLIC_MINIO_BASE_URL ?? "http://localhost:9000"}/code/${id}/code.py`,
+            )
                 .then((response) => response.text())
                 .then((text) => setCodeContent(text))
                 .catch((error) =>
@@ -73,7 +80,9 @@ export default function PSOExecResult() {
         };
 
         const fetchLogsContent = () => {
-            fetch(`http://localhost:9000/code/${id}/logbook.txt`)
+            fetch(
+                `${process.env.NEXT_PUBLIC_MINIO_BASE_URL ?? "http://localhost:9000"}/code/${id}/logbook.txt`,
+            )
                 .then((response) => response.text())
                 .then((text) => setLogsContent(text))
                 .catch((error) =>
@@ -82,7 +91,9 @@ export default function PSOExecResult() {
         };
 
         const fetchBestContent = () => {
-            fetch(`http://localhost:9000/code/${id}/best.txt`)
+            fetch(
+                `${process.env.NEXT_PUBLIC_MINIO_BASE_URL ?? "http://localhost:9000"}/code/${id}/best.txt`,
+            )
                 .then((response) => response.text())
                 .then((text) => setBestContent(text))
                 .catch((error) =>
@@ -98,19 +109,22 @@ export default function PSOExecResult() {
     const handleShareSubmit = (e) => {
         e.preventDefault();
 
-        fetch("http://localhost:5002/api/runs/share", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
+        fetch(
+            `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL ?? "http://localhost:5002"}/api/runs/share`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                credentials: "include",
+                body: JSON.stringify({
+                    runID: id,
+                    userEmailList: shareEmails
+                        .split(",")
+                        .map((email) => email.trim()),
+                }),
             },
-            credentials: "include",
-            body: JSON.stringify({
-                runID: id,
-                userEmailList: shareEmails
-                    .split(",")
-                    .map((email) => email.trim()),
-            }),
-        }).then(async (response) => {
+        ).then(async (response) => {
             if (response.status === 200) {
                 alert("Run shared successfully");
                 return;
@@ -294,7 +308,7 @@ export default function PSOExecResult() {
                                                     Animation
                                                 </h3>
                                                 <Image
-                                                    src={`http://localhost:9000/code/${id}/pso_animation.gif`}
+                                                    src={`${process.env.NEXT_PUBLIC_MINIO_BASE_URL ?? "http://localhost:9000"}/code/${id}/pso_animation.gif`}
                                                     alt="PSO Animation"
                                                     width={800}
                                                     height={100}
