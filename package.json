@@ -10,18 +10,23 @@
         "format": "npx prettier . --write"
     },
     "dependencies": {
+        "@ai-sdk/google": "^1.2.3",
+        "@ai-sdk/react": "^1.2.3",
         "@codemirror/lang-json": "^6.0.1",
         "@emotion/react": "^11.13.3",
         "@emotion/styled": "^11.13.0",
         "@mui/material": "^6.1.5",
         "@uiw/react-codemirror": "^4.23.6",
+        "ai": "^4.2.8",
         "eslint-config-next": "^15.2.0",
         "lucide-react": "^0.476.0",
         "next": "^15.2.0",
         "react": "^19.0.0",
         "react-dom": "^19.0.0",
         "react-dropzone": "^14.2.10",
-        "sharp": "^0.33.5"
+        "react-markdown": "^10.1.0",
+        "sharp": "^0.33.5",
+        "zod": "^3.24.2"
     },
     "devDependencies": {
         "postcss": "^8",
