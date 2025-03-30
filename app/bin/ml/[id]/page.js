@@ -1,7 +1,7 @@
 "use client";
 
 import PreviewML from "@/app/_components/ml/preview";
-import { BadgeX, Share2 } from "lucide-react";
+import { BadgeX, Share2, Sparkles } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
@@ -261,6 +261,17 @@ export default function MLExecResult() {
                                     <h3 className="text-xl font-bold text-gray-800">
                                         Code
                                     </h3>
+                                    <Link
+                                        href={`/explain/${id}`}
+                                        className=" inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium text-slate-700 border border-slate-300  shadow-sm transition-all duration-200 ease-in-out hover:bg-slate-200 hover:border-slate-400 hover:text-slate-900 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 active:bg-slate-300 active:scale-[0.98] mt-8"
+                                    >
+                                        <Sparkles
+                                            size={16}
+                                            className="text-blue-500"
+                                            aria-hidden="true"
+                                        />{" "}
+                                        Ask EvOC AI to Explain
+                                    </Link>
                                     <pre className="bg-gray-200 p-4 rounded-lg overflow-auto text-sm mt-4 w-[900px]">
                                         <code className="overflow-auto text-wrap w-[900px]">
                                             {codeContent}
