@@ -62,6 +62,14 @@ export const ChooseAlgo = ({
                     <h5 className="text-lg font-bold">
                         Step 1.1: Configure Mu and Lambda
                     </h5>
+                    <p className="text-sm">
+                        Mu - (Number of individuals to select for the next
+                        generation. Positive Integer)
+                    </p>
+                    <p className="text-sm">
+                        Lambda - (The number of children to produce at each
+                        generation. Positive Integer)
+                    </p>
                     {chosenAlgo === "eaMuCommaLambda" && !(mu < lambda) && (
                         <p className="text-blue-500">
                             Mu should be less than Lambda for eaMuCommaLambda.

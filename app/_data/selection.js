@@ -26,16 +26,16 @@ export const selectionData = [
         description:
             "Select by roulette wheel. The selection probability of an individual is proportional to its fitness.",
     },
-    {
-        name: "selNSGA2",
-        description:
-            "Select the best individual according to the non-dominated sorting of NSGA-II.",
-    },
-    {
-        name: "selSPEA2",
-        description:
-            "Select the best individual according to the non-dominated sorting of SPEA2.",
-    },
+    // {
+    //     name: "selNSGA2",
+    //     description:
+    //         "Select the best individual according to the non-dominated sorting of NSGA-II.",
+    // },
+    // {
+    //     name: "selSPEA2",
+    //     description:
+    //         "Select the best individual according to the non-dominated sorting of SPEA2.",
+    // },
     {
         name: "selRandom",
         description: "Select randomly.",
