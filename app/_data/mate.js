@@ -33,6 +33,15 @@ export const mateData = [
         description:
             "Executes a messy one-point crossover on the input individuals.",
     },
+    {
+        name: "cxUniform",
+        description: "Executes a uniform crossover on the input individuals.",
+    },
+    {
+        name: "cxUniformPartialyMatched",
+        description:
+            "Executes a uniform partially matched crossover on the input individuals.",
+    },
 ];
 
 export const deMateData = [

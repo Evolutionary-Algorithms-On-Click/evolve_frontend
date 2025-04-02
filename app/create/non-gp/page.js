@@ -19,6 +19,7 @@ import { deMateData, mateData } from "@/app/_data/mate";
 import Link from "next/link";
 import { LogOut } from "lucide-react";
 import { ConfigureDEParams } from "./_components/chooseDEParams";
+import { selectionData } from "@/app/_data/selection";
 
 export default function ConfigureNonGP() {
     const [userData, setUserData] = useState({});
@@ -116,6 +117,30 @@ export default function ConfigureNonGP() {
             lambda_: Optional[int] = None
             hofSize: Optional[int] = 1
         */
+
+        if (
+            ![
+                "cxPartialyMatched",
+                "cxOrdered",
+                "cxUniformPartialyMatched",
+            ].includes(matingFunc.name)
+        ) {
+            // individual size should be greater than max random range and datatype not floating point.
+            if (indGen === "floatingPoint") {
+                alert(
+                    `Please select a different type. This is because of the way in which ${matingFunc.name} works.`,
+                );
+                return;
+            }
+
+            if (indSize <= parseInt(randomRangeEnd)) {
+                alert(
+                    `Please select a valid individual size greater than random range. This is because of the way in which ${matingFunc.name} works.`,
+                );
+                return;
+            }
+        }
+
         const inputData = {
             algorithm: chosenAlgo.toString(),
             individual: indGen.toString(),
@@ -127,7 +152,7 @@ export default function ConfigureNonGP() {
             mutpb: parseFloat(mutpb ?? 0.2),
             weights: parameters.map((param) => parseFloat(param)),
             individualSize: parseInt(indSize ?? 10),
-            indpb: 0.05,
+            indpb: 0.05, // TODO: Get this from the user.
             randomRange: [
                 parseInt(randomRangeStart ?? 0),
                 parseInt(randomRangeEnd ?? 100),
@@ -327,7 +352,18 @@ export default function ConfigureNonGP() {
                         {currentStep >= 6 && popFunc && (
                             <ChooseMatingFunction
                                 mateData={
-                                    chosenAlgo === "de" ? deMateData : mateData
+                                    chosenAlgo === "de"
+                                        ? deMateData
+                                        : indGen === "floatingPoint"
+                                          ? mateData.filter(
+                                                (mate) =>
+                                                    ![
+                                                        "cxPartialyMatched",
+                                                        "cxOrdered",
+                                                        "cxUniformPartialyMatched",
+                                                    ].includes(mate.name),
+                                            )
+                                          : mateData
                                 }
                                 mateFunc={matingFunc}
                                 setMateFunc={setMatingFunc}
@@ -354,6 +390,19 @@ export default function ConfigureNonGP() {
 
                         {currentStep >= 8 && matingFunc && (
                             <ChooseSelectionFunction
+                                selData={
+                                    chosenAlgo === "eaMuPlusLambda" ||
+                                    chosenAlgo === "eaMuCommaLambda"
+                                        ? selectionData.filter(
+                                              (sel) =>
+                                                  ![
+                                                      "selRoulette",
+                                                      "selBest",
+                                                      "selWorst",
+                                                  ].includes(sel.name),
+                                          )
+                                        : selectionData
+                                }
                                 selectFunc={selectFunc}
                                 setSelectFunc={setSelectFunc}
                                 currentStep={currentStep}
