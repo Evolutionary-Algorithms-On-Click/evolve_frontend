@@ -1,0 +1,14 @@
+services:
+    evoc:
+        image: evoc:latest
+        build:
+            context: .
+            dockerfile: Dockerfile
+        environment:
+            - NEXT_PUBLIC_BACKEND_BASE_URL=${NEXT_PUBLIC_BACKEND_BASE_URL}
+            - NEXT_PUBLIC_AUTH_BASE_URL=${NEXT_PUBLIC_AUTH_BASE_URL}
+            - NEXT_PUBLIC_MINIO_BASE_URL=${NEXT_PUBLIC_MINIO_BASE_URL}
+            - NEXT_PUBLIC_AI=${NEXT_PUBLIC_AI}
+            - GOOGLE_GENERATIVE_AI_API_KEY=${GOOGLE_GENERATIVE_AI_API_KEY}
+        ports:
+            - "3000:3000"
