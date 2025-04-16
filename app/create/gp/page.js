@@ -404,7 +404,13 @@ export default function ConfigureGP() {
                                 setMinHeight={setMutMinHeight}
                                 maxHeight={mutMaxHeight}
                                 setMaxHeight={setMutMaxHeight}
-                                treeGenList={treeGenExpression == "genFull"?treeGeneratorData.filter((x) => x.name !== "genFull"):treeGeneratorData} 
+                                treeGenList={
+                                    treeGenExpression == "genFull"
+                                        ? treeGeneratorData.filter(
+                                              (x) => x.name !== "genFull",
+                                          )
+                                        : treeGeneratorData
+                                }
                             />
                         )}
 

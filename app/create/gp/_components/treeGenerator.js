@@ -11,7 +11,7 @@ export default function ChooseTreeGeneratorExpression({
     setMinHeight,
     maxHeight,
     setMaxHeight,
-    treeGenList = treeGeneratorData, 
+    treeGenList = treeGeneratorData,
 }) {
     return (
         <div className="my-4 mt-16">
