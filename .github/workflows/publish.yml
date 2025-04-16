@@ -1,0 +1,18 @@
+name: Build and Publish Docker Image
+
+on:
+    push:
+        branches: [main]
+    workflow_dispatch:
+
+jobs:
+    main-workflow:
+        uses: Evolutionary-Algorithms-On-Click/operations/.github/workflows/docker-publish.yml@main
+        with:
+            branch: ${{ github.ref }}
+            image_name: ${{ github.repository }}
+            event_name: ${{ github.event_name }}
+        permissions:
+            contents: read
+            packages: write
+            id-token: write
