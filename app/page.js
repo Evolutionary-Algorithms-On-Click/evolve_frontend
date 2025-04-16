@@ -24,8 +24,9 @@ export default function Home() {
                         Get Started
                     </Link>
                     <Link
-                        className="rounded-full transition-colors flex items-center justify-center bg-yellow-400 text-black hover:bg-yellow-50 text-sm sm:text-base h-12 p-4 w-full md:w-fit cursor-not-allowed border border-black gap-2"
-                        href="/"
+                        className="rounded-full transition-colors flex items-center justify-center bg-yellow-400 text-black hover:bg-yellow-50 text-sm sm:text-base h-12 p-4 w-full md:w-fit border border-black gap-2"
+                        href="https://evolutionary-algorithms-on-click.github.io/user_docs/"
+                        target="_blank"
                     >
                         <BookUp2 size={24} />
                         Read our docs
