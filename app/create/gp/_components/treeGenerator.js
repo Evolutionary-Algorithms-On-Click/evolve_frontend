@@ -11,12 +11,13 @@ export default function ChooseTreeGeneratorExpression({
     setMinHeight,
     maxHeight,
     setMaxHeight,
+    treeGenList = treeGeneratorData,
 }) {
     return (
         <div className="my-4 mt-16">
             <h4 className="text-lg font-bold mb-4">{title}</h4>
             <div className="grid grid-cols-2 gap-4 align-top">
-                {treeGeneratorData.map((algorithm, index) => (
+                {treeGenList.map((algorithm, index) => (
                     <button
                         onClick={(e) => {
                             e.preventDefault();

@@ -20,6 +20,7 @@ import Link from "next/link";
 import PreviewGP from "@/app/_components/gp/preview";
 import { LogOut } from "lucide-react";
 import { algorithmData } from "@/app/_data/algorithms";
+import { treeGeneratorData } from "@/app/_data/treeGenExpression";
 
 // The rest of the code remains unchanged
 
@@ -90,7 +91,7 @@ export default function ConfigureGP() {
     const [equation, setEquation] = useState("");
 
     // Algorithm Parameters.
-    const [populationSize, setPopulationSize] = useState(5000);
+    const [populationSize, setPopulationSize] = useState(200);
     const [generations, setGenerations] = useState(10);
     const [cxpb, setCxpb] = useState(0.5);
     const [mutpb, setMutpb] = useState(0.2);
@@ -403,6 +404,13 @@ export default function ConfigureGP() {
                                 setMinHeight={setMutMinHeight}
                                 maxHeight={mutMaxHeight}
                                 setMaxHeight={setMutMaxHeight}
+                                treeGenList={
+                                    treeGenExpression == "genFull"
+                                        ? treeGeneratorData.filter(
+                                              (x) => x.name !== "genFull",
+                                          )
+                                        : treeGeneratorData
+                                }
                             />
                         )}
 
