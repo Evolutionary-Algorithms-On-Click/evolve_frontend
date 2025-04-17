@@ -12,19 +12,22 @@ export default function Register() {
         password: "",
         confirmPassword: "",
     });
+    const [isLoading, setIsLoading] = useState(false);
+    const router = useRouter();
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    const router = useRouter();
-
     const handleSubmit = async (e) => {
         e.preventDefault();
+
         if (formData.password !== formData.confirmPassword) {
             alert("Passwords do not match!");
             return;
         }
+
+        setIsLoading(true);
 
         const inputData = {
             username: formData.username,
@@ -33,35 +36,48 @@ export default function Register() {
             password: formData.password,
         };
 
-        const res = await fetch(
-            (process.env.NEXT_PUBLIC_AUTH_BASE_URL ?? "http://localhost:5000") +
-                "/api/register",
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
+        try {
+            const res = await fetch(
+                (process.env.NEXT_PUBLIC_AUTH_BASE_URL ??
+                    "http://localhost:5000") + "/api/register",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    credentials: "include",
+                    body: JSON.stringify(inputData),
                 },
-                credentials: "include",
-                body: JSON.stringify(inputData),
-            },
-        );
+            );
 
-        switch (res.status) {
-            case 200:
+            if (res.ok) {
                 router.push(
                     "/auth/register/verify?m=" + encodeURI(formData.email),
                 );
-                break;
-            case 400:
-                return res.json().then((error) => {
-                    alert(
-                        error
-                            ? (error.message ?? "Invalid request.")
-                            : "Invalid request.",
+            } else {
+                let errorData = {
+                    message: `Registration failed with status: ${res.status}`,
+                };
+                try {
+                    errorData = await res.json();
+                } catch (parseError) {
+                    console.error(
+                        "Could not parse error response:",
+                        parseError,
                     );
-                });
-            default:
-                alert("Something went wrong. Please try again later.");
+                }
+                alert(
+                    errorData.message ??
+                        "An unknown error occurred during registration.",
+                );
+                setIsLoading(false);
+            }
+        } catch (error) {
+            console.error("Registration request failed:", error);
+            alert(
+                "Failed to connect to the server. Please check your network or try again later.",
+            );
+            setIsLoading(false);
         }
     };
 
@@ -96,6 +112,7 @@ export default function Register() {
                         onChange={handleChange}
                         className="w-full p-2 mt-4 border rounded-xl"
                         required
+                        disabled={isLoading}
                     />
                     <input
                         type="text"
@@ -105,6 +122,7 @@ export default function Register() {
                         onChange={handleChange}
                         className="w-full p-2 mt-4 border rounded-xl"
                         required
+                        disabled={isLoading}
                     />
                     <input
                         type="email"
@@ -114,6 +132,7 @@ export default function Register() {
                         onChange={handleChange}
                         className="w-full p-2 mt-4 border rounded-xl"
                         required
+                        disabled={isLoading}
                     />
                     <input
                         type="password"
@@ -123,6 +142,7 @@ export default function Register() {
                         onChange={handleChange}
                         className="w-full p-2 mt-4 border rounded-xl"
                         required
+                        disabled={isLoading}
                     />
                     <input
                         type="password"
@@ -132,12 +152,16 @@ export default function Register() {
                         onChange={handleChange}
                         className="w-full p-2 mt-4 mb-3 border rounded-xl"
                         required
+                        disabled={isLoading}
                     />
                     <button
                         type="submit"
-                        className="rounded-full transition-colors flex items-center justify-center bg-yellow-400 text-black hover:bg-yellow-50 text-sm sm:text-base p-2 w-full border border-black gap-2 mt-4"
+                        className={`rounded-full transition-colors flex items-center justify-center bg-yellow-400 text-black hover:bg-yellow-50 text-sm sm:text-base p-2 w-full border border-black gap-2 mt-4 ${
+                            isLoading ? "opacity-50 cursor-not-allowed" : ""
+                        }`}
+                        disabled={isLoading}
                     >
-                        Sign Up
+                        {isLoading ? "Signing Up..." : "Sign Up"}{" "}
                     </button>
                 </form>
                 <div className="flex flex-wrap gap-4 justify-center mt-8">
@@ -145,8 +169,12 @@ export default function Register() {
                         Already have an account?
                     </p>
                     <Link
-                        className="flex items-center gap-2 underline underline-offset-4 decoration-dashed text-foreground"
+                        className={`flex items-center gap-2 underline underline-offset-4 decoration-dashed text-foreground ${
+                            isLoading ? "pointer-events-none opacity-50" : ""
+                        }`}
                         href="/auth"
+                        aria-disabled={isLoading}
+                        tabIndex={isLoading ? -1 : undefined}
                     >
                         Sign In →
                     </Link>
