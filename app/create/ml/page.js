@@ -74,27 +74,27 @@ export default function OptimizeMLModelWithEA() {
 
     const router = useRouter();
 
-    const runGPAlgorithm = async () => {
+    const runEAMLAlgo = async () => {
         const inputData = {
-            algorithm: chosenAlgo,
-            mlEvalFunctionCodeString: mlEvalFunctionCodeString,
-            populationSize: populationSize,
-            generations: generations,
-            cxpb: cxpb,
-            mutpb: mutpb,
-            weights: parameters,
-            googleDriveUrl: datasetURL,
-            sep: sep,
-            mlImportCodeString: mlImportCodeString,
-            targetColumnName: targetColumnName,
+            algorithm: chosenAlgo.toString(),
+            mlEvalFunctionCodeString: mlEvalFunctionCodeString.toString(),
+            populationSize: parseInt(populationSize),
+            generations: parseInt(generations.toString()),
+            cxpb: parseFloat(cxpb),
+            mutpb: parseFloat(mutpb),
+            weights: parameters.map((param) => parseFloat(param)),
+            googleDriveUrl: datasetURL.toString(),
+            sep: sep.toString(),
+            mlImportCodeString: mlImportCodeString.toString(),
+            targetColumnName: targetColumnName.toString(),
             indpb: 0.05,
-            crossoverFunction: matingFunc,
-            mutationFunction: mutateFunc,
-            selectionFunction: selectFunc,
-            tournamentSize: tempTourSize,
-            mu: mu,
-            lambda_: lambda,
-            hofSize: hof,
+            crossoverFunction: matingFunc.toString(),
+            mutationFunction: mutateFunc.toString(),
+            selectionFunction: selectFunc.toString(),
+            tournamentSize: parseInt(tempTourSize),
+            mu: parseInt(mu ?? 2),
+            lambda_: parseInt(lambda ?? 4),
+            hofSize: parseInt(hof ?? 5),
         };
 
         const response = await fetch(
@@ -392,7 +392,7 @@ export default function OptimizeMLModelWithEA() {
                                     onClick={(e) => {
                                         e.preventDefault();
                                         setIsLoading(true);
-                                        runGPAlgorithm().then(() => {
+                                        runEAMLAlgo().then(() => {
                                             setIsLoading(false);
                                         });
                                     }}
