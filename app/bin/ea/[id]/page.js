@@ -1,11 +1,10 @@
 "use client";
 
-import Preview from "@/app/_components/non-gp/preview"; // Assuming this path is correct
+import Preview from "@/app/_components/non-gp/preview";
 import { BadgeX, Share2, Sparkles } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-// Import useRef
 import { useEffect, useState, useRef } from "react";
 
 export default function Execution() {
@@ -146,11 +145,18 @@ export default function Execution() {
                                     );
                                 }
                             } else if (message.startsWith("retry: ")) {
-                                // Optional: handle retry directive if needed
                                 console.log(
                                     "Server suggested retry interval:",
                                     message.substring(7).trim(),
                                 );
+                            } else if (message.startsWith("event: ")) {
+                                const eventType = message.substring(7).trim();
+                                if (eventType === "done") {
+                                    console.log("SSE stream done event.");
+                                    setSseStatus("closed");
+                                    sseAbortControllerRef.current = null;
+                                    fetchData();
+                                }
                             } else if (message && !message.startsWith(":")) {
                                 // Ignore comments starting with :
                                 // Handle other event types if necessary later
@@ -274,7 +280,6 @@ export default function Execution() {
                         console.error(
                             "Execution failed or encountered an error on backend.",
                         );
-                        // Optionally fetch partial logs/error details if available
                         fetchLogsContent(); // Attempt to fetch logs even on failure
                     }
                     // Reset SSE status if run is not running and not already closed/error
@@ -468,7 +473,7 @@ export default function Execution() {
             {/* Execution Status Display */}
             <div className="mt-4 text-center">
                 <p className="text-gray-700 font-semibold">
-                    Status:{" "}
+                    Status:
                     <span
                         className={`capitalize font-bold ${
                             executionStatus === "completed"
@@ -498,7 +503,6 @@ export default function Execution() {
                                 fill="none"
                                 viewBox="0 0 24 24"
                             >
-                                {" "}
                                 <circle
                                     className="opacity-25"
                                     cx="12"
@@ -506,12 +510,12 @@ export default function Execution() {
                                     r="10"
                                     stroke="currentColor"
                                     strokeWidth="4"
-                                ></circle>{" "}
+                                ></circle>
                                 <path
                                     className="opacity-75"
                                     fill="currentColor"
                                     d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                                ></path>{" "}
+                                ></path>
                             </svg>
                             Connecting to log stream...
                         </div>
@@ -642,7 +646,7 @@ export default function Execution() {
                                                 className="text-blue-500"
                                                 aria-hidden="true"
                                             />
-                                            Explain Code
+                                            Ask EvoC AI
                                         </Link>
                                     )}
                                 </div>
@@ -798,7 +802,6 @@ export default function Execution() {
                                     fill="none"
                                     viewBox="0 0 24 24"
                                 >
-                                    {" "}
                                     <circle
                                         className="opacity-25"
                                         cx="12"
@@ -806,12 +809,12 @@ export default function Execution() {
                                         r="10"
                                         stroke="currentColor"
                                         strokeWidth="4"
-                                    ></circle>{" "}
+                                    ></circle>
                                     <path
                                         className="opacity-75"
                                         fill="currentColor"
                                         d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                                    ></path>{" "}
+                                    ></path>
                                 </svg>
                                 <span className="ml-2 text-gray-600">
                                     Processing...
@@ -829,7 +832,6 @@ export default function Execution() {
                             fill="none"
                             viewBox="0 0 24 24"
                         >
-                            {" "}
                             <circle
                                 className="opacity-25"
                                 cx="12"
@@ -837,12 +839,12 @@ export default function Execution() {
                                 r="10"
                                 stroke="currentColor"
                                 strokeWidth="4"
-                            ></circle>{" "}
+                            ></circle>
                             <path
                                 className="opacity-75"
                                 fill="currentColor"
                                 d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                            ></path>{" "}
+                            ></path>
                         </svg>
                         Loading Run Details...
                     </div>
@@ -889,7 +891,7 @@ export default function Execution() {
                                 </button>
                                 <button
                                     type="submit"
-                                    className="rounded-full px-4 py-2 text-sm font-medium border border-transparent bg-blue-600 text-white hover:bg-blue-700"
+                                    className="rounded-full transition-colors flex items-center justify-center bg-yellow-400 text-black hover:bg-yellow-50 text-sm sm:text-base h-12 p-4 w-full   border border-black gap-2"
                                 >
                                     Share
                                 </button>

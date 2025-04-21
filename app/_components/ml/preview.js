@@ -20,7 +20,7 @@ export default function PreviewML({
     currentStep,
 }) {
     return (
-        <div className="flex flex-col items-start p-4 h-fit md:sticky top-4 bg-gray-100 bg-opacity-70 text-black rounded-2xl max-w-[32%]">
+        <div className="flex flex-col items-start p-4 h-fit md:sticky top-4 bg-gray-100 bg-opacity-70 text-black rounded-2xl">
             <h3 className="text-xl font-bold">ML Config Summary</h3>
             <div className="flex flex-col mt-4">
                 {currentStep >= 1 && (
