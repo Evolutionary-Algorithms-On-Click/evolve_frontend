@@ -56,7 +56,7 @@ export default function Execution() {
                     Accept: "text/event-stream",
                 },
                 signal: signal,
-                // credentials: 'include', // Usually not needed unless cookies/auth are required for SSE endpoint itself
+                // credentials: 'include',
             });
 
             if (!response.ok) {
@@ -76,6 +76,7 @@ export default function Execution() {
             let buffer = "";
 
             const processStream = async () => {
+                setShowLogs(true);
                 while (true) {
                     try {
                         // Check if aborted before reading
@@ -150,13 +151,12 @@ export default function Execution() {
                                     message.substring(7).trim(),
                                 );
                             } else if (message.startsWith("event: ")) {
-                                const eventType = message.substring(7).trim();
-                                if (eventType === "done") {
-                                    console.log("SSE stream done event.");
-                                    setSseStatus("closed");
-                                    sseAbortControllerRef.current = null;
-                                    fetchData();
-                                }
+                                console.log("SSE stream done event.");
+                                setSseStatus("closed");
+                                setShowLogs(false);
+                                setShowCode(false);
+                                sseAbortControllerRef.current = null;
+                                fetchData();
                             } else if (message && !message.startsWith(":")) {
                                 // Ignore comments starting with :
                                 // Handle other event types if necessary later
