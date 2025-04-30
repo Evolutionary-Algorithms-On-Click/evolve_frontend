@@ -151,6 +151,7 @@ export default function MLExecResult() {
             let buffer = "";
 
             const processStream = async () => {
+                setShowLogs(true);
                 while (true) {
                     try {
                         // Check if aborted before reading
@@ -178,11 +179,11 @@ export default function MLExecResult() {
                                 "SSE Stream finished by server (done: true).",
                             );
                             setSseStatus("closed");
-                            sseAbortControllerRef.current = null; // Clear ref
-                            // Server closed connection (likely saw __SSE_STREAM_END__)
-                            // Now fetch the final confirmed status
-                            fetchData(); // Call fetchData defined above
-                            break; // Exit loop
+                            setShowCode(false);
+                            setShowLogs(false);
+                            sseAbortControllerRef.current = null;
+                            fetchData();
+                            break;
                         }
 
                         buffer += decoder.decode(value, { stream: true });
@@ -240,13 +241,12 @@ export default function MLExecResult() {
                                     message.substring(7).trim(),
                                 );
                             } else if (message.startsWith("event: ")) {
-                                const eventType = message.substring(7).trim();
-                                if (eventType === "done") {
-                                    console.log("SSE stream done event.");
-                                    setSseStatus("closed");
-                                    sseAbortControllerRef.current = null;
-                                    fetchData();
-                                }
+                                console.log("SSE stream done event.");
+                                setSseStatus("closed");
+                                setShowCode(false);
+                                setShowLogs(false);
+                                sseAbortControllerRef.current = null;
+                                fetchData();
                             } else if (message && !message.startsWith(":")) {
                                 // Ignore comments starting with :
                                 // Handle other event types if necessary later

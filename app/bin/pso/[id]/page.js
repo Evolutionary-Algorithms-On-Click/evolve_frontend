@@ -135,6 +135,7 @@ export default function PSOExecResult() {
             let buffer = "";
 
             const processStream = async () => {
+                setShowLogs(true);
                 while (true) {
                     try {
                         if (signal.aborted) {
@@ -151,6 +152,8 @@ export default function PSOExecResult() {
                         if (done) {
                             console.log("SSE Stream finished by server.");
                             setSseStatus("closed");
+                            setShowCode(false);
+                            setShowLogs(false);
                             sseAbortControllerRef.current = null;
                             fetchData();
                             break;
@@ -204,13 +207,12 @@ export default function PSOExecResult() {
                                     message.substring(7).trim(),
                                 );
                             } else if (message.startsWith("event: ")) {
-                                const eventType = message.substring(7).trim();
-                                if (eventType === "done") {
-                                    console.log("SSE stream done event.");
-                                    setSseStatus("closed");
-                                    sseAbortControllerRef.current = null;
-                                    fetchData();
-                                }
+                                console.log("SSE stream done event.");
+                                setSseStatus("closed");
+                                setShowCode(false);
+                                setShowLogs(false);
+                                sseAbortControllerRef.current = null;
+                                fetchData();
                             } else if (message && !message.startsWith(":")) {
                                 // Ignore comments starting with :
                                 // Handle other event types if necessary later
