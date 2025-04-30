@@ -73,6 +73,10 @@ export default function MLExecResult() {
                     ) {
                         startLogStreaming(id); // Pass id here
                     }
+                } else if (newStatus === "scheduled") {
+                    setTimeout(() => {
+                        fetchData();
+                    }, 2000); // Retry after 2 seconds.
                 } else {
                     // If status is completed, error, timed_out etc., stop SSE and fetch final results
                     stopLogStreaming(); // Ensure any active stream is stopped

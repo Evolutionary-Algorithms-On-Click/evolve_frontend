@@ -70,6 +70,10 @@ export default function PSOExecResult() {
                     ) {
                         startLogStreaming(id);
                     }
+                } else if (newStatus === "scheduled") {
+                    setTimeout(() => {
+                        fetchData();
+                    }, 2000); // Retry after 2 seconds.
                 } else {
                     stopLogStreaming();
                     if (
