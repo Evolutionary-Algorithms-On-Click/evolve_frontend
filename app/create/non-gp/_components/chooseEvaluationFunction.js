@@ -12,7 +12,7 @@ export default function ChooseEvalFunction({
             <h4 className="text-lg font-bold mb-4">
                 Step 9: Choose an evaluation function
             </h4>
-            <div className="grid grid-cols-2 gap-4 align-top">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 align-top">
                 {evalFuncData.map((evalF, index) => (
                     <button
                         onClick={(e) => {
@@ -24,7 +24,7 @@ export default function ChooseEvalFunction({
                         }}
                         key={index}
                         className={
-                            "border border-gray-300 p-4 rounded-lg max-w-xl text-left items-start min-w-2/3 bg-opacity-30" +
+                            "border border-gray-300 p-4 rounded-lg max-w-xl text-left items-start min-w-full sm:min-w-2/3 bg-opacity-30" +
                             (evalFunc && evalFunc === evalF.name
                                 ? " border-blue-500 bg-blue-100 text-blue-900"
                                 : " border-gray-300 hover:bg-gray-100 hover:text-foreground")
