@@ -13,7 +13,7 @@ export default function ChooseMutationFunction({
         <div className="mt-16">
             <h4 className="text-lg font-bold mb-4">{title}</h4>
             {/* grid: each element has a name and description */}
-            <div className="grid grid-cols-2 gap-4 align-top">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 align-top">
                 {mutationData.map((mut, index) => (
                     <button
                         onClick={(e) => {
@@ -38,7 +38,7 @@ export default function ChooseMutationFunction({
                         }}
                         key={index}
                         className={
-                            "border border-gray-300 p-4 rounded-lg max-w-xl text-left items-start min-w-2/3 bg-opacity-30" +
+                            "border border-gray-300 p-4 rounded-lg max-w-xl text-left items-start min-w-full sm:min-w-2/3 bg-opacity-30" +
                             (mutateFunc && mutateFunc === mut.name
                                 ? " border-blue-500 bg-blue-100 text-blue-900"
                                 : " border-gray-300 hover:bg-gray-100 hover:text-foreground")
@@ -55,7 +55,7 @@ export default function ChooseMutationFunction({
                     <h5 className="text-lg font-bold">
                         {`Step ${nextStep - 1}.1: Choose the number of individual ephemeral constants to mutate.`}
                     </h5>
-                    <div className="mt-4 grid grid-cols-2 gap-2 align-top">
+                    <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <button
                             onClick={(e) => {
                                 e.preventDefault();
@@ -67,7 +67,7 @@ export default function ChooseMutationFunction({
                                 );
                             }}
                             className={
-                                "border border-gray-300 p-4 rounded-lg max-w-xl text-left items-start min-w-2/3" +
+                                "border border-gray-300 p-4 rounded-lg max-w-xl text-left items-start min-w-full sm:min-w-2/3" +
                                 (mode === "one"
                                     ? " bg-foreground text-background"
                                     : "")
@@ -86,7 +86,7 @@ export default function ChooseMutationFunction({
                                 );
                             }}
                             className={
-                                "border border-gray-300 p-2 rounded-lg max-w-xl text-left items-start min-w-2/3" +
+                                "border border-gray-300 p-4 rounded-lg max-w-xl text-left items-start min-w-full sm:min-w-2/3" +
                                 (mode === "all"
                                     ? " bg-foreground text-background"
                                     : "")

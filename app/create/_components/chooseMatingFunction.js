@@ -14,7 +14,7 @@ export default function ChooseMatingFunction({
         <div className="mt-8">
             <h4 className="text-lg font-bold mb-4">{title}</h4>
             {/* grid: each element has a name and description */}
-            <div className="grid grid-cols-2 gap-4 align-top">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 align-top">
                 {mateData.map((mate, index) => (
                     <button
                         onClick={(e) => {
@@ -38,7 +38,7 @@ export default function ChooseMatingFunction({
                         }}
                         key={index}
                         className={
-                            "border p-4 rounded-lg max-w-xl text-left items-start min-w-2/3 bg-opacity-30" +
+                            "border p-4 rounded-lg max-w-xl text-left items-start min-w-full sm:min-w-2/3 bg-opacity-30" +
                             (mateFunc && mateFunc === mate.name
                                 ? " border-blue-500 bg-blue-100 text-blue-900"
                                 : " border-gray-300 hover:bg-gray-100 hover:text-foreground")
@@ -67,7 +67,7 @@ export default function ChooseMatingFunction({
 
                             setTerminalProb(e.target.value);
                         }}
-                        className="border border-gray-300 p-2 rounded-lg max-w-xl text-left items-start min-w-2/3"
+                        className="border border-gray-300 p-2 rounded-lg max-w-xl text-left items-start min-w-full sm:min-w-2/3"
                     />
                 </div>
             )}

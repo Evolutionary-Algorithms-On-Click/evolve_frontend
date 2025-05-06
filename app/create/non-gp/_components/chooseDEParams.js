@@ -8,12 +8,12 @@ export function ConfigureDEParams({
     setCurrentStep,
 }) {
     return (
-        <div className="mt-16">
-            <h4 className="text-lg font-bold mb-4">
-                Step 1.1: Configure DE parameters.
+        <div className="px-4 sm:px-6 lg:px-8 mt-16">
+            <h4 className="text-lg sm:text-xl font-bold mb-4">
+                Step 1.1: Configure DE Parameters
             </h4>
 
-            {/* phi1 Input */}
+            {/* Crossover Rate */}
             <div className="mb-4">
                 <label
                     htmlFor="phi1"
@@ -32,7 +32,7 @@ export function ConfigureDEParams({
                 />
             </div>
 
-            {/* phi2 Input */}
+            {/* Scaling Factor */}
             <div className="mb-4">
                 <label
                     htmlFor="phi2"

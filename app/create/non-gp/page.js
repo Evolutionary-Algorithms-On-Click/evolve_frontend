@@ -241,25 +241,27 @@ export default function ConfigureNonGP() {
                 </Link>
             </div>
 
-            <div className="flex flex-wrap mt-16 gap-4 border border-gray-400 rounded-2xl bg-gray-100 bg-opacity-70">
-                <Preview
-                    algo={chosenAlgo}
-                    parameters={parameters}
-                    indGen={indGen}
-                    indSize={indSize}
-                    popFunc={popFunc}
-                    mateFunc={matingFunc}
-                    mutateFunc={mutateFunc}
-                    selectFunc={selectFunc}
-                    evalFunc={evalFunc}
-                    tempTourSize={tempTourSize}
-                    currentStep={currentStep}
-                    populationSize={populationSize}
-                    generations={generations}
-                    cxpb={cxpb}
-                    mutpb={mutpb}
-                    hofSize={hof}
-                />
+            <div className="flex flex-wrap mt-16 gap-4 border border-gray-400 rounded-2xl bg-gray-100 bg-opacity-70 w-full max-h-[80vh] overflow-auto">
+    <div className="w-full">
+        <Preview
+            algo={chosenAlgo}
+            parameters={parameters}
+            indGen={indGen}
+            indSize={indSize}
+            popFunc={popFunc}
+            mateFunc={matingFunc}
+            mutateFunc={mutateFunc}
+            selectFunc={selectFunc}
+            evalFunc={evalFunc}
+            tempTourSize={tempTourSize}
+            currentStep={currentStep}
+            populationSize={populationSize}
+            generations={generations}
+            cxpb={cxpb}
+            mutpb={mutpb}
+            hofSize={hof}
+        />
+    </div>
 
                 <div className="border border-gray-400 rounded-2xl p-4 bg-white">
                     <form

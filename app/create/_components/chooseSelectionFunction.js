@@ -14,7 +14,7 @@ export default function ChooseSelectionFunction({
     return (
         <div className="mt-16">
             <h4 className="text-lg font-bold mb-4">{title}</h4>
-            <div className="grid grid-cols-2 gap-4 align-top">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 align-top">
                 {selData.map((sel, index) => (
                     <button
                         onClick={(e) => {
@@ -31,7 +31,7 @@ export default function ChooseSelectionFunction({
                         }}
                         key={index}
                         className={
-                            "border p-4 rounded-lg max-w-xl text-left items-start min-w-2/3 bg-opacity-30" +
+                            "border p-4 rounded-lg max-w-xl text-left items-start min-w-full sm:min-w-2/3 bg-opacity-30" +
                             (selectFunc && selectFunc === sel.name
                                 ? " border-blue-500 bg-blue-100 text-blue-900"
                                 : " border-gray-300 hover:bg-gray-100 hover:text-foreground")
@@ -49,7 +49,7 @@ export default function ChooseSelectionFunction({
                     <input
                         type="number"
                         value={tempTourSize}
-                        className="border border-gray-300 p-2 rounded-lg"
+                        className="border border-gray-300 p-2 rounded-lg min-w-full sm:min-w-2/3"
                         placeholder="Enter a number"
                         onChange={(e) => {
                             if (isNaN(e.target.value)) {

@@ -13,21 +13,15 @@ export default function ConfigureAlgoParams({
 }) {
     return (
         <div className="mt-16">
-            {/* 
-                poputlationSize=5000,
-                generations=10,
-                cxpb=0.5,
-                mutpb=0.2 
-            */}
             <h4 className="text-lg font-bold mb-4">{title}</h4>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                     <h5 className="text-lg font-bold mb-4">Population Size</h5>
                     <input
                         type="number"
                         value={populationSize}
-                        className="border border-gray-300 p-2 rounded-lg"
+                        className="border border-gray-300 p-2 rounded-lg w-full"
                         placeholder="Enter a number"
                         onChange={(e) => {
                             if (isNaN(e.target.value)) {
@@ -38,7 +32,6 @@ export default function ConfigureAlgoParams({
                                 alert("Population size cannot be negative");
                                 return;
                             }
-
                             setPopulationSize(e.target.value);
                         }}
                     />
@@ -48,7 +41,7 @@ export default function ConfigureAlgoParams({
                     <input
                         type="number"
                         value={generations}
-                        className="border border-gray-300 p-2 rounded-lg"
+                        className="border border-gray-300 p-2 rounded-lg w-full"
                         placeholder="Enter a number"
                         onChange={(e) => {
                             if (isNaN(e.target.value)) {
@@ -66,13 +59,11 @@ export default function ConfigureAlgoParams({
                     />
                 </div>
                 <div>
-                    <h5 className="text-lg font-bold mb-4">
-                        Crossover Probability
-                    </h5>
+                    <h5 className="text-lg font-bold mb-4">Crossover Probability</h5>
                     <input
                         type="number"
                         value={cxpb}
-                        className="border border-gray-300 p-2 rounded-lg"
+                        className="border border-gray-300 p-2 rounded-lg w-full"
                         placeholder="Enter a number"
                         onChange={(e) => {
                             if (isNaN(e.target.value)) {
@@ -81,16 +72,7 @@ export default function ConfigureAlgoParams({
                             }
 
                             if (e.target.value < 0 || e.target.value > 1) {
-                                alert(
-                                    "Crossover probability must be between 0 and 1",
-                                );
-                                return;
-                            }
-
-                            if (e.target.value < 0) {
-                                alert(
-                                    "Crossover probability cannot be negative",
-                                );
+                                alert("Crossover probability must be between 0 and 1");
                                 return;
                             }
 
@@ -99,13 +81,11 @@ export default function ConfigureAlgoParams({
                     />
                 </div>
                 <div>
-                    <h5 className="text-lg font-bold mb-4">
-                        Mutation Probability
-                    </h5>
+                    <h5 className="text-lg font-bold mb-4">Mutation Probability</h5>
                     <input
                         type="number"
                         value={mutpb}
-                        className="border border-gray-300 p-2 rounded-lg"
+                        className="border border-gray-300 p-2 rounded-lg w-full"
                         placeholder="Enter a number"
                         onChange={(e) => {
                             if (isNaN(e.target.value)) {
@@ -114,16 +94,7 @@ export default function ConfigureAlgoParams({
                             }
 
                             if (e.target.value < 0 || e.target.value > 1) {
-                                alert(
-                                    "Mutation probability must be between 0 and 1",
-                                );
-                                return;
-                            }
-
-                            if (e.target.value < 0) {
-                                alert(
-                                    "Mutation probability cannot be negative",
-                                );
+                                alert("Mutation probability must be between 0 and 1");
                                 return;
                             }
 
@@ -132,13 +103,11 @@ export default function ConfigureAlgoParams({
                     />
                 </div>
                 <div>
-                    <h5 className="text-lg font-bold mb-4">
-                        Hall of Fame Size
-                    </h5>
+                    <h5 className="text-lg font-bold mb-4">Hall of Fame Size</h5>
                     <input
                         type="number"
                         value={hof}
-                        className="border border-gray-300 p-2 rounded-lg"
+                        className="border border-gray-300 p-2 rounded-lg w-full"
                         placeholder="Enter a number"
                         onChange={(e) => {
                             if (isNaN(e.target.value)) {

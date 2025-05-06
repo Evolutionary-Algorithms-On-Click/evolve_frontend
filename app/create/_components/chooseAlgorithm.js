@@ -14,9 +14,11 @@ export const ChooseAlgo = ({
     setLambda,
 }) => {
     return (
-        <div className="my-4">
+        <div className="my-4 px-4">
             <h4 className="text-lg font-bold mb-4">{title}</h4>
-            <div className="grid grid-cols-2 gap-4 align-top">
+
+            {/* Responsive grid for algorithm buttons */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {algoData.map((algorithm, index) => (
                     <button
                         onClick={(e) => {
@@ -28,9 +30,7 @@ export const ChooseAlgo = ({
                                 algorithm.name !== "eaMuCommaLambda"
                             ) {
                                 setCurrentStep(
-                                    currentStep < nextStep
-                                        ? nextStep
-                                        : currentStep,
+                                    currentStep < nextStep ? nextStep : currentStep
                                 );
                             }
 
@@ -43,7 +43,7 @@ export const ChooseAlgo = ({
                         }}
                         key={index}
                         className={
-                            "border p-4 rounded-2xl max-w-xl text-left items-start min-w-2/3  bg-opacity-30" +
+                            "border p-4 rounded-2xl w-full text-left bg-opacity-30 transition-all duration-200" +
                             (chosenAlgo && chosenAlgo === algorithm.name
                                 ? " border-blue-500 bg-blue-100 text-blue-900"
                                 : " border-gray-300 hover:bg-gray-100 hover:text-foreground")
@@ -55,33 +55,33 @@ export const ChooseAlgo = ({
                 ))}
             </div>
 
-            {/* Extra input args for certain algorithms. */}
+            {/* Mu & Lambda section */}
             {(chosenAlgo === "eaMuPlusLambda" ||
                 chosenAlgo === "eaMuCommaLambda") && (
-                <div className="mt-4">
-                    <h5 className="text-lg font-bold">
+                <div className="mt-6">
+                    <h5 className="text-lg font-bold mb-2">
                         Step 1.1: Configure Mu and Lambda
                     </h5>
                     <p className="text-sm">
-                        Mu - (Number of individuals to select for the next
-                        generation. Positive Integer)
+                        Mu - (Number of individuals to select for the next generation. Positive Integer)
                     </p>
                     <p className="text-sm">
-                        Lambda - (The number of children to produce at each
-                        generation. Positive Integer)
+                        Lambda - (Number of children to produce at each generation. Positive Integer)
                     </p>
+
                     {chosenAlgo === "eaMuCommaLambda" && !(mu < lambda) && (
-                        <p className="text-blue-500">
+                        <p className="text-blue-500 mt-2">
                             Mu should be less than Lambda for eaMuCommaLambda.
                         </p>
                     )}
-                    <div className="grid grid-cols-2 gap-4 mt-4">
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
                         <div>
-                            <h6 className="text-lg font-bold mb-4">Mu</h6>
+                            <h6 className="text-lg font-bold mb-2">Mu</h6>
                             <input
                                 type="number"
                                 value={mu.toString()}
-                                className="border border-gray-300 p-2 rounded-lg"
+                                className="border border-gray-300 p-2 rounded-lg w-full"
                                 placeholder="Enter a number"
                                 onChange={(e) => {
                                     const _mu = parseInt(e.target.value);
@@ -95,24 +95,21 @@ export const ChooseAlgo = ({
                                     }
 
                                     if (lambda && _mu) {
-                                        // If next steps are already set and user goes
-                                        // back to change mu or lambda, we don't want
-                                        // to reset the steps.
                                         setCurrentStep(
                                             currentStep < nextStep
                                                 ? nextStep
-                                                : currentStep,
+                                                : currentStep
                                         );
                                     }
                                 }}
                             />
                         </div>
                         <div>
-                            <h6 className="text-lg font-bold mb-4">Lambda</h6>
+                            <h6 className="text-lg font-bold mb-2">Lambda</h6>
                             <input
                                 type="number"
                                 value={lambda.toString()}
-                                className="border border-gray-300 p-2 rounded-lg"
+                                className="border border-gray-300 p-2 rounded-lg w-full"
                                 placeholder="Enter a number"
                                 onChange={(e) => {
                                     const _lambda = parseInt(e.target.value);
@@ -126,13 +123,10 @@ export const ChooseAlgo = ({
                                     }
 
                                     if (mu && _lambda) {
-                                        // If next steps are already set and user goes
-                                        // back to change mu or lambda, we don't want
-                                        // to reset the steps.
                                         setCurrentStep(
                                             currentStep < nextStep
                                                 ? nextStep
-                                                : currentStep,
+                                                : currentStep
                                         );
                                     }
                                 }}

@@ -11,27 +11,27 @@ export default function ChooseInitializationFunction({
     return (
         <div className="mt-16">
             <h4 className="text-lg font-bold mb-4">{title}</h4>
-            {/* grid: each element has a name and description */}
-            <div className="grid grid-cols-2 gap-4 align-top">
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {populationFunctionData.map((pop, index) => (
                     <button
+                        key={index}
                         onClick={(e) => {
                             e.preventDefault();
                             setPopFunc(pop.name);
                             setCurrentStep(
-                                currentStep < nextStep ? nextStep : currentStep,
+                                currentStep < nextStep ? nextStep : currentStep
                             );
                         }}
-                        key={index}
-                        className={
-                            "border border-gray-300 p-4 rounded-lg max-w-xl text-left items-start min-w-2/3 bg-opacity-30" +
-                            (popFunc && popFunc === pop.name
-                                ? " border-blue-500 bg-blue-100 text-blue-900"
-                                : " border-gray-300 hover:bg-gray-100 hover:text-foreground")
-                        }
+                        className={`border p-4 rounded-lg text-left transition duration-200 ease-in-out
+                            ${
+                                popFunc === pop.name
+                                    ? "border-blue-500 bg-blue-100 text-blue-900"
+                                    : "border-gray-300 hover:bg-gray-100"
+                            }`}
                     >
-                        <h5 className="text-lg font-bold">{pop.name}</h5>
-                        <p>{pop.description}</p>
+                        <h5 className="text-lg font-semibold mb-1">{pop.name}</h5>
+                        <p className="text-sm text-gray-700">{pop.description}</p>
                     </button>
                 ))}
             </div>

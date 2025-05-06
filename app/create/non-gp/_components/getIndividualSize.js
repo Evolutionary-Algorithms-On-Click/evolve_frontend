@@ -12,20 +12,16 @@ export function GetIndividualSize({
             </h4>
             <input
                 type="number"
+                min={0}
                 value={indSize}
-                className="border border-gray-300 p-2 rounded-lg"
+                className="border border-gray-300 p-3 rounded-lg w-full max-w-md"
                 placeholder="Enter a number"
                 onChange={(e) => {
-                    if (isNaN(e.target.value)) {
-                        e.target.value = 0;
-                    }
-                    if (e.target.value < 0) {
-                        e.target.value = 0;
-                    }
-                    setIndSize(e.target.value);
-                    if (e.target.value > 0) {
+                    const value = Math.max(0, parseInt(e.target.value) || 0);
+                    setIndSize(value);
+                    if (value > 0) {
                         setCurrentStep(
-                            currentStep < nextStep ? nextStep : currentStep,
+                            currentStep < nextStep ? nextStep : currentStep
                         );
                     }
                 }}
