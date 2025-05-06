@@ -20,7 +20,7 @@ export default function ChooseInitializationFunction({
                             e.preventDefault();
                             setPopFunc(pop.name);
                             setCurrentStep(
-                                currentStep < nextStep ? nextStep : currentStep
+                                currentStep < nextStep ? nextStep : currentStep,
                             );
                         }}
                         className={`border p-4 rounded-lg text-left transition duration-200 ease-in-out
@@ -30,8 +30,12 @@ export default function ChooseInitializationFunction({
                                     : "border-gray-300 hover:bg-gray-100"
                             }`}
                     >
-                        <h5 className="text-lg font-semibold mb-1">{pop.name}</h5>
-                        <p className="text-sm text-gray-700">{pop.description}</p>
+                        <h5 className="text-lg font-semibold mb-1">
+                            {pop.name}
+                        </h5>
+                        <p className="text-sm text-gray-700">
+                            {pop.description}
+                        </p>
                     </button>
                 ))}
             </div>

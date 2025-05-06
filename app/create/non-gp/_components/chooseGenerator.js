@@ -60,16 +60,17 @@ export default function ChooseGenerator({
                         Step 3.1: Random Range
                     </h5>
 
-                    {(randomRangeStart &&
+                    {randomRangeStart &&
                         randomRangeEnd &&
                         (isNaN(randomRangeEnd) ||
                             isNaN(randomRangeStart) ||
                             parseInt(randomRangeStart) >
-                                parseInt(randomRangeEnd))) && (
-                        <p className="text-blue-500 mb-3">
-                            Selected range is invalid. Ensure start &lt; end and both are numbers.
-                        </p>
-                    )}
+                                parseInt(randomRangeEnd)) && (
+                            <p className="text-blue-500 mb-3">
+                                Selected range is invalid. Ensure start &lt; end
+                                and both are numbers.
+                            </p>
+                        )}
 
                     <div className="flex flex-col md:flex-row gap-4">
                         <input

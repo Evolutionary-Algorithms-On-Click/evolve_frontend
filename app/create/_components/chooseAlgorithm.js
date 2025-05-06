@@ -30,7 +30,9 @@ export const ChooseAlgo = ({
                                 algorithm.name !== "eaMuCommaLambda"
                             ) {
                                 setCurrentStep(
-                                    currentStep < nextStep ? nextStep : currentStep
+                                    currentStep < nextStep
+                                        ? nextStep
+                                        : currentStep,
                                 );
                             }
 
@@ -63,10 +65,12 @@ export const ChooseAlgo = ({
                         Step 1.1: Configure Mu and Lambda
                     </h5>
                     <p className="text-sm">
-                        Mu - (Number of individuals to select for the next generation. Positive Integer)
+                        Mu - (Number of individuals to select for the next
+                        generation. Positive Integer)
                     </p>
                     <p className="text-sm">
-                        Lambda - (Number of children to produce at each generation. Positive Integer)
+                        Lambda - (Number of children to produce at each
+                        generation. Positive Integer)
                     </p>
 
                     {chosenAlgo === "eaMuCommaLambda" && !(mu < lambda) && (
@@ -98,7 +102,7 @@ export const ChooseAlgo = ({
                                         setCurrentStep(
                                             currentStep < nextStep
                                                 ? nextStep
-                                                : currentStep
+                                                : currentStep,
                                         );
                                     }
                                 }}
@@ -126,7 +130,7 @@ export const ChooseAlgo = ({
                                         setCurrentStep(
                                             currentStep < nextStep
                                                 ? nextStep
-                                                : currentStep
+                                                : currentStep,
                                         );
                                     }
                                 }}

@@ -21,7 +21,7 @@ export function GetIndividualSize({
                     setIndSize(value);
                     if (value > 0) {
                         setCurrentStep(
-                            currentStep < nextStep ? nextStep : currentStep
+                            currentStep < nextStep ? nextStep : currentStep,
                         );
                     }
                 }}

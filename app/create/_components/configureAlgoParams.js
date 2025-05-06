@@ -59,7 +59,9 @@ export default function ConfigureAlgoParams({
                     />
                 </div>
                 <div>
-                    <h5 className="text-lg font-bold mb-4">Crossover Probability</h5>
+                    <h5 className="text-lg font-bold mb-4">
+                        Crossover Probability
+                    </h5>
                     <input
                         type="number"
                         value={cxpb}
@@ -72,7 +74,9 @@ export default function ConfigureAlgoParams({
                             }
 
                             if (e.target.value < 0 || e.target.value > 1) {
-                                alert("Crossover probability must be between 0 and 1");
+                                alert(
+                                    "Crossover probability must be between 0 and 1",
+                                );
                                 return;
                             }
 
@@ -81,7 +85,9 @@ export default function ConfigureAlgoParams({
                     />
                 </div>
                 <div>
-                    <h5 className="text-lg font-bold mb-4">Mutation Probability</h5>
+                    <h5 className="text-lg font-bold mb-4">
+                        Mutation Probability
+                    </h5>
                     <input
                         type="number"
                         value={mutpb}
@@ -94,7 +100,9 @@ export default function ConfigureAlgoParams({
                             }
 
                             if (e.target.value < 0 || e.target.value > 1) {
-                                alert("Mutation probability must be between 0 and 1");
+                                alert(
+                                    "Mutation probability must be between 0 and 1",
+                                );
                                 return;
                             }
 
@@ -103,7 +111,9 @@ export default function ConfigureAlgoParams({
                     />
                 </div>
                 <div>
-                    <h5 className="text-lg font-bold mb-4">Hall of Fame Size</h5>
+                    <h5 className="text-lg font-bold mb-4">
+                        Hall of Fame Size
+                    </h5>
                     <input
                         type="number"
                         value={hof}
