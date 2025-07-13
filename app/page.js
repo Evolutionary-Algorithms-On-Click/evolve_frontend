@@ -1,8 +1,18 @@
+"use client";
+
 import { BookUp2, Pickaxe } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect } from "react";
 
 export default function Home() {
+    useEffect(() => {
+        // Check if user is already logged in
+        if (localStorage.getItem("id")) {
+            window.location.href = "/create";
+        }
+    }, []);
+
     return (
         <div className="min-h-screen flex flex-col items-center justify-between p-8 sm:p-20 bg-background font-[family-name:var(--font-geist-mono)]">
             <main className="flex flex-col items-center gap-6 flex-grow justify-center">
