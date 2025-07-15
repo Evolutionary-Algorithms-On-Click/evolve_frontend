@@ -7,6 +7,13 @@ import DynamicLogo from "./_components/DynamicLogo";
 import LightBulbToggle from "./_components/LightBulbToggle";
 
 export default function Home() {
+    useEffect(() => {
+        // Check if user is already logged in
+        if (localStorage.getItem("id")) {
+            window.location.href = "/create";
+        }
+    }, []);
+
     return (
         <div className="min-h-screen flex flex-col items-center justify-between p-8 sm:p-20 bg-background dark:bg-gray-900 font-[family-name:var(--font-geist-mono)]">
             <LightBulbToggle />
