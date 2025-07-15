@@ -21,6 +21,8 @@ import PreviewGP from "@/app/_components/gp/preview";
 import { LogOut } from "lucide-react";
 import { algorithmData } from "@/app/_data/algorithms";
 import { treeGeneratorData } from "@/app/_data/treeGenExpression";
+import DynamicLogo from "@/app/_components/DynamicLogo";
+import LightBulbToggle from "@/app/_components/LightBulbToggle";
 
 // The rest of the code remains unchanged
 
@@ -204,15 +206,19 @@ export default function ConfigureGP() {
         <Loader type={"full"} message={"Running Algorithm..."} />
     ) : (
         <main className="flex flex-col justify-center items-center justify-items-center min-h-screen font-[family-name:var(--font-geist-mono)] p-8">
-            <div className="text-center">
-                <h1 className="text-3xl sm:text-4xl font-bold">
+            <LightBulbToggle />
+            <div className="text-center mb-8">
+                <div className="flex items-center justify-center overflow-hidden h-32 mb-4">
+                    <DynamicLogo height={320} width={680} className="rounded-md" />
+                </div>
+                <h1 className="text-3xl sm:text-4xl font-bold text-center dark:text-gray-100">
                     Evolve OnClick
                 </h1>
-                <p>Run and Visualize algorithms with just a click.</p>
+                <p className="dark:text-gray-300">Run and Visualize algorithms with just a click.</p>
             </div>
 
             {userData.fullName && (
-                <div className="mt-4 flex flex-row gap-2 bg-gray-900 rounded-full px-4 text-[#6eff39] items-center">
+                <div className="mt-4 flex flex-row gap-2 bg-gray-900 dark:bg-gray-700 rounded-full px-4 text-[#6eff39] items-center">
                     <div className="py-2">
                         <p className="text-xs">
                             {userData.fullName} {"</>"} @{userData.userName}
@@ -223,7 +229,7 @@ export default function ConfigureGP() {
                             localStorage.clear();
                             window.location.href = "/auth";
                         }}
-                        className="text-[#ff2e2e] font-semibold border-l border-[#ffffff] pl-3 py-2 flex flex-row justify-center items-center"
+                        className="text-[#ff2e2e] font-semibold border-l border-[#ffffff] dark:border-gray-500 pl-3 py-2 flex flex-row justify-center items-center"
                     >
                         <LogOut className="mx-1" size={16} />
                     </button>
@@ -233,79 +239,66 @@ export default function ConfigureGP() {
             <div className="flex flex-row gap-4">
                 <Link
                     href="/create"
-                    className="rounded-full border border-solid border-black/[.08] transition-colors flex items-center justify-center bg-background text-foreground hover:bg-[#000000] hover:text-background text-sm sm:text-base px-4 py-2 mt-8"
+                    className="rounded-full border border-solid border-black/[.08] dark:border-gray-600 transition-colors flex items-center justify-center bg-background dark:bg-gray-800 text-foreground dark:text-gray-100 hover:bg-[#000000] hover:text-background dark:hover:bg-gray-700 text-sm sm:text-base px-4 py-2 mt-8"
                 >
                     ← Go Back
                 </Link>
                 <Link
                     href="/bin"
-                    className="rounded-full border border-solid border-black/[.08] transition-colors flex items-center justify-center bg-background text-foreground hover:bg-[#000000] hover:text-background text-sm sm:text-base px-4 py-2 mt-8"
+                    className="rounded-full border border-solid border-black/[.08] dark:border-gray-600 transition-colors flex items-center justify-center bg-background dark:bg-gray-800 text-foreground dark:text-gray-100 hover:bg-[#000000] hover:text-background dark:hover:bg-gray-700 text-sm sm:text-base px-4 py-2 mt-8"
                 >
                     View Previous Runs →
                 </Link>
             </div>
 
-            <div className="flex flex-wrap mt-16 gap-4 border border-gray-400 rounded-2xl bg-gray-100 bg-opacity-70">
+            <div className="flex flex-wrap mt-16 gap-4 border border-gray-400 dark:border-gray-600 rounded-2xl bg-gray-100 dark:bg-gray-800 bg-opacity-70">
                 <PreviewGP
                     algo={chosenAlgo}
                     parameters={parameters}
-                    indGen={indGen}
                     primitiveSet={primitiveSet}
                     treeGenExpression={treeGenExpression}
                     minHeight={minHeight}
                     maxHeight={maxHeight}
+                    indGen={indGen}
                     popFunc={popFunc}
+                    mateFunc={matingFunc}
+                    mutateFunc={mutateFunc}
                     selectFunc={selectionFunction}
                     tempTourSize={tempTourSize}
-                    mutateFunc={mutateFunc}
-                    mode={mode}
-                    mutExpr={mutExpr}
-                    mutMinHeight={mutMinHeight}
-                    mutMaxHeight={mutMaxHeight}
-                    matingFunc={matingFunc}
-                    terminalProb={terminalProb}
-                    mateHeightLimit={mateHeightLimit}
-                    mutateHeightLimit={mutateHeightLimit}
-                    generations={generations}
+                    currentStep={currentStep}
                     populationSize={populationSize}
+                    generations={generations}
                     cxpb={cxpb}
                     mutpb={mutpb}
                     hofSize={hof}
-                    currentStep={currentStep}
                 />
 
-                <div className="border border-gray-400 rounded-2xl p-4 bg-white">
+                <div className="border border-gray-400 dark:border-gray-600 rounded-2xl p-4 bg-white dark:bg-gray-700">
                     <form
                         onSubmit={(e) => {
                             e.preventDefault();
                         }}
                         className="flex flex-col"
                     >
-                        <h3 className="text-xl font-bold">
+                        <h3 className="text-xl font-bold dark:text-gray-100">
                             Configure Algorithm
                         </h3>
-                        <p className="text-sm text-gray-500">
-                            Genetic Programming -{" "}
+                        <p className="text-sm text-gray-500 dark:text-gray-400">
+                            GP -{" "}
                             <span className="text-green-500">
-                                PrimitiveTree
+                                GeneticProgramming
                             </span>
                         </p>
                         <hr className="my-4" />
 
                         {currentStep >= 1 && (
                             <ChooseAlgo
-                                algoData={algorithmData.filter(
-                                    (x) => x.name !== "de",
-                                )}
                                 chosenAlgo={chosenAlgo}
                                 setChosenAlgo={setChosenAlgo}
                                 currentStep={currentStep}
                                 nextStep={2}
                                 setCurrentStep={setCurrentStep}
-                                mu={mu}
-                                setMu={setMu}
-                                lambda={lambda}
-                                setLambda={setLambda}
+                                algoData={algorithmData}
                             />
                         )}
 
@@ -321,141 +314,110 @@ export default function ConfigureGP() {
 
                         {currentStep >= 3 && (
                             <ChoosePrimitiveSet
-                                currentStep={currentStep}
-                                setCurrentStep={setCurrentStep}
-                                nextStep={4}
                                 primitiveSet={primitiveSet}
                                 setPrimitiveSet={setPrimitiveSet}
+                                currentStep={currentStep}
+                                nextStep={4}
+                                setCurrentStep={setCurrentStep}
                             />
                         )}
 
                         {currentStep >= 4 && (
                             <ChooseTreeGeneratorExpression
-                                currentStep={currentStep}
-                                setCurrentStep={setCurrentStep}
-                                nextStep={5}
                                 treeGenExpression={treeGenExpression}
                                 setTreeGenExpression={setTreeGenExpression}
                                 minHeight={minHeight}
                                 setMinHeight={setMinHeight}
                                 maxHeight={maxHeight}
                                 setMaxHeight={setMaxHeight}
+                                currentStep={currentStep}
+                                nextStep={5}
+                                setCurrentStep={setCurrentStep}
+                                treeGeneratorData={treeGeneratorData}
                             />
                         )}
 
                         {currentStep >= 5 && (
                             <ChooseInitializationFunction
-                                title="Step 5: Choose an Individual Generator Function."
+                                indGen={indGen}
+                                setIndGen={setIndGen}
                                 currentStep={currentStep}
-                                setCurrentStep={setCurrentStep}
                                 nextStep={6}
-                                popFunc={indGen}
-                                setPopFunc={setIndGen}
+                                setCurrentStep={setCurrentStep}
                             />
                         )}
 
                         {currentStep >= 6 && (
-                            <ChooseInitializationFunction
-                                title="Step 6: Choose a Population Generator Function."
-                                currentStep={currentStep}
-                                setCurrentStep={setCurrentStep}
-                                nextStep={7}
-                                popFunc={popFunc}
-                                setPopFunc={setPopFunc}
-                            />
-                        )}
-
-                        {currentStep >= 7 && (
                             <ChooseSelectionFunction
-                                title="Step 7: Choose a Selection Function."
-                                currentStep={currentStep}
-                                setCurrentStep={setCurrentStep}
-                                nextStep={8}
                                 selectFunc={selectionFunction}
                                 setSelectFunc={setSelectionFunction}
                                 tempTourSize={tempTourSize}
                                 setTempTourSize={setTempTourSize}
+                                currentStep={currentStep}
+                                nextStep={7}
+                                setCurrentStep={setCurrentStep}
                             />
                         )}
 
-                        {currentStep >= 8 && (
+                        {currentStep >= 7 && (
                             <ChooseMutationFunction
-                                title="Step 8: Choose a Mutation Function."
-                                mutationData={gpMutationData}
-                                currentStep={currentStep}
-                                setCurrentStep={setCurrentStep}
-                                nextStep={9}
                                 mutateFunc={mutateFunc}
                                 setMutateFunc={setMutateFunc}
                                 mode={mode}
                                 setMode={setMode}
+                                mutExpr={mutExpr}
+                                setMutExpr={setMutExpr}
+                                mutMinHeight={mutMinHeight}
+                                setMutMinHeight={setMutMinHeight}
+                                mutMaxHeight={mutMaxHeight}
+                                setMutMaxHeight={setMutMaxHeight}
+                                currentStep={currentStep}
+                                nextStep={8}
+                                setCurrentStep={setCurrentStep}
+                                mutationData={gpMutationData}
+                            />
+                        )}
+
+                        {currentStep >= 8 && (
+                            <ChooseMatingFunction
+                                mateFunc={matingFunc}
+                                setMateFunc={setMatingFunc}
+                                terminalProb={terminalProb}
+                                setTerminalProb={setTerminalProb}
+                                currentStep={currentStep}
+                                nextStep={9}
+                                setCurrentStep={setCurrentStep}
+                                mateData={gpMateData}
                             />
                         )}
 
                         {currentStep >= 9 && (
-                            <ChooseTreeGeneratorExpression
-                                title="Step 9: Choose a Mutation Generator Tree Expression."
+                            <ConfigureBloatLimits
+                                mateHeightLimit={mateHeightLimit}
+                                setMateHeightLimit={setMateHeightLimit}
+                                mutateHeightLimit={mutateHeightLimit}
+                                setMutateHeightLimit={setMutateHeightLimit}
                                 currentStep={currentStep}
-                                setCurrentStep={setCurrentStep}
                                 nextStep={10}
-                                treeGenExpression={mutExpr}
-                                setTreeGenExpression={setMutExpr}
-                                minHeight={mutMinHeight}
-                                setMinHeight={setMutMinHeight}
-                                maxHeight={mutMaxHeight}
-                                setMaxHeight={setMutMaxHeight}
-                                treeGenList={
-                                    treeGenExpression == "genFull"
-                                        ? treeGeneratorData.filter(
-                                              (x) => x.name !== "genFull",
-                                          )
-                                        : treeGeneratorData
-                                }
+                                setCurrentStep={setCurrentStep}
                             />
                         )}
 
                         {currentStep >= 10 && (
-                            <ChooseMatingFunction
-                                title="Step 10: Choose a Mating Function."
-                                mateData={gpMateData}
-                                mateFunc={matingFunc}
-                                setMateFunc={setMatingFunc}
-                                currentStep={currentStep}
-                                nextStep={11}
-                                setCurrentStep={setCurrentStep}
-                                terminalProb={terminalProb}
-                                setTerminalProb={setTerminalProb}
-                                setPrimitiveSet={setPrimitiveSet}
-                            />
-                        )}
-
-                        {currentStep >= 11 && (
-                            <ConfigureBloatLimits
-                                currentStep={currentStep}
-                                setCurrentStep={setCurrentStep}
-                                nextStep={12}
-                                mateHeight={mateHeightLimit}
-                                setMateHeight={setMateHeightLimit}
-                                mutHeight={mutateHeightLimit}
-                                setMutHeight={setMutateHeightLimit}
-                            />
-                        )}
-
-                        {currentStep >= 11 && (
                             <ConfigureEquation
-                                currentStep={currentStep}
-                                setCurrentStep={setCurrentStep}
-                                nextStep={13}
                                 degree={degree}
                                 setDegree={setDegree}
                                 coefficients={coefficients}
                                 setCoefficients={setCoefficients}
                                 equation={equation}
                                 setEquation={setEquation}
+                                currentStep={currentStep}
+                                nextStep={11}
+                                setCurrentStep={setCurrentStep}
                             />
                         )}
 
-                        {currentStep >= 13 && (
+                        {currentStep >= 11 && (
                             <ConfigureAlgoParams
                                 populationSize={populationSize}
                                 setPopulationSize={setPopulationSize}
@@ -470,11 +432,11 @@ export default function ConfigureGP() {
                             />
                         )}
 
-                        {currentStep >= 13 && (
+                        {currentStep >= 11 && (
                             // TODO: Disable button if any of the fields are absent.
                             <div className="mt-4">
                                 <button
-                                    className="bg-foreground text-background p-2 rounded-lg w-full hover:opacity-70 active:opacity-50"
+                                    className="bg-foreground dark:bg-gray-800 text-background dark:text-gray-100 p-2 rounded-lg w-full"
                                     onClick={(e) => {
                                         e.preventDefault();
                                         setIsLoading(true);

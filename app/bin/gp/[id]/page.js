@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState, useRef } from "react";
+import LightBulbToggle from "@/app/_components/LightBulbToggle";
 
 export default function GPRunResult() {
     const [data, setData] = useState(null); // Stores full run data if needed later
@@ -471,6 +472,7 @@ export default function GPRunResult() {
 
     return (
         <main className="flex flex-col items-center justify-center min-h-screen font-[family-name:var(--font-geist-mono)] p-4 sm:p-8 bg-gray-100">
+            <LightBulbToggle />
             {/* Header */}
             <div className="text-center mb-6">
                 <h1 className="text-3xl sm:text-4xl font-bold text-gray-800">

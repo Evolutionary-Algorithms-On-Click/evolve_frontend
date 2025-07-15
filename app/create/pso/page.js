@@ -14,6 +14,7 @@ import { benchmarkData } from "@/app/_data/benchmarks";
 import { ConfigurePopulationSizeAndGenerations } from "./_components/popSizeAndGenerations";
 import { LogOut } from "lucide-react";
 import PreviewPSO from "@/app/_components/pso/preview";
+import LightBulbToggle from "@/app/_components/LightBulbToggle";
 
 export default function ConfigurePSO() {
     const [userData, setUserData] = useState({});
@@ -102,6 +103,7 @@ export default function ConfigurePSO() {
         <Loader type={"full"} message={"Running Algorithm..."} />
     ) : (
         <main className="flex flex-col justify-center items-center justify-items-center min-h-screen font-[family-name:var(--font-geist-mono)] p-8">
+            <LightBulbToggle />
             <div className="text-center">
                 <h1 className="text-3xl sm:text-4xl font-bold">
                     Evolve OnClick

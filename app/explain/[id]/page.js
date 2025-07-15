@@ -5,6 +5,7 @@ import { useEffect, useState, useRef } from "react";
 import { useChat } from "ai/react";
 import { Bot, Loader2, Send, User, Code, FileJson } from "lucide-react";
 import ReactMarkdown from "react-markdown";
+import LightBulbToggle from "../../_components/LightBulbToggle";
 
 export default function ExplainPage() {
     const [codeContent, setCodeContent] = useState(null);
@@ -185,6 +186,7 @@ export default function ExplainPage() {
 
     return (
         <div className="flex h-screen w-screen bg-slate-100 font-[family-name:var(--font-geist-mono)]">
+            <LightBulbToggle />
             <div className="w-[37%] flex-shrink-0 border-r border-slate-300 bg-white">
                 <div className="h-full flex flex-col overflow-hidden">
                     <div className="p-4 border-b border-slate-200 flex items-center justify-between flex-shrink-0">

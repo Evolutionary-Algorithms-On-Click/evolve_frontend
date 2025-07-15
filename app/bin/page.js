@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { DnaIcon, Loader2, LogOut } from "lucide-react";
+import DynamicLogo from "../_components/DynamicLogo";
+import LightBulbToggle from "../_components/LightBulbToggle";
 
 export default function Results() {
     const [userData, setUserData] = useState({});
@@ -77,17 +79,21 @@ export default function Results() {
 
     return (
         <main className="flex flex-col font-[family-name:var(--font-geist-mono)] p-8">
+            <LightBulbToggle />
             <div className="text-center mb-8">
-                <h1 className="text-3xl sm:text-4xl font-bold text-gray-800">
+                <div className="flex items-center justify-center overflow-hidden h-32 mb-4">
+                    <DynamicLogo height={320} width={680} className="rounded-md" />
+                </div>
+                <h1 className="text-3xl sm:text-4xl font-bold text-gray-800 dark:text-gray-100">
                     Evolve OnClick
                 </h1>
-                <p className="text-gray-600">
+                <p className="text-gray-600 dark:text-gray-300">
                     Run and Visualize algorithms with just a click.
                 </p>
             </div>
 
             {userData.fullName && (
-                <div className="mt-4 flex flex-row gap-2 bg-gray-900 rounded-full px-4 text-[#6eff39] items-center w-fit ml-auto mr-auto">
+                <div className="mt-4 flex flex-row gap-2 bg-gray-900 dark:bg-gray-700 rounded-full px-4 text-[#6eff39] items-center w-fit ml-auto mr-auto">
                     <div className="py-2">
                         <p className="text-xs">
                             {userData.fullName} {"</>"} @{userData.userName}
@@ -98,7 +104,7 @@ export default function Results() {
                             localStorage.clear();
                             window.location.href = "/auth";
                         }}
-                        className="text-[#ff2e2e] font-semibold border-l border-[#ffffff] pl-3 py-2 flex flex-row justify-center items-center"
+                        className="text-[#ff2e2e] font-semibold border-l border-[#ffffff] dark:border-gray-500 pl-3 py-2 flex flex-row justify-center items-center"
                     >
                         <LogOut className="mx-1" size={16} />
                     </button>
@@ -108,37 +114,37 @@ export default function Results() {
             <div className="flex flex-row gap-4 mt-4 mb-8 ml-auto mr-auto">
                 <Link
                     href="/create"
-                    className="rounded-full border border-solid border-black/[.08] transition-colors flex items-center justify-center bg-background text-foreground hover:bg-[#000000] hover:text-background text-sm sm:text-base px-4 py-2 mt-8"
+                    className="rounded-full border border-solid border-black/[.08] dark:border-gray-600 transition-colors flex items-center justify-center bg-background dark:bg-gray-800 text-foreground dark:text-gray-100 hover:bg-[#000000] hover:text-background dark:hover:bg-gray-700 text-sm sm:text-base px-4 py-2 mt-8"
                 >
                     ← Go Back
                 </Link>
                 <Link
                     href="/create"
-                    className="rounded-full border border-solid border-black/[.08] transition-colors flex items-center justify-center bg-background text-foreground hover:bg-[#000000] hover:text-background text-sm sm:text-base px-4 py-2 mt-8"
+                    className="rounded-full border border-solid border-black/[.08] dark:border-gray-600 transition-colors flex items-center justify-center bg-background dark:bg-gray-800 text-foreground dark:text-gray-100 hover:bg-[#000000] hover:text-background dark:hover:bg-gray-700 text-sm sm:text-base px-4 py-2 mt-8"
                 >
                     {"Create ->"}
                 </Link>
             </div>
 
-            <h1 className="text-xl font-bold text-center">
+            <h1 className="text-xl font-bold text-center dark:text-gray-100">
                 Previous Algorithm Runs
             </h1>
 
             {isLoading && (
                 <div className="flex flex-col text-center justify-center items-center mt-8">
                     <Loader2 size={32} />
-                    <p className="text-gray-600 mt-4">Loading runs...</p>
+                    <p className="text-gray-600 dark:text-gray-300 mt-4">Loading runs...</p>
                 </div>
             )}
 
             {/* Display grouped run cards */}
             {!isLoading && Object.keys(runData).length === 0 ? (
                 <div className="flex flex-col text-center justify-center items-center">
-                    <p className="text-gray-600 mb-4">
+                    <p className="text-gray-600 dark:text-gray-300 mb-4">
                         No previous runs found.
                     </p>
                     <Link
-                        className="rounded-full border border-solid transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-gray-700 text-sm sm:text-base px-6 py-2 sm:px-8 shadow-md w-fit mt-16"
+                        className="rounded-full border border-solid transition-colors flex items-center justify-center bg-foreground dark:bg-gray-800 text-background dark:text-gray-100 gap-2 hover:bg-gray-700 dark:hover:bg-gray-700 text-sm sm:text-base px-6 py-2 sm:px-8 shadow-md w-fit mt-16"
                         href="/create"
                     >
                         Create New Run
@@ -150,25 +156,25 @@ export default function Results() {
                         {/* Tab Buttons */}
                         <div className="flex flex-wrap gap-4 mb-8 justify-center items-center">
                             <button
-                                className={`rounded-full border border-solid transition-colors flex items-center justify-center gap-2 text-sm sm:text-base px-6 py-2 sm:px-8 shadow-md ${activeTab === "gp" ? "bg-foreground text-background" : "bg-background text-foreground"}`}
+                                className={`rounded-full border border-solid transition-colors flex items-center justify-center gap-2 text-sm sm:text-base px-6 py-2 sm:px-8 shadow-md ${activeTab === "gp" ? "bg-foreground text-background" : "bg-background dark:bg-gray-800 text-foreground dark:text-gray-100"}`}
                                 onClick={() => setActiveTab("gp")}
                             >
                                 Genetic Programming
                             </button>
                             <button
-                                className={`rounded-full border border-solid transition-colors flex items-center justify-center gap-2 text-sm sm:text-base px-6 py-2 sm:px-8 shadow-md ${activeTab === "ea" ? "bg-foreground text-background" : "bg-background text-foreground"}`}
+                                className={`rounded-full border border-solid transition-colors flex items-center justify-center gap-2 text-sm sm:text-base px-6 py-2 sm:px-8 shadow-md ${activeTab === "ea" ? "bg-foreground text-background" : "bg-background dark:bg-gray-800 text-foreground dark:text-gray-100"}`}
                                 onClick={() => setActiveTab("ea")}
                             >
                                 Without Genetic Programming
                             </button>
                             <button
-                                className={`rounded-full border border-solid transition-colors flex items-center justify-center gap-2 text-sm sm:text-base px-6 py-2 sm:px-8 shadow-md ${activeTab === "pso" ? "bg-foreground text-background" : "bg-background text-foreground"}`}
+                                className={`rounded-full border border-solid transition-colors flex items-center justify-center gap-2 text-sm sm:text-base px-6 py-2 sm:px-8 shadow-md ${activeTab === "pso" ? "bg-foreground text-background" : "bg-background dark:bg-gray-800 text-foreground dark:text-gray-100"}`}
                                 onClick={() => setActiveTab("pso")}
                             >
                                 Particle Swarm Optimization
                             </button>
                             <button
-                                className={`rounded-full border border-solid transition-colors flex items-center justify-center gap-2 text-sm sm:text-base px-6 py-2 sm:px-8 shadow-md ${activeTab === "ml" ? "bg-foreground text-background" : "bg-background text-foreground"}`}
+                                className={`rounded-full border border-solid transition-colors flex items-center justify-center gap-2 text-sm sm:text-base px-6 py-2 sm:px-8 shadow-md ${activeTab === "ml" ? "bg-foreground text-background" : "bg-background dark:bg-gray-800 text-foreground dark:text-gray-100"}`}
                                 onClick={() => setActiveTab("ml")}
                             >
                                 Optimized ML Models with EA
@@ -178,7 +184,7 @@ export default function Results() {
                             (runType) =>
                                 activeTab === runType && (
                                     <div key={runType} className="w-full">
-                                        <h2 className="text-lg font-bold text-center mb-4">
+                                        <h2 className="text-lg font-bold text-center mb-4 dark:text-gray-100">
                                             {runType === "gp"
                                                 ? "Genetic Programming"
                                                 : runType === "ea"
@@ -193,7 +199,7 @@ export default function Results() {
                                             {runData[runType].map((run) => (
                                                 <div
                                                     key={run.id}
-                                                    className="bg-white rounded-3xl shadow-md border-2 border-gray-400 hover:border-black transition-colors duration-300 p-4 w-72 flex flex-col"
+                                                    className="bg-white dark:bg-gray-800 rounded-3xl shadow-md border-2 border-gray-400 dark:border-gray-600 hover:border-black dark:hover:border-gray-400 transition-colors duration-300 p-4 w-72 flex flex-col"
                                                 >
                                                     <div className="aspect-w-1 aspect-h-1 relative overflow-hidden rounded-md mb-4">
                                                         <Image
@@ -220,14 +226,14 @@ export default function Results() {
                                                             className="transition-transform duration-500 hover:scale-110"
                                                         />
                                                     </div>
-                                                    <p className="text-gray-600 text-sm truncate">
+                                                    <p className="text-gray-600 dark:text-gray-300 text-sm truncate">
                                                         {run.description}
                                                     </p>
-                                                    <p className="text-gray-500 text-xs mt-2">
+                                                    <p className="text-gray-500 dark:text-gray-400 text-xs mt-2">
                                                         {run.name.split("-")[0]}{" "}
                                                         generations
                                                     </p>
-                                                    <p className="text-gray-500 text-xs">
+                                                    <p className="text-gray-500 dark:text-gray-400 text-xs">
                                                         {run.name.split("-")[1]}{" "}
                                                         individuals
                                                     </p>
@@ -251,40 +257,26 @@ export default function Results() {
                                                         </p>
                                                     )}
                                                     {run.status ===
-                                                        "pending" && (
-                                                        <p className="text-orange-600 text-xs mt-2">
-                                                            {run.status}
-                                                        </p>
-                                                    )}
-                                                    {run.status ===
                                                         "failed" && (
                                                         <p className="text-red-600 text-xs mt-2">
                                                             {run.status}
                                                         </p>
                                                     )}
 
-                                                    {run.isShared ===
-                                                        "true" && (
-                                                        <p className="text-blue-600 text-xs mt-2">
-                                                            Shared Run
-                                                        </p>
-                                                    )}
-
-                                                    <p className="text-gray-500 text-xs mt-2 mb-6">
-                                                        Created At:{" "}
-                                                        {
-                                                            run.createdAt
-                                                                .toString()
-                                                                .split(".")[0]
-                                                        }
-                                                    </p>
-                                                    <Link
-                                                        className="rounded-full border border-solid border-yellow-900 transition-colors flex items-center justify-center bg-yellow-400 text-black hover:bg-yellow-50 gap-2 text-sm sm:text-base p-2 h-8 mt-auto w-full"
-                                                        href={`/bin/${runType}/${run.id}`}
-                                                    >
-                                                        <DnaIcon size={24} />
-                                                        View Run
-                                                    </Link>
+                                                    <div className="flex flex-row gap-2 mt-4">
+                                                        <Link
+                                                            href={`/bin/${runType}/${run.id}`}
+                                                            className="flex-1 rounded-full border border-solid border-black/[.08] dark:border-gray-600 transition-colors flex items-center justify-center bg-background dark:bg-gray-700 text-foreground dark:text-gray-100 hover:bg-[#000000] hover:text-background dark:hover:bg-gray-600 text-xs px-4 py-2"
+                                                        >
+                                                            View Results
+                                                        </Link>
+                                                        <Link
+                                                            href={`/explain/${run.id}`}
+                                                            className="flex-1 rounded-full border border-solid border-black/[.08] dark:border-gray-600 transition-colors flex items-center justify-center bg-background dark:bg-gray-700 text-foreground dark:text-gray-100 hover:bg-[#000000] hover:text-background dark:hover:bg-gray-600 text-xs px-4 py-2"
+                                                        >
+                                                            Explain
+                                                        </Link>
+                                                    </div>
                                                 </div>
                                             ))}
                                         </div>

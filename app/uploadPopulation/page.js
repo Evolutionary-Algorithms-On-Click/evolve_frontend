@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useDropzone } from "react-dropzone";
 import CodeMirror from "@uiw/react-codemirror";
 import { json } from "@codemirror/lang-json";
+import LightBulbToggle from "../_components/LightBulbToggle";
 
 export default function UploadPage() {
     const [file, setFile] = useState(null);
@@ -51,6 +52,7 @@ export default function UploadPage() {
 
     return (
         <main className="items-center justify-items-center min-h-screen font-[family-name:var(--font-geist-mono)] p-8">
+            <LightBulbToggle />
             <div>
                 <h1 className="text-3xl sm:text-4xl font-bold text-center mb-4">
                     Evolve OnClick Unpickler

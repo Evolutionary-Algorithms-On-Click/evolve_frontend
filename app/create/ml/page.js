@@ -15,6 +15,7 @@ import { useRouter } from "next/navigation";
 import { LogOut } from "lucide-react";
 import { algorithmData } from "@/app/_data/algorithms";
 import PreviewML from "@/app/_components/ml/preview";
+import LightBulbToggle from "@/app/_components/LightBulbToggle";
 
 export default function OptimizeMLModelWithEA() {
     const [userData, setUserData] = useState({});
@@ -125,6 +126,7 @@ export default function OptimizeMLModelWithEA() {
         <Loader type={"full"} message={"Optimizing your ML Model..."} />
     ) : (
         <main className="flex flex-col justify-center items-center justify-items-center min-h-screen font-[family-name:var(--font-geist-mono)] p-8">
+            <LightBulbToggle />
             <div className="text-center">
                 <h1 className="text-3xl sm:text-4xl font-bold">
                     Evolve OnClick
