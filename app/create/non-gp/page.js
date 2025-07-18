@@ -82,6 +82,34 @@ export default function ConfigureNonGP() {
     const [mutpb, setMutpb] = useState(0.2);
     const [hof, setHof] = useState(5);
 
+    // --- FORM VALIDATION LOGIC ---
+    const isFormValid =
+        chosenAlgo &&
+        parameters.length > 0 &&
+        indGen &&
+        randomRangeStart !== "" &&
+        randomRangeEnd !== "" &&
+        !isNaN(Number(randomRangeStart)) &&
+        !isNaN(Number(randomRangeEnd)) &&
+        parseInt(randomRangeStart) <= parseInt(randomRangeEnd) &&
+        indSize > 0 &&
+        popFunc &&
+        matingFunc &&
+        mutateFunc &&
+        selectFunc &&
+        evalFunc &&
+        populationSize > 0 &&
+        generations > 0 &&
+        cxpb >= 0 && cxpb <= 1 &&
+        mutpb >= 0 && mutpb <= 1 &&
+        hof > 0 &&
+        // Tournament size required if selection is tournament
+        ((selectFunc && selectFunc.name === "selTournament" && tempTourSize > 0) ||
+            (selectFunc && selectFunc.name !== "selTournament")) &&
+        // For some mating functions, extra checks
+        (["cxPartialyMatched", "cxOrdered", "cxUniformPartialyMatched"].includes(matingFunc.name) ||
+            (indGen !== "floatingPoint" && indSize > parseInt(randomRangeEnd)));
+
     const router = useRouter();
 
     useEffect(() => {
@@ -447,12 +475,16 @@ export default function ConfigureNonGP() {
                             <div className="mt-4">
                                 <button
                                     className="bg-foreground text-background p-2 rounded-lg w-full"
-                                    onClick={(e) => {
+                                    disabled={!isFormValid || isLoading}
+                                    onClick={async (e) => {
                                         e.preventDefault();
+                                        if (!isFormValid) {
+                                            alert("Please fill in all required fields before executing.");
+                                            return;
+                                        }
                                         setIsLoading(true);
-                                        runAlgorithm().then(() => {
-                                            setIsLoading(false);
-                                        });
+                                        await runAlgorithm();
+                                        setIsLoading(false);
                                     }}
                                 >
                                     <div className="flex flex-row gap-2 justify-center items-center">
