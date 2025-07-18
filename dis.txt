@@ -1,0 +1,3 @@
+made some changes in the logo and named it "LOGO-W".
+added darktheme and a toggle button to switch between light and dark theme. and the logo will dynamically change from LOGO to LOGO-W wwhen required.
+

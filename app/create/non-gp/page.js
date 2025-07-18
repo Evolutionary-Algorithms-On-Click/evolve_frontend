@@ -1,25 +1,21 @@
 "use client";
 
+import { LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import Loader from "../../_components/Loader";
-import { ChooseAlgo } from "../_components/chooseAlgorithm";
-import ChooseWeights from "../_components/chooseWeights";
-import ChooseGenerator from "./_components/chooseGenerator";
-import { GetIndividualSize } from "./_components/getIndividualSize";
-import ChooseInitializationFunction from "../_components/chooseInitializationFunction";
-import ChooseMatingFunction from "../_components/chooseMatingFunction";
-import ChooseSelectionFunction from "../_components/chooseSelectionFunction";
-import ChooseEvalFunction from "./_components/chooseEvaluationFunction";
-import ConfigureAlgoParams from "../_components/configureAlgoParams";
-import Preview from "../../_components/non-gp/preview";
-import ChooseMutationFunction from "../_components/chooseMutateFunction";
-import { deMutationData, mutationData } from "@/app/_data/mutation";
-import { deMateData, mateData } from "@/app/_data/mate";
-import Link from "next/link";
-import { LogOut } from "lucide-react";
-import { ConfigureDEParams } from "./_components/chooseDEParams";
-import { selectionData } from "@/app/_data/selection";
+import Loader from "@/app/_components/Loader";
+import ChooseAlgorithm from "@/app/create/_components/chooseAlgorithm";
+import ChooseWeights from "@/app/create/_components/chooseWeights";
+import ChooseInitializationFunction from "@/app/create/_components/chooseInitializationFunction";
+import ChooseMatingFunction from "@/app/create/_components/chooseMatingFunction";
+import ChooseMutateFunction from "@/app/create/_components/chooseMutateFunction";
+import ChooseSelectionFunction from "@/app/create/_components/chooseSelectionFunction";
+import ChooseEvaluationFunction from "@/app/create/non-gp/_components/chooseEvaluationFunction";
+import ChooseGenerator from "@/app/create/non-gp/_components/chooseGenerator";
+import GetIndividualSize from "@/app/create/non-gp/_components/getIndividualSize";
+import ChooseDEParams from "@/app/create/non-gp/_components/chooseDEParams";
+import ConfigureAlgoParams from "@/app/create/_components/configureAlgoParams";
+import DynamicLogo from "@/app/_components/DynamicLogo";
 
 export default function ConfigureNonGP() {
     const [userData, setUserData] = useState({});
@@ -80,119 +76,69 @@ export default function ConfigureNonGP() {
     const [generations, setGenerations] = useState(10);
     const [cxpb, setCxpb] = useState(0.5);
     const [mutpb, setMutpb] = useState(0.2);
-    const [hof, setHof] = useState(5);
+    const [indpb, setIndpb] = useState(0.05);
+    const [tournsize, setTournsize] = useState(3);
+    const [hofSize, setHofSize] = useState(1);
 
     const router = useRouter();
 
-    useEffect(() => {
-        if (
-            chosenAlgo !== "eaMuPlusLambda" &&
-            chosenAlgo !== "eaMuCommaLambda"
-        ) {
-            if (parameters.length > 0 && currentStep < 3) {
-                setCurrentStep(3);
-            }
-        }
-    }, [currentStep]);
-
     const runAlgorithm = async () => {
-        /*
-            algorithm: str
-            individual: str
-            populationFunction: str
-            evaluationFunction: str
-            populationSize: int
-            generations: int
-            cxpb: float
-            mutpb: float
-            weights: tuple
-            individualSize: int
-            indpb: float
-            randomRange: list
-            crossoverFunction: str
-            mutationFunction: str
-            selectionFunction: str
-            tournamentSize: Optional[int] = None
-            mu: Optional[int] = None
-            lambda_: Optional[int] = None
-            hofSize: Optional[int] = 1
-        */
-
-        if (
-            ![
-                "cxPartialyMatched",
-                "cxOrdered",
-                "cxUniformPartialyMatched",
-            ].includes(matingFunc.name)
-        ) {
-            // individual size should be greater than max random range and datatype not floating point.
-            if (indGen === "floatingPoint") {
-                alert(
-                    `Please select a different type. This is because of the way in which ${matingFunc.name} works.`,
-                );
-                return;
-            }
-
-            if (indSize <= parseInt(randomRangeEnd)) {
-                alert(
-                    `Please select a valid individual size greater than random range. This is because of the way in which ${matingFunc.name} works.`,
-                );
-                return;
-            }
-        }
+        setIsLoading(true);
 
         const inputData = {
-            algorithm: chosenAlgo.toString(),
-            individual: indGen.toString(),
-            populationFunction: popFunc.toString(),
-            evaluationFunction: evalFunc.toString(),
-            populationSize: parseInt(populationSize ?? 5000),
-            generations: parseInt(generations ?? 10),
-            cxpb: parseFloat(cxpb ?? 0.5),
-            mutpb: parseFloat(mutpb ?? 0.2),
-            weights: parameters.map((param) => parseFloat(param)),
-            individualSize: parseInt(indSize ?? 10),
-            indpb: 0.05, // TODO: Get this from the user.
-            randomRange: [
-                parseInt(randomRangeStart ?? 0),
-                parseInt(randomRangeEnd ?? 100),
-            ],
-            crossoverFunction: matingFunc
-                ? matingFunc.toString()
-                : "cxOnePoint",
-            mutationFunction: mutateFunc ? mutateFunc.toString() : "mutFlipBit",
-            selectionFunction: selectFunc
-                ? selectFunc.toString()
-                : "selRoulette",
-            tournamentSize: parseInt(tempTourSize ?? 2),
-            mu: parseInt(mu ?? 1),
-            lambda_: parseInt(lambda ?? 1),
-            hofSize: parseInt(hof ?? 5),
-            crossOverRate: parseFloat(crossOverRate ?? 0.25),
-            scalingFactor: parseFloat(scalingFactor ?? 1),
+            algorithm: chosenAlgo,
+            mu: mu,
+            lambda: lambda,
+            crossOverRate: crossOverRate,
+            scalingFactor: scalingFactor,
+            parameters: parameters,
+            indGen: indGen,
+            randomRangeStart: randomRangeStart,
+            randomRangeEnd: randomRangeEnd,
+            indSize: indSize,
+            popFunc: popFunc,
+            matingFunc: matingFunc,
+            mutateFunc: mutateFunc,
+            selectFunc: selectFunc,
+            tempTourSize: tempTourSize,
+            evalFunc: evalFunc,
+            populationSize: populationSize,
+            generations: generations,
+            cxpb: cxpb,
+            mutpb: mutpb,
+            indpb: indpb,
+            tournsize: tournsize,
+            hofSize: hofSize,
         };
 
-        const response = await fetch(
-            (process.env.NEXT_PUBLIC_BACKEND_BASE_URL ??
-                "http://localhost:5002") + "/api/ea",
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
+        try {
+            const response = await fetch(
+                (process.env.NEXT_PUBLIC_BACKEND_BASE_URL ??
+                    "http://localhost:5002") + "/api/runs/ea",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    credentials: "include",
+                    body: JSON.stringify(inputData),
                 },
-                credentials: "include",
-                body: JSON.stringify(inputData),
-            },
-        );
+            );
 
-        switch (response.status) {
-            case 200:
-                let data = await response.json();
-                router.push(`/bin/ea/${data.data.runID}`);
+            switch (response.status) {
+                case 200:
+                    let data = await response.json();
+                    router.push(`/bin/ea/${data.data.runID}`);
 
-                break;
-            default:
-                alert("Error running algorithm.");
+                    break;
+                default:
+                    alert("Error running algorithm.");
+            }
+        } catch (error) {
+            console.error("Error running algorithm:", error);
+            alert("Failed to run algorithm. Please try again.");
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -200,15 +146,18 @@ export default function ConfigureNonGP() {
         <Loader type={"full"} message={"Running Algorithm..."} />
     ) : (
         <main className="flex flex-col justify-center items-center justify-items-center min-h-screen font-[family-name:var(--font-geist-mono)] p-8">
-            <div>
-                <h1 className="text-3xl sm:text-4xl font-bold text-center">
+            <div className="text-center mb-8">
+                <div className="flex items-center justify-center overflow-hidden h-32 mb-4">
+                    <DynamicLogo height={320} width={680} className="rounded-md" />
+                </div>
+                <h1 className="text-3xl sm:text-4xl font-bold text-center dark:text-gray-100">
                     Evolve OnClick
                 </h1>
-                <p>Run and Visualize algorithms with just a click.</p>
+                <p className="dark:text-gray-300">Run and Visualize algorithms with just a click.</p>
             </div>
 
             {userData.fullName && (
-                <div className="mt-4 flex flex-row gap-2 bg-gray-900 rounded-full px-4 text-[#6eff39] items-center">
+                <div className="mt-4 flex flex-row gap-2 bg-gray-900 dark:bg-gray-700 rounded-full px-4 text-[#6eff39] items-center">
                     <div className="py-2">
                         <p className="text-xs">
                             {userData.fullName} {"</>"} @{userData.userName}
@@ -219,258 +168,109 @@ export default function ConfigureNonGP() {
                             localStorage.clear();
                             window.location.href = "/auth";
                         }}
-                        className="text-[#ff2e2e] font-semibold border-l border-[#ffffff] pl-3 py-2 flex flex-row justify-center items-center"
+                        className="text-[#ff2e2e] font-semibold border-l border-[#ffffff] dark:border-gray-500 pl-3 py-2 flex flex-row justify-center items-center"
                     >
                         <LogOut className="mx-1" size={16} />
                     </button>
                 </div>
             )}
 
-            <div className="flex flex-row gap-4">
-                <Link
-                    href="/create"
-                    className="rounded-full border border-solid border-black/[.08] transition-colors flex items-center justify-center bg-background text-foreground hover:bg-[#000000] hover:text-background text-sm sm:text-base px-4 py-2 mt-8"
-                >
-                    ← Go Back
-                </Link>
-                <Link
-                    href="/bin"
-                    className="rounded-full border border-solid border-black/[.08] transition-colors flex items-center justify-center bg-background text-foreground hover:bg-[#000000] hover:text-background text-sm sm:text-base px-4 py-2 mt-8"
-                >
-                    View Previous Runs →
-                </Link>
-            </div>
+            <div className="flex flex-col items-center justify-center flex-grow w-fit min-w-[32%]">
+                <div className="flex flex-col gap-1 p-4 w-full bg-white dark:bg-gray-800 shadow-sm border border-dashed border-gray-200 dark:border-gray-600 rounded-3xl">
+                    <div className="mb-4">
+                        <h2 className="text-xl font-semibold text-center text-gray-900 dark:text-gray-100">
+                            Configure Non-GP Algorithm
+                        </h2>
+                        <p className="text-xs text-gray-500 dark:text-gray-400 text-center">
+                            Step {currentStep} of 9
+                        </p>
+                    </div>
 
-            <div className="flex flex-wrap mt-16 gap-4 border border-gray-400 rounded-2xl bg-gray-100 bg-opacity-70">
-                <Preview
-                    algo={chosenAlgo}
-                    parameters={parameters}
-                    indGen={indGen}
-                    indSize={indSize}
-                    popFunc={popFunc}
-                    mateFunc={matingFunc}
-                    mutateFunc={mutateFunc}
-                    selectFunc={selectFunc}
-                    evalFunc={evalFunc}
-                    tempTourSize={tempTourSize}
-                    currentStep={currentStep}
-                    populationSize={populationSize}
-                    generations={generations}
-                    cxpb={cxpb}
-                    mutpb={mutpb}
-                    hofSize={hof}
-                />
+                    {currentStep === 1 && (
+                        <ChooseAlgorithm
+                            chosenAlgo={chosenAlgo}
+                            setChosenAlgo={setChosenAlgo}
+                            setCurrentStep={setCurrentStep}
+                        />
+                    )}
 
-                <div className="border border-gray-400 rounded-2xl p-4 bg-white">
-                    <form
-                        onSubmit={(e) => {
-                            e.preventDefault();
-                        }}
-                        className="flex flex-col"
-                    >
-                        <h3 className="text-xl font-bold">
-                            Configure Algorithm
-                        </h3>
-                        <p className="text-sm text-gray-500">Non-GP</p>
-                        <hr className="my-4" />
+                    {currentStep === 2 && (
+                        <ChooseWeights
+                            parameters={parameters}
+                            setParameters={setParameters}
+                            setCurrentStep={setCurrentStep}
+                        />
+                    )}
 
-                        {currentStep >= 1 && (
-                            <ChooseAlgo
-                                chosenAlgo={chosenAlgo}
-                                setChosenAlgo={setChosenAlgo}
-                                currentStep={currentStep}
-                                nextStep={2}
-                                setCurrentStep={setCurrentStep}
-                                mu={mu}
-                                setMu={setMu}
-                                lambda={lambda}
-                                setLambda={setLambda}
-                            />
-                        )}
+                    {currentStep === 3 && (
+                        <ChooseInitializationFunction
+                            indGen={indGen}
+                            setIndGen={setIndGen}
+                            setCurrentStep={setCurrentStep}
+                        />
+                    )}
 
-                        {chosenAlgo === "de" && currentStep >= 2 && (
-                            <ConfigureDEParams
-                                phi1={crossOverRate}
-                                phi2={scalingFactor}
-                                setPhi1={setCrossOverRate}
-                                setPhi2={setScalingFactor}
-                                currentStep={currentStep}
-                                nextStep={3}
-                                setCurrentStep={setCurrentStep}
-                            />
-                        )}
+                    {currentStep === 4 && (
+                        <GetIndividualSize
+                            indSize={indSize}
+                            setIndSize={setIndSize}
+                            setCurrentStep={setCurrentStep}
+                        />
+                    )}
 
-                        {currentStep >= 2 && (
-                            <ChooseWeights
-                                currentStep={currentStep}
-                                nextStep={3}
-                                setCurrentStep={setCurrentStep}
-                                parameters={parameters}
-                                setParameters={setParameters}
-                            />
-                        )}
+                    {currentStep === 5 && (
+                        <ChooseMatingFunction
+                            matingFunc={matingFunc}
+                            setMatingFunc={setMatingFunc}
+                            setCurrentStep={setCurrentStep}
+                        />
+                    )}
 
-                        {parameters.length > 0 && currentStep >= 3 && (
-                            <ChooseGenerator
-                                indGen={indGen}
-                                setIndGen={setIndGen}
-                                randomRangeStart={randomRangeStart}
-                                setRandomRangeStart={setRandomRangeStart}
-                                randomRangeEnd={randomRangeEnd}
-                                setRandomRangeEnd={setRandomRangeEnd}
-                                currentStep={currentStep}
-                                setCurrentStep={setCurrentStep}
-                                nextStep={4}
-                            />
-                        )}
+                    {currentStep === 6 && (
+                        <ChooseMutateFunction
+                            mutateFunc={mutateFunc}
+                            setMutateFunc={setMutateFunc}
+                            setCurrentStep={setCurrentStep}
+                        />
+                    )}
 
-                        {currentStep >= 4 &&
-                            indGen &&
-                            randomRangeStart &&
-                            randomRangeEnd &&
-                            parseInt(randomRangeStart) <=
-                                parseInt(randomRangeEnd) && (
-                                <GetIndividualSize
-                                    indSize={indSize}
-                                    setIndSize={setIndSize}
-                                    currentStep={currentStep}
-                                    nextStep={5}
-                                    setCurrentStep={setCurrentStep}
-                                />
-                            )}
+                    {currentStep === 7 && (
+                        <ChooseSelectionFunction
+                            selectFunc={selectFunc}
+                            setSelectFunc={setSelectFunc}
+                            tempTourSize={tempTourSize}
+                            setTempTourSize={setTempTourSize}
+                            setCurrentStep={setCurrentStep}
+                        />
+                    )}
 
-                        {currentStep >= 5 && indSize && (
-                            <ChooseInitializationFunction
-                                popFunc={popFunc}
-                                setPopFunc={setPopFunc}
-                                currentStep={currentStep}
-                                nextStep={6}
-                                setCurrentStep={setCurrentStep}
-                            />
-                        )}
+                    {currentStep === 8 && (
+                        <ChooseEvaluationFunction
+                            evalFunc={evalFunc}
+                            setEvalFunc={setEvalFunc}
+                            setCurrentStep={setCurrentStep}
+                        />
+                    )}
 
-                        {currentStep >= 6 && popFunc && (
-                            <ChooseMatingFunction
-                                mateData={
-                                    chosenAlgo === "de"
-                                        ? deMateData
-                                        : indGen === "floatingPoint"
-                                          ? mateData.filter(
-                                                (mate) =>
-                                                    ![
-                                                        "cxPartialyMatched",
-                                                        "cxOrdered",
-                                                        "cxUniformPartialyMatched",
-                                                    ].includes(mate.name),
-                                            )
-                                          : mateData
-                                }
-                                mateFunc={matingFunc}
-                                setMateFunc={setMatingFunc}
-                                currentStep={currentStep}
-                                nextStep={7}
-                                setCurrentStep={setCurrentStep}
-                            />
-                        )}
-
-                        {currentStep >= 7 && matingFunc && (
-                            <ChooseMutationFunction
-                                mutationData={
-                                    chosenAlgo === "de"
-                                        ? deMutationData
-                                        : mutationData
-                                }
-                                mutateFunc={mutateFunc}
-                                setMutateFunc={setMutateFunc}
-                                currentStep={currentStep}
-                                nextStep={8}
-                                setCurrentStep={setCurrentStep}
-                            />
-                        )}
-
-                        {currentStep >= 8 && matingFunc && (
-                            <ChooseSelectionFunction
-                                selData={
-                                    chosenAlgo === "eaMuPlusLambda" ||
-                                    chosenAlgo === "eaMuCommaLambda"
-                                        ? selectionData.filter(
-                                              (sel) =>
-                                                  ![
-                                                      "selRoulette",
-                                                      "selBest",
-                                                      "selWorst",
-                                                  ].includes(sel.name),
-                                          )
-                                        : selectionData
-                                }
-                                selectFunc={selectFunc}
-                                setSelectFunc={setSelectFunc}
-                                currentStep={currentStep}
-                                nextStep={9}
-                                setCurrentStep={setCurrentStep}
-                                tempTourSize={tempTourSize}
-                                setTempTourSize={setTempTourSize}
-                            />
-                        )}
-
-                        {currentStep >= 9 &&
-                            selectFunc &&
-                            (selectFunc !== "selTournament" ||
-                                (selectFunc === "selTournament" &&
-                                    tempTourSize > 0)) && (
-                                <ChooseEvalFunction
-                                    evalFunc={evalFunc}
-                                    setEvalFunc={setEvalFunc}
-                                    currentStep={currentStep}
-                                    nextStep={10}
-                                    setCurrentStep={setCurrentStep}
-                                />
-                            )}
-
-                        {currentStep >= 10 && evalFunc && (
-                            <ConfigureAlgoParams
-                                populationSize={populationSize}
-                                setPopulationSize={setPopulationSize}
-                                generations={generations}
-                                setGenerations={setGenerations}
-                                cxpb={cxpb}
-                                setCxpb={setCxpb}
-                                mutpb={mutpb}
-                                setMutpb={setMutpb}
-                                hof={hof}
-                                setHof={setHof}
-                            />
-                        )}
-
-                        {currentStep >= 10 && evalFunc && (
-                            // TODO: Disable button if any of the fields are absent.
-                            <div className="mt-4">
-                                <button
-                                    className="bg-foreground text-background p-2 rounded-lg w-full"
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        setIsLoading(true);
-                                        runAlgorithm().then(() => {
-                                            setIsLoading(false);
-                                        });
-                                    }}
-                                >
-                                    <div className="flex flex-row gap-2 justify-center items-center">
-                                        <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            height="24px"
-                                            viewBox="0 -960 960 960"
-                                            width="24px"
-                                            fill="#FFFFFF"
-                                        >
-                                            <path d="M480-80 120-280v-400l360-200 360 200v400L480-80ZM364-590q23-24 53-37t63-13q33 0 63 13t53 37l120-67-236-131-236 131 120 67Zm76 396v-131q-54-14-87-57t-33-98q0-11 1-20.5t4-19.5l-125-70v263l240 133Zm40-206q33 0 56.5-23.5T560-480q0-33-23.5-56.5T480-560q-33 0-56.5 23.5T400-480q0 33 23.5 56.5T480-400Zm40 206 240-133v-263l-125 70q3 10 4 19.5t1 20.5q0 55-33 98t-87 57v131Z" />
-                                        </svg>
-                                        Execute Algorithm
-                                    </div>
-                                </button>
-                            </div>
-                        )}
-                    </form>
+                    {currentStep === 9 && (
+                        <ConfigureAlgoParams
+                            populationSize={populationSize}
+                            setPopulationSize={setPopulationSize}
+                            generations={generations}
+                            setGenerations={setGenerations}
+                            cxpb={cxpb}
+                            setCxpb={setCxpb}
+                            mutpb={mutpb}
+                            setMutpb={setMutpb}
+                            indpb={indpb}
+                            setIndpb={setIndpb}
+                            tournsize={tournsize}
+                            setTournsize={setTournsize}
+                            hofSize={hofSize}
+                            setHofSize={setHofSize}
+                            runAlgorithm={runAlgorithm}
+                        />
+                    )}
                 </div>
             </div>
         </main>
