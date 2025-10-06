@@ -36,7 +36,7 @@ If you use EvOC in your research, please cite:
 
 ```bibtex
 @inproceedings{evoc2024gecco,
-  author = {Prithiviraj Ashrock and Srivathsan S and Madhavan S},
+  author = {Ritwik Murali and Ashwin Narayanan Sivamani and Abhinav Ramakrishnan and Hariharan Arul and Ananya R},
   title = {EvOC: A Framework for Visualizing and Evolving Cellular Automata in Unity},
   year = {2024},
   isbn = {9798400706243},
