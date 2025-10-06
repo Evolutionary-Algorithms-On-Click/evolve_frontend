@@ -30,20 +30,13 @@ npm run dev
 npm run build && npm run start
 ```
 
+## Citation
 
-## 📄 Citation
-
-If you use EvOC in your research or for a scientific publication, please consider citing the following paper:
-
-> Prithiviraj Ashrock, Srivathsan S, and Madhavan S. (2024). **EvOC: A Framework for Visualizing and Evolving Cellular Automata in Unity**. In *Proceedings of the Genetic and Evolutionary Computation Conference Companion (GECCO '24 Companion)*. Association for Computing Machinery, New York, NY, USA, 257–258.
->
-> **DOI:** https://doi.org/10.1145/3712255.3726652
-
-**BibTeX entry:**
+If you use EvOC in your research, please cite:
 
 ```bibtex
 @inproceedings{evoc2024gecco,
-  author = {Ashrock, Prithiviraj and S, Srivathsan and S, Madhavan},
+  author = {Prithiviraj Ashrock and Srivathsan S and Madhavan S},
   title = {EvOC: A Framework for Visualizing and Evolving Cellular Automata in Unity},
   year = {2024},
   isbn = {9798400706243},
