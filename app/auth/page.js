@@ -124,7 +124,7 @@ export default function Auth() {
                                 );
                             }}
                         >
-                            {"Recover Password"}
+                        { /* {"Recover Password"} */ }
                         </button>
                         <Link
                             className={`underline underline-offset-4 decoration-dashed text-foreground text-xs ${isLoading ? "pointer-events-none opacity-50" : ""}`}
