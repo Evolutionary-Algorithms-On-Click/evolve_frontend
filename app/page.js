@@ -37,18 +37,21 @@ export default function Home() {
                     </div>
                 </div>
 
-                <div className="mt-auto pt-12 w-full max-w-md text-center">
-                    <p className="text-foreground/70 text-xs sm:text-sm mb-4">
-                        Explore the foundational research behind EvOC's innovative approach.
-                    </p>
-                    <a
-                        className="inline-flex items-center justify-center rounded-full border border-black bg-background px-6 py-3 text-xs sm:text-sm text-foreground transition-colors hover:bg-yellow-400 hover:text-black"
-                        href="https://dl.acm.org/doi/10.1145/3712255.3726652"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        Read the Research Paper
-                    </a>
+                <div className="mt-auto pt-12 w-full max-w-md">
+                    <div className="rounded-xl border border-black/20 bg-background p-4 sm:p-5 text-center">
+                        <p className="text-foreground/70 text-xs sm:text-sm mb-3">
+                            Explore the foundational research behind EvOC's
+                            innovative approach.
+                        </p>
+                        <a
+                            className="text-foreground text-xs sm:text-sm underline underline-offset-4 hover:text-yellow-400"
+                            href="https://dl.acm.org/doi/10.1145/3712255.3726652"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            Read the Research Paper
+                        </a>
+                    </div>
                 </div>
             </main>
 
