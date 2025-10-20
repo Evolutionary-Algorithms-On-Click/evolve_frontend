@@ -100,40 +100,47 @@ export default function ConfigureGP() {
     const router = useRouter();
 
     const validateInput = () => {
-        if (!["eaSimple", "eaMuPlusLambda", "eaMuCommaLambda", "eaGenerateUpdate"].includes(chosenAlgo)) {
-          alert("Invalid algorithm! Choose a supported GP algorithm.");
-          return false;
+        if (
+            ![
+                "eaSimple",
+                "eaMuPlusLambda",
+                "eaMuCommaLambda",
+                "eaGenerateUpdate",
+            ].includes(chosenAlgo)
+        ) {
+            alert("Invalid algorithm! Choose a supported GP algorithm.");
+            return false;
         }
         if (populationSize <= 0) {
-          alert("Population size must be greater than 0!!");
-          return false;
+            alert("Population size must be greater than 0!!");
+            return false;
         }
         if (generations <= 0) {
-          alert("Generations must be greater than 0!!");
-          return false;
+            alert("Generations must be greater than 0!!");
+            return false;
         }
         if (cxpb < 0 || cxpb > 1) {
-          alert("Crossover probability must be between 0 and 1!!");
-          return false;
+            alert("Crossover probability must be between 0 and 1!!");
+            return false;
         }
         if (mutpb < 0 || mutpb > 1) {
-          alert("Mutation probability must be between 0 and 1!!");
-          return false;
+            alert("Mutation probability must be between 0 and 1!!");
+            return false;
         }
         if (!matingFunc) {
-          alert("Mating function is required!!");
-          return false;
+            alert("Mating function is required!!");
+            return false;
         }
         if (!mutateFunc) {
-          alert("Mutation function is required!!");
-          return false;
+            alert("Mutation function is required!!");
+            return false;
         }
         if (!selectionFunction) {
-          alert("Selection function is required!!");
-          return false;
+            alert("Selection function is required!!");
+            return false;
         }
         return true;
-      };
+    };
 
     const runGPAlgorithm = async () => {
         if (!validateInput()) {

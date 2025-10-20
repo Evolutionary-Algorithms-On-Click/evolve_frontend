@@ -60,45 +60,58 @@ export default function ConfigurePSO() {
 
     const validateInput = () => {
         if (!["original", "multiswarm", "speciation"].includes(algorithm)) {
-          alert("Invalid PSO algorithm. Choose original, multiswarm, or speciation!!");
-          return false;
+            alert(
+                "Invalid PSO algorithm. Choose original, multiswarm, or speciation!!",
+            );
+            return false;
         }
         if (dimensions <= 0) {
-          alert("Dimensions must be greater than 0!!");
-          return false;
+            alert("Dimensions must be greater than 0!!");
+            return false;
         }
         if (minPosition >= maxPosition) {
-          alert("Min position must be less than max position!!");
-          return false;
+            alert("Min position must be less than max position!!");
+            return false;
         }
         if (minSpeed >= maxSpeed) {
-          alert("Min speed must be less than max speed!!");
-          return false;
+            alert("Min speed must be less than max speed!!");
+            return false;
         }
         if (
-          ![
-            "rand", "plane", "sphere", "cigar", "rosenbrock", "h1", "ackley", "bohachevsky",
-            "griewank", "rastrigin", "rastrigin_scaled", "rastrigin_skew", "schaffer",
-            "schwefel", "himmelblau"
-          ].includes(benchmark)
+            ![
+                "rand",
+                "plane",
+                "sphere",
+                "cigar",
+                "rosenbrock",
+                "h1",
+                "ackley",
+                "bohachevsky",
+                "griewank",
+                "rastrigin",
+                "rastrigin_scaled",
+                "rastrigin_skew",
+                "schaffer",
+                "schwefel",
+                "himmelblau",
+            ].includes(benchmark)
         ) {
-          alert("Invalid benchmark function selected!!");
-          return false;
+            alert("Invalid benchmark function selected!!");
+            return false;
         }
         if (populationSize <= 0) {
-          alert("Population size must be greater than 0!!");
-          return false;
+            alert("Population size must be greater than 0!!");
+            return false;
         }
         if (generations <= 0) {
-          alert("Generations must be greater than 0!!");
-          return false;
+            alert("Generations must be greater than 0!!");
+            return false;
         }
         return true;
-      };
+    };
 
     const runPSO = async () => {
-
-        if(!validateInput()){
+        if (!validateInput()) {
             return;
         }
 
