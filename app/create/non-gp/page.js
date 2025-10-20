@@ -20,6 +20,7 @@ import Link from "next/link";
 import { LogOut } from "lucide-react";
 import { ConfigureDEParams } from "./_components/chooseDEParams";
 import { selectionData } from "@/app/_data/selection";
+import { env } from "next-runtime-env";
 
 export default function ConfigureNonGP() {
     const [userData, setUserData] = useState({});
@@ -212,8 +213,8 @@ export default function ConfigureNonGP() {
         };
 
         const response = await fetch(
-            (process.env.NEXT_PUBLIC_BACKEND_BASE_URL ??
-                "http://localhost:5002") + "/api/ea",
+            (env("NEXT_PUBLIC_BACKEND_BASE_URL") ?? "http://localhost:5002") +
+                "/api/ea",
             {
                 method: "POST",
                 headers: {

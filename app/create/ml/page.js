@@ -15,6 +15,7 @@ import { useRouter } from "next/navigation";
 import { LogOut } from "lucide-react";
 import { algorithmData } from "@/app/_data/algorithms";
 import PreviewML from "@/app/_components/ml/preview";
+import { env } from "next-runtime-env";
 
 export default function OptimizeMLModelWithEA() {
     const [userData, setUserData] = useState({});
@@ -98,8 +99,8 @@ export default function OptimizeMLModelWithEA() {
         };
 
         const response = await fetch(
-            (process.env.NEXT_PUBLIC_BACKEND_BASE_URL ??
-                "http://localhost:5002") + "/api/ml",
+            (env("NEXT_PUBLIC_BACKEND_BASE_URL") ?? "http://localhost:5002") +
+                "/api/ml",
             {
                 method: "POST",
                 headers: {

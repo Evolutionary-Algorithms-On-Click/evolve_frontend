@@ -14,6 +14,7 @@ import { benchmarkData } from "@/app/_data/benchmarks";
 import { ConfigurePopulationSizeAndGenerations } from "./_components/popSizeAndGenerations";
 import { LogOut } from "lucide-react";
 import PreviewPSO from "@/app/_components/pso/preview";
+import { env } from "next-runtime-env";
 
 export default function ConfigurePSO() {
     const [userData, setUserData] = useState({});
@@ -131,8 +132,8 @@ export default function ConfigurePSO() {
         };
 
         const response = await fetch(
-            (process.env.NEXT_PUBLIC_BACKEND_BASE_URL ??
-                "http://localhost:5002") + "/api/pso",
+            (env("NEXT_PUBLIC_BACKEND_BASE_URL") ?? "http://localhost:5002") +
+                "/api/pso",
             {
                 method: "POST",
                 headers: {

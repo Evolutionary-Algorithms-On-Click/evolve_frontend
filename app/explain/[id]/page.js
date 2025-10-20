@@ -5,6 +5,7 @@ import { useEffect, useState, useRef } from "react";
 import { useChat } from "ai/react";
 import { Bot, Loader2, Send, User, Code, FileJson } from "lucide-react";
 import ReactMarkdown from "react-markdown";
+import { env } from "next-runtime-env";
 
 export default function ExplainPage() {
     const [codeContent, setCodeContent] = useState(null);
@@ -27,7 +28,7 @@ export default function ExplainPage() {
             let configFetched = false;
             try {
                 const codeRes = await fetch(
-                    `${process.env.NEXT_PUBLIC_MINIO_BASE_URL ?? "http://localhost:9000"}/code/${id}/code.py`,
+                    `${env("NEXT_PUBLIC_MINIO_BASE_URL") ?? "http://localhost:9000"}/code/${id}/code.py`,
                 );
                 if (!codeRes.ok)
                     throw new Error(
@@ -37,7 +38,7 @@ export default function ExplainPage() {
                 setCodeContent(codeText);
                 codeFetched = true;
                 const configRes = await fetch(
-                    `${process.env.NEXT_PUBLIC_MINIO_BASE_URL ?? "http://localhost:9000"}/code/${id}/input.json`,
+                    `${env("NEXT_PUBLIC_MINIO_BASE_URL") ?? "http://localhost:9000"}/code/${id}/input.json`,
                 );
                 if (!configRes.ok)
                     throw new Error(

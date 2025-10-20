@@ -21,6 +21,7 @@ import PreviewGP from "@/app/_components/gp/preview";
 import { LogOut } from "lucide-react";
 import { algorithmData } from "@/app/_data/algorithms";
 import { treeGeneratorData } from "@/app/_data/treeGenExpression";
+import { env } from "next-runtime-env";
 
 // The rest of the code remains unchanged
 
@@ -222,8 +223,8 @@ export default function ConfigureGP() {
         };
 
         const response = await fetch(
-            (process.env.NEXT_PUBLIC_BACKEND_BASE_URL ??
-                "http://localhost:5002") + "/api/gp",
+            (env("NEXT_PUBLIC_BACKEND_BASE_URL") ?? "http://localhost:5002") +
+                "/api/gp",
             {
                 method: "POST",
                 headers: {

@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState, useRef } from "react";
+import { env } from "next-runtime-env";
 
 export default function MLExecResult() {
     // --- State Variables ---
@@ -32,7 +33,7 @@ export default function MLExecResult() {
     const fetchData = () => {
         // Use NEXT_PUBLIC prefix for browser access
         const backendBaseUrl =
-            process.env.NEXT_PUBLIC_BACKEND_BASE_URL ?? "http://localhost:5002";
+            env("NEXT_PUBLIC_BACKEND_BASE_URL") ?? "http://localhost:5002";
         console.log("Fetching execution status for ML Run ID:", id);
         fetch(`${backendBaseUrl}/api/runs/run`, {
             method: "POST",
@@ -125,7 +126,7 @@ export default function MLExecResult() {
         const signal = sseAbortControllerRef.current.signal;
 
         const backendBaseUrl =
-            process.env.NEXT_PUBLIC_BACKEND_BASE_URL ?? "http://localhost:5002";
+            env("NEXT_PUBLIC_BACKEND_BASE_URL") ?? "http://localhost:5002";
         const sseUrl = `${backendBaseUrl.replace(/\/$/, "")}/api/runs/logs`; // Updated URL
 
         try {
@@ -314,7 +315,7 @@ export default function MLExecResult() {
     // --- Fetch Static Content & Initial Status ---
     useEffect(() => {
         const minioBaseUrl =
-            process.env.NEXT_PUBLIC_MINIO_BASE_URL ?? "http://localhost:9000";
+            env("NEXT_PUBLIC_MINIO_BASE_URL") ?? "http://localhost:9000";
         const fetchInputParams = () => {
             fetch(`${minioBaseUrl}/code/${id}/input.json`)
                 .then((response) =>
@@ -359,7 +360,7 @@ export default function MLExecResult() {
     // --- Fetch Final Log Content ---
     const fetchLogsContent = () => {
         const minioBaseUrl =
-            process.env.NEXT_PUBLIC_MINIO_BASE_URL ?? "http://localhost:9000";
+            env("NEXT_PUBLIC_MINIO_BASE_URL") ?? "http://localhost:9000";
         fetch(`${minioBaseUrl}/code/${id}/logbook.txt`)
             .then((response) =>
                 response.ok
@@ -377,7 +378,7 @@ export default function MLExecResult() {
     const fetchBestContent = () => {
         // Renamed function
         const minioBaseUrl =
-            process.env.NEXT_PUBLIC_MINIO_BASE_URL ?? "http://localhost:9000";
+            env("NEXT_PUBLIC_MINIO_BASE_URL") ?? "http://localhost:9000";
         fetch(`${minioBaseUrl}/code/${id}/best.txt`) // Assuming best ML results are in best.txt
             .then((response) =>
                 response.ok
@@ -410,7 +411,7 @@ export default function MLExecResult() {
     const handleShareSubmit = (e) => {
         e.preventDefault();
         const backendBaseUrl =
-            process.env.NEXT_PUBLIC_BACKEND_BASE_URL ?? "http://localhost:5002";
+            env("NEXT_PUBLIC_BACKEND_BASE_URL") ?? "http://localhost:5002";
         fetch(`${backendBaseUrl}/api/runs/share`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -470,7 +471,7 @@ export default function MLExecResult() {
             ? "Live Execution Logs"
             : "Execution Logs"; // Changed final log title slightly
     const minioBaseUrl =
-        process.env.NEXT_PUBLIC_MINIO_BASE_URL ?? "http://localhost:9000";
+        env("NEXT_PUBLIC_MINIO_BASE_URL") ?? "http://localhost:9000";
 
     return (
         <main className="flex flex-col items-center justify-center min-h-screen font-[family-name:var(--font-geist-mono)] p-4 sm:p-8 bg-gray-100">
@@ -647,7 +648,7 @@ export default function MLExecResult() {
                                     Code
                                 </h3>
                                 {/* ... Ask AI Button ... */}
-                                {process.env.NEXT_PUBLIC_AI === "true" && (
+                                {env("NEXT_PUBLIC_AI") === "true" && (
                                     <Link
                                         href={`/explain/${id}`}
                                         className="inline-flex items-center justify-center gap-2 rounded-full px-4 py-2 text-xs sm:text-sm font-medium text-slate-700 border border-slate-300 shadow-sm transition-all duration-200 ease-in-out hover:bg-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 active:bg-slate-300"

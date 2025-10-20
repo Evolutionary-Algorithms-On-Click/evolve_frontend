@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { DnaIcon, Loader2, LogOut } from "lucide-react";
+import { env } from "next-runtime-env";
 
 export default function Results() {
     const [userData, setUserData] = useState({});
@@ -23,7 +24,7 @@ export default function Results() {
 
             // Fetch the run data
             fetch(
-                (process.env.NEXT_PUBLIC_BACKEND_BASE_URL ??
+                (env("NEXT_PUBLIC_BACKEND_BASE_URL") ??
                     "http://localhost:5002") + "/api/runs",
                 {
                     method: "GET",
@@ -198,7 +199,7 @@ export default function Results() {
                                                     <div className="aspect-w-1 aspect-h-1 relative overflow-hidden rounded-md mb-4">
                                                         <Image
                                                             src={
-                                                                `${process.env.NEXT_PUBLIC_MINIO_BASE_URL ?? "http://localhost:9000"}/code/${run.id}/` +
+                                                                `${env("NEXT_PUBLIC_MINIO_BASE_URL") ?? "http://localhost:9000"}/code/${run.id}/` +
                                                                 (runType ===
                                                                 "ea"
                                                                     ? "fitness_plot.png"

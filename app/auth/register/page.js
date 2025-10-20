@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { env } from "next-runtime-env";
 
 export default function Register() {
     const [formData, setFormData] = useState({
@@ -38,8 +39,8 @@ export default function Register() {
 
         try {
             const res = await fetch(
-                (process.env.NEXT_PUBLIC_AUTH_BASE_URL ??
-                    "http://localhost:5000") + "/api/register",
+                (env("NEXT_PUBLIC_AUTH_BASE_URL") ?? "http://localhost:5000") +
+                    "/api/register",
                 {
                     method: "POST",
                     headers: {
