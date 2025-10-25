@@ -114,19 +114,14 @@ export default function Auth() {
                     />
 
                     <div className="flex flex-wrap gap-2 justify-between mt-2 w-full px-1">
-                        <button
-                            type="button"
+                        <Link
+                            href="/auth/recover"
                             className={`underline underline-offset-4 decoration-dashed text-foreground text-xs ${isLoading ? "pointer-events-none opacity-50" : ""}`}
                             aria-disabled={isLoading}
                             tabIndex={isLoading ? -1 : undefined}
-                            onClick={() => {
-                                alert(
-                                    "This feature is a work in progress - Sorry for the inconvenience.",
-                                );
-                            }}
                         >
                             {"Recover Password"}
-                        </button>
+                        </Link>
                         <Link
                             className={`underline underline-offset-4 decoration-dashed text-foreground text-xs ${isLoading ? "pointer-events-none opacity-50" : ""}`}
                             href="/auth/register"
