@@ -4,7 +4,7 @@ Thank you for your interest in contributing to the **Evolutionary Algorithms on 
 
 Every contribution, no matter how small—from fixing typos to implementing new features—is welcome and valued.
 
-***
+---
 
 ## 🚀 Getting Started
 
@@ -12,8 +12,8 @@ To ensure a smooth workflow and avoid duplicate effort, please follow these step
 
 ### 1. Claim a Task
 
-* Check the project's **issue tracker** to find an open bug or feature to work on.
-* To get a task officially assigned to you, **you must tag @Ashrockzzz2003 in a comment on the issue** you wish to work on. This is required to receive assignment confirmation.
+- Check the project's **issue tracker** to find an open bug or feature to work on.
+- To get a task officially assigned to you, **you must tag @Ashrockzzz2003 in a comment on the issue** you wish to work on. This is required to receive assignment confirmation.
 
 ### 2. Set Up Your Development Environment
 
@@ -23,7 +23,7 @@ The complete guidelines for setting up your local environment, building, and run
 
 Please follow these steps to ensure the application runs correctly locally before proceeding with any code changes.
 
-***
+---
 
 ## 🛠 Submitting Changes (Pull Requests)
 
@@ -38,17 +38,17 @@ When you are ready to submit your work, please follow the standard Git workflow:
 
 ### Commit Message Guidelines
 
-* Use a clear, descriptive title for your commits.
-* The first line of the commit message should be a brief summary (under 50 characters).
-* **Reference the issue number** the PR is addressing (e.g., `Fix: Button layout on mobile view (#42)`).
+- Use a clear, descriptive title for your commits.
+- The first line of the commit message should be a brief summary (under 50 characters).
+- **Reference the issue number** the PR is addressing (e.g., `Fix: Button layout on mobile view (#42)`).
 
-***
+---
 
 ## 🛡 Code of Conduct
 
 To ensure a welcoming and friendly community, we expect all contributors to follow our **Code of Conduct** (CoC) in all project spaces. Please read the CoC to understand the behavioral standards and reporting procedures.
 
-***
+---
 
 ## ❓ Need Help?
 

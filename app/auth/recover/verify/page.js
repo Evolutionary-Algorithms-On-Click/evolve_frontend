@@ -1,13 +1,15 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 
 export default function VerifyOTP() {
     const [formData, setFormData] = useState({
-        otp:"",
-        new_password: ""
+        otp: "",
+        newPassword: "",
+        confirmPassword: "",
     });
     const [isLoading, setIsLoading] = useState(false);
     const searchParams = useSearchParams();
@@ -20,12 +22,19 @@ export default function VerifyOTP() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        // Validate password match
+        if (formData.newPassword !== formData.confirmPassword) {
+            alert("Passwords do not match. Please try again.");
+            return;
+        }
+
         setIsLoading(true);
 
         const inputData = {
             email: email,
             otp: formData.otp,
-            new_password: formData.new_password
+            new_password: formData.newPassword,
         };
 
         try {
@@ -82,7 +91,7 @@ export default function VerifyOTP() {
                     width={680}
                 />
             </div>
-            <div className="flex flex-col items-center justify-center flex-grow w-fit min-w-[32%]">
+            <div className="flex flex-col flex-grow min-w-[32%] w-full md:max-w-[80%] lg:max-w-[60%] xl:max-w-[40%] mx-auto justify-center items-center align-middle">
                 <form
                     onSubmit={handleSubmit}
                     className="flex flex-col gap-1 p-4 w-full bg-white shadow-sm border border-dashed border-gray-200 rounded-3xl"
@@ -93,6 +102,16 @@ export default function VerifyOTP() {
                         </h2>
                         <p className="text-xs text-gray-500 text-center break-words px-2">
                             {`Please enter the OTP sent to ${email ?? "your email"}.`}
+                        </p>
+                        <p className="text-xs text-gray-500 text-center break-words px-2 mt-2 mx-auto justify-center items-center align-middle">
+                            OTP will be sent only if the email is registered. If you did not receive an OTP, please check the email ID you typed again and{" "}
+                            <Link
+                                href="/auth/recover"
+                                className="text-blue-600 hover:text-blue-800 underline cursor-pointer"
+                            >
+                                retry
+                            </Link>
+                            .
                         </p>
                     </div>
                     <input
@@ -111,9 +130,19 @@ export default function VerifyOTP() {
                     />
                     <input
                         type="password"
-                        name="new_password"
+                        name="newPassword"
                         placeholder="Enter new password"
-                        value={formData.new_password}
+                        value={formData.newPassword}
+                        onChange={handleChange}
+                        className="w-full p-2 mt-4 border rounded-xl"
+                        required
+                        disabled={isLoading}
+                    />
+                    <input
+                        type="password"
+                        name="confirmPassword"
+                        placeholder="Confirm new password"
+                        value={formData.confirmPassword}
                         onChange={handleChange}
                         className="w-full p-2 mt-4 border rounded-xl"
                         required
@@ -121,9 +150,8 @@ export default function VerifyOTP() {
                     />
                     <button
                         type="submit"
-                        className={`rounded-full transition-colors flex items-center justify-center bg-yellow-400 text-black hover:bg-yellow-50 text-sm sm:text-base p-2 w-full border border-black gap-2 mt-4 ${
-                            isLoading ? "opacity-50 cursor-not-allowed" : ""
-                        }`}
+                        className={`rounded-full transition-colors flex items-center justify-center bg-yellow-400 text-black hover:bg-yellow-50 text-sm sm:text-base p-2 w-full border border-black gap-2 mt-4 ${isLoading ? "opacity-50 cursor-not-allowed" : ""
+                            }`}
                         disabled={isLoading}
                     >
                         {isLoading ? "Verifying..." : "Verify OTP"}
