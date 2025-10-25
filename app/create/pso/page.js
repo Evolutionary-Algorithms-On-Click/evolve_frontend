@@ -14,6 +14,7 @@ import { benchmarkData } from "@/app/_data/benchmarks";
 import { ConfigurePopulationSizeAndGenerations } from "./_components/popSizeAndGenerations";
 import { LogOut } from "lucide-react";
 import PreviewPSO from "@/app/_components/pso/preview";
+import { env } from "next-runtime-env";
 
 export default function ConfigurePSO() {
     const [userData, setUserData] = useState({});
@@ -58,7 +59,63 @@ export default function ConfigurePSO() {
 
     const router = useRouter();
 
+    const validateInput = () => {
+        if (!["original", "multiswarm", "speciation"].includes(algorithm)) {
+            alert(
+                "Invalid PSO algorithm. Choose original, multiswarm, or speciation!!",
+            );
+            return false;
+        }
+        if (dimensions <= 0) {
+            alert("Dimensions must be greater than 0!!");
+            return false;
+        }
+        if (minPosition >= maxPosition) {
+            alert("Min position must be less than max position!!");
+            return false;
+        }
+        if (minSpeed >= maxSpeed) {
+            alert("Min speed must be less than max speed!!");
+            return false;
+        }
+        if (
+            ![
+                "rand",
+                "plane",
+                "sphere",
+                "cigar",
+                "rosenbrock",
+                "h1",
+                "ackley",
+                "bohachevsky",
+                "griewank",
+                "rastrigin",
+                "rastrigin_scaled",
+                "rastrigin_skew",
+                "schaffer",
+                "schwefel",
+                "himmelblau",
+            ].includes(benchmark)
+        ) {
+            alert("Invalid benchmark function selected!!");
+            return false;
+        }
+        if (populationSize <= 0) {
+            alert("Population size must be greater than 0!!");
+            return false;
+        }
+        if (generations <= 0) {
+            alert("Generations must be greater than 0!!");
+            return false;
+        }
+        return true;
+    };
+
     const runPSO = async () => {
+        if (!validateInput()) {
+            return;
+        }
+
         const inputData = {
             algorithm: algorithm,
             dimensions: parseInt(dimensions.toString()),
@@ -75,8 +132,8 @@ export default function ConfigurePSO() {
         };
 
         const response = await fetch(
-            (process.env.NEXT_PUBLIC_BACKEND_BASE_URL ??
-                "http://localhost:5002") + "/api/pso",
+            (env("NEXT_PUBLIC_BACKEND_BASE_URL") ?? "http://localhost:5002") +
+                "/api/pso",
             {
                 method: "POST",
                 headers: {
@@ -266,6 +323,7 @@ export default function ConfigurePSO() {
                             <div className="mt-4">
                                 <button
                                     className="bg-foreground text-background p-2 rounded-lg w-full hover:opacity-70 active:opacity-50"
+                                    disable={!validateInput()}
                                     onClick={(e) => {
                                         e.preventDefault();
                                         setIsLoading(true);

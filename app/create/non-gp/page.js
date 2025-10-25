@@ -20,6 +20,7 @@ import Link from "next/link";
 import { LogOut } from "lucide-react";
 import { ConfigureDEParams } from "./_components/chooseDEParams";
 import { selectionData } from "@/app/_data/selection";
+import { env } from "next-runtime-env";
 
 export default function ConfigureNonGP() {
     const [userData, setUserData] = useState({});
@@ -95,7 +96,46 @@ export default function ConfigureNonGP() {
         }
     }, [currentStep]);
 
+    const validateInput = () => {
+        if (!chosenAlgo) {
+            alert("Algorithm is required!!");
+            return false;
+        }
+        if (!indGen) {
+            alert("Individual generator is required!!");
+            return false;
+        }
+        if (!popFunc) {
+            alert("Population function is required!!");
+            return false;
+        }
+        if (!matingFunc) {
+            alert("Mating (crossover) function is required!!");
+            return false;
+        }
+        if (!mutateFunc) {
+            alert("Mutation function is required!!");
+            return false;
+        }
+        if (!selectFunc) {
+            alert("Selection function is required!!");
+            return false;
+        }
+        if (!evalFunc) {
+            alert("Evaluation function is required!!");
+            return false;
+        }
+        if (populationSize <= 0 || generations <= 0) {
+            alert("Population size and generations must be greater than 0!!");
+            return false;
+        }
+        return true;
+    };
+
     const runAlgorithm = async () => {
+        if (!validateInput()) {
+            return;
+        }
         /*
             algorithm: str
             individual: str
@@ -173,8 +213,8 @@ export default function ConfigureNonGP() {
         };
 
         const response = await fetch(
-            (process.env.NEXT_PUBLIC_BACKEND_BASE_URL ??
-                "http://localhost:5002") + "/api/ea",
+            (env("NEXT_PUBLIC_BACKEND_BASE_URL") ?? "http://localhost:5002") +
+                "/api/ea",
             {
                 method: "POST",
                 headers: {
@@ -447,6 +487,7 @@ export default function ConfigureNonGP() {
                             <div className="mt-4">
                                 <button
                                     className="bg-foreground text-background p-2 rounded-lg w-full"
+                                    disabled={!validateInput()}
                                     onClick={(e) => {
                                         e.preventDefault();
                                         setIsLoading(true);

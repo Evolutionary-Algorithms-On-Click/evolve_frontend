@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useDropzone } from "react-dropzone";
 import CodeMirror from "@uiw/react-codemirror";
 import { json } from "@codemirror/lang-json";
+import { env } from "next-runtime-env";
 
 export default function UploadPage() {
     const [file, setFile] = useState(null);
@@ -26,7 +27,7 @@ export default function UploadPage() {
 
         try {
             const res = await fetch(
-                (process.env.NEXT_PUBLIC_BACKEND_BASE_URL ??
+                (env("NEXT_PUBLIC_BACKEND_BASE_URL") ??
                     "http://localhost:5002") + "/api/unpickleFile/",
                 {
                     method: "POST",

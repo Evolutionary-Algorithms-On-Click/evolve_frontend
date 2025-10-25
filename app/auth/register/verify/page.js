@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
+import { env } from "next-runtime-env";
 
 export default function VerifyOTP() {
     const [otp, setOtp] = useState("");
@@ -21,8 +22,8 @@ export default function VerifyOTP() {
 
         try {
             const response = await fetch(
-                (process.env.NEXT_PUBLIC_AUTH_BASE_URL ??
-                    "http://localhost:5000") + "/api/register/verify",
+                (env("NEXT_PUBLIC_AUTH_BASE_URL") ?? "http://localhost:5000") +
+                    "/api/register/verify",
                 {
                     method: "POST",
                     headers: {

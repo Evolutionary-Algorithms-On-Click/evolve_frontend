@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { env } from "next-runtime-env";
 
 export default function Auth() {
     const [email, setEmail] = useState("");
@@ -21,8 +22,8 @@ export default function Auth() {
 
         try {
             const response = await fetch(
-                (process.env.NEXT_PUBLIC_AUTH_BASE_URL ??
-                    "http://localhost:5000") + "/api/login",
+                (env("NEXT_PUBLIC_AUTH_BASE_URL") ?? "http://localhost:5000") +
+                    "/api/login",
                 {
                     method: "POST",
                     headers: {
