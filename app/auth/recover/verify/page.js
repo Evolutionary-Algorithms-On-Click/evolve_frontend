@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
+import { env } from "next-runtime-env";
 
 export default function VerifyOTP() {
     const [formData, setFormData] = useState({
@@ -39,8 +40,8 @@ export default function VerifyOTP() {
 
         try {
             const response = await fetch(
-                (process.env.NEXT_PUBLIC_AUTH_BASE_URL ??
-                    "http://localhost:5000") + "/api/password/reset/verify",
+                (env("NEXT_PUBLIC_AUTH_BASE_URL") ?? "http://localhost:5000") +
+                    "/api/password/reset/verify",
                 {
                     method: "POST",
                     headers: {
@@ -104,7 +105,9 @@ export default function VerifyOTP() {
                             {`Please enter the OTP sent to ${email ?? "your email"}.`}
                         </p>
                         <p className="text-xs text-gray-500 text-center break-words px-2 mt-2 mx-auto justify-center items-center align-middle">
-                            OTP will be sent only if the email is registered. If you did not receive an OTP, please check the email ID you typed again and{" "}
+                            OTP will be sent only if the email is registered. If
+                            you did not receive an OTP, please check the email
+                            ID you typed again and{" "}
                             <Link
                                 href="/auth/recover"
                                 className="text-blue-600 hover:text-blue-800 underline cursor-pointer"
@@ -150,8 +153,9 @@ export default function VerifyOTP() {
                     />
                     <button
                         type="submit"
-                        className={`rounded-full transition-colors flex items-center justify-center bg-yellow-400 text-black hover:bg-yellow-50 text-sm sm:text-base p-2 w-full border border-black gap-2 mt-4 ${isLoading ? "opacity-50 cursor-not-allowed" : ""
-                            }`}
+                        className={`rounded-full transition-colors flex items-center justify-center bg-yellow-400 text-black hover:bg-yellow-50 text-sm sm:text-base p-2 w-full border border-black gap-2 mt-4 ${
+                            isLoading ? "opacity-50 cursor-not-allowed" : ""
+                        }`}
                         disabled={isLoading}
                     >
                         {isLoading ? "Verifying..." : "Verify OTP"}

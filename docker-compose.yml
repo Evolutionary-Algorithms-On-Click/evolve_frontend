@@ -1,4 +1,3 @@
-
 services:
     evolve_frontend:
         # image: ghcr.io/evolutionary-algorithms-on-click/evolve_frontend:main
