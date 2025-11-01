@@ -70,7 +70,7 @@ export default function ConfigurePSO() {
             alert("Dimensions must be greater than 0!!");
             return false;
         }
-        if (minPosition >= maxPosition) {
+        if (minPos >= maxPos) {
             alert("Min position must be less than max position!!");
             return false;
         }
