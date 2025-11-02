@@ -1,5 +1,8 @@
 # evolve-frontend
 
+<img width="1265" height="1280" alt="image" src="https://github.com/user-attachments/assets/a3f2fbbe-63cb-4983-9079-c071bb1ed97c" />
+
+
 ## Setup ENV
 
 Create a `.env` file in the root directory of the project and add the following environment variables:
