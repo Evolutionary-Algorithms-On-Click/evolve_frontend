@@ -104,7 +104,7 @@ const StatementsList = ({ statements }) => {
                 <p className="text-gray-600 mt-1">{statements.length} total</p>
             </div>
 
-            <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-6">
                 {statements.map((statement) => (
                     <StatementCard key={statement.id} statement={statement} />
                 ))}
