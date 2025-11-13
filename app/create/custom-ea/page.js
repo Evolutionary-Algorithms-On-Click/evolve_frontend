@@ -1,50 +1,95 @@
 "use client";
-import React, { useState } from "react";
+
+import Loader from "@/app/_components/Loader";
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { LogOut } from "lucide-react";
 import CreateNewAction from "./_components/non-functional/newPSActionButton";
-import StatementCard from "./_components/non-functional/PSCard";
 import ProblemStatementForm from "./_components/non-functional/PSform";
+import StatementsList from "./_components/feature/PSList";
+import { env } from "next-runtime-env";
 
 // Parent Component
 export default function CustomEA() {
+    const [userData, setUserData] = useState({});
+    // useEffect(() => {
+    //     if (!localStorage.getItem("id")) {
+    //         window.location.href = "/auth";
+    //         return;
+    //     } else {
+    //         setUserData({
+    //             email: localStorage.getItem("email"),
+    //             userName: localStorage.getItem("userName"),
+    //             fullName: localStorage.getItem("fullName"),
+    //             id: localStorage.getItem("id"),
+    //         });
+    //     }
+    // }, []);
+
     const [isCreating, setIsCreating] = useState(false);
-    const [statements, setStatements] = useState([
-        {
-            id: 1,
-            title: "User Authentication Flow",
-            description:
-                "Redesign the authentication process to improve security",
-            date: "Nov 10, 2025",
-            collaborators: 3,
-        },
-        {
-            id: 2,
-            title: "Dashboard Performance",
-            description: "Optimize dashboard loading times and reduce latency",
-            date: "Nov 8, 2025",
-            collaborators: 5,
-        },
-        {
-            id: 3,
-            title: "Mobile Responsiveness",
-            description: "Improve mobile experience across all pages",
-            date: "Nov 5, 2025",
-            collaborators: 2,
-        },
-        {
-            id: 4,
-            title: "Data Export Feature",
-            description: "Implement data export options in various formats",
-            date: "Nov 1, 2025",
-            collaborators: 4,
-        },
-        {
-            id: 5,
-            title: "Notification System",
-            description: "Develop a real-time notification system for users",
-            date: "Oct 28, 2025",
-            collaborators: 3,
-        },
-    ]);
+    const [isLoading, setIsLoading] = useState(false);
+    const [statements, setStatements] = useState(null); // null = not loaded yet
+    const [loadingStatements, setLoadingStatements] = useState(true);
+    const [statementsError, setStatementsError] = useState(null);
+
+    useEffect(() => {
+        let mounted = true;
+        const controller = new AbortController();
+
+        const fetchProblems = async () => {
+            setLoadingStatements(true);
+            setStatementsError(null);
+            try {
+                const base =
+                    env("NEXT_PUBLIC_BACKEND_BASE_URL") ??
+                    "http://localhost:8080";
+                const res = await fetch(base + "/api/v1/problems", {
+                    method: "GET",
+                    credentials: "include",
+                    signal: controller.signal,
+                });
+
+                if (!mounted) return;
+
+                if (res.status === 401) {
+                    // Not authenticated
+                    window.location.href = "/auth";
+                    return;
+                }
+
+                if (!res.ok) {
+                    const text = await res.text();
+                    throw new Error(`Error ${res.status}: ${text}`);
+                }
+
+                const data = await res.json();
+
+                // Expecting an array of problems per spec
+                if (Array.isArray(data)) {
+                    setStatements(data);
+                } else if (data && Array.isArray(data.data)) {
+                    setStatements(data.data);
+                } else {
+                    // Backend returned null or unexpected shape
+                    setStatements([]);
+                }
+            } catch (err) {
+                if (controller.signal.aborted) return;
+                console.error("Failed to fetch problems:", err);
+                setStatementsError(err.message ?? "Failed to load problems.");
+                setStatements([]);
+            } finally {
+                if (mounted) setLoadingStatements(false);
+            }
+        };
+
+        fetchProblems();
+
+        return () => {
+            mounted = false;
+            controller.abort();
+        };
+    }, []);
 
     const handleCreateNew = () => {
         setIsCreating(true);
@@ -71,44 +116,67 @@ export default function CustomEA() {
         setIsCreating(false);
     };
 
-    return (
-        <div className="h-screen bg-gray-50 flex">
-            {/* Left Half */}
-            <div className="w-1/2 border-r border-gray-200">
-                {!isCreating ? (
-                    <CreateNewAction onCreateNew={handleCreateNew} />
-                ) : (
-                    <ProblemStatementForm
-                        onCancel={handleCancelCreate}
-                        onSubmit={handleSubmitStatement}
-                    />
-                )}
+    return isLoading ? (
+        <Loader type={"full"} message={"Running Algorithm..."} />
+    ) : (
+        <main className="flex flex-col justify-center items-center justify-items-center min-h-screen font-[family-name:var(--font-geist-mono)] p-8">
+            <div className="text-center">
+                <h1 className="text-3xl sm:text-4xl font-bold">
+                    Evolve OnClick
+                </h1>
+                <p>Run and Visualize algorithms with just a click.</p>
             </div>
 
-            {/* Right Half */}
-            <div className="w-1/2">
-                <StatementsList statements={statements} />
+            {userData.fullName && (
+                <div className="mt-4 flex flex-row gap-2 bg-gray-900 rounded-full px-4 text-[#6eff39] items-center">
+                    <div className="py-2">
+                        <p className="text-xs">
+                            {userData.fullName} {"</>"} @{userData.userName}
+                        </p>
+                    </div>
+                    <button
+                        onClick={() => {
+                            localStorage.clear();
+                            window.location.href = "/auth";
+                        }}
+                        className="text-[#ff2e2e] font-semibold border-l border-[#ffffff] pl-3 py-2 flex flex-row justify-center items-center"
+                    >
+                        <LogOut className="mx-1" size={16} />
+                    </button>
+                </div>
+            )}
+
+            <div className="flex flex-row gap-4">
+                <Link
+                    href="/create"
+                    className="rounded-full border border-solid border-black/[.08] transition-colors flex items-center justify-center bg-background text-foreground hover:bg-[#000000] hover:text-background text-sm sm:text-base px-4 py-2 mt-8"
+                >
+                    ← Go Back
+                </Link>
             </div>
-        </div>
+
+            <div className="w-full max-w-8xl mt-8 h-[70vh] bg-gray-50 rounded-2xl overflow-hidden shadow-md flex">
+                {/* Left Half */}
+                <div className="w-1/2 border-r border-gray-200">
+                    {!isCreating ? (
+                        <CreateNewAction onCreateNew={handleCreateNew} />
+                    ) : (
+                        <ProblemStatementForm
+                            onCancel={handleCancelCreate}
+                            onSubmit={handleSubmitStatement}
+                        />
+                    )}
+                </div>
+
+                {/* Right Half */}
+                <div className="w-1/2">
+                    <StatementsList
+                        statements={statements}
+                        loading={loadingStatements}
+                        error={statementsError}
+                    />
+                </div>
+            </div>
+        </main>
     );
 }
-
-// Statements List Component (Right side)
-const StatementsList = ({ statements }) => {
-    return (
-        <div className="h-full overflow-y-auto bg-gray-50 p-8">
-            <div className="mb-6">
-                <h2 className="text-2xl font-bold text-gray-900">
-                    Problem Statements
-                </h2>
-                <p className="text-gray-600 mt-1">{statements.length} total</p>
-            </div>
-
-            <div className="grid grid-cols-2 gap-6">
-                {statements.map((statement) => (
-                    <StatementCard key={statement.id} statement={statement} />
-                ))}
-            </div>
-        </div>
-    );
-};
