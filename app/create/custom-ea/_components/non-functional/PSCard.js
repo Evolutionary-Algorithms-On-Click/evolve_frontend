@@ -1,33 +1,53 @@
 import React from "react";
-import { FileText, Calendar, Users } from "lucide-react";
+import { FileText } from "lucide-react";
 
 // Statement Card Component (NotebookLM style)
 const StatementCard = ({ statement }) => {
+    const gradients = [
+        "from-amber-700 to-amber-900",
+        "from-emerald-700 to-emerald-900",
+        "from-blue-600 to-blue-800",
+        "from-purple-700 to-purple-900",
+        "from-rose-700 to-rose-900",
+        "from-teal-700 to-teal-900",
+    ];
+
+    const gradient = gradients[statement.id % gradients.length];
+
     return (
-        <div className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow border border-gray-200 p-6 cursor-pointer group">
-            <div className="flex items-start gap-4">
-                <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center flex-shrink-0">
-                    <FileText className="w-6 h-6 text-white" />
+        <div
+            className={`relative rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer group overflow-hidden bg-gradient-to-br ${gradient}`}
+        >
+            {/* Three dots menu */}
+            <div className="absolute top-4 right-4 z-10">
+                <button className="w-8 h-8 rounded-full hover:bg-white/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div className="flex flex-col gap-1">
+                        <div className="w-1 h-1 rounded-full bg-white"></div>
+                        <div className="w-1 h-1 rounded-full bg-white"></div>
+                        <div className="w-1 h-1 rounded-full bg-white"></div>
+                    </div>
+                </button>
+            </div>
+
+            {/* Card content */}
+            <div className="p-6">
+                {/* Icon */}
+                <div className="mb-6">
+                    <div className="w-16 h-16 flex items-center justify-center">
+                        <FileText className="w-12 h-12 text-white/90" />
+                    </div>
                 </div>
 
-                <div className="flex-1 min-w-0">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
-                        {statement.title}
-                    </h3>
-                    <p className="text-gray-600 text-sm mb-4 line-clamp-2">
-                        {statement.description}
-                    </p>
+                {/* Title */}
+                <h3 className="text-xl font-medium text-white mb-3 line-clamp-2 min-h-[3.5rem]">
+                    {statement.title}
+                </h3>
 
-                    <div className="flex items-center gap-4 text-sm text-gray-500">
-                        <div className="flex items-center gap-1">
-                            <Calendar className="w-4 h-4" />
-                            <span>{statement.date}</span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                            <Users className="w-4 h-4" />
-                            <span>{statement.collaborators} collaborators</span>
-                        </div>
-                    </div>
+                {/* Metadata */}
+                <div className="flex items-center gap-3 text-sm text-white/80">
+                    <span>{statement.date}</span>
+                    <span>•</span>
+                    <span>{statement.collaborators} sources</span>
                 </div>
             </div>
         </div>
