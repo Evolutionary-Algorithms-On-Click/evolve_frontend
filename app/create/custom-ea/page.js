@@ -31,6 +31,8 @@ export default function CustomEA() {
     const [statements, setStatements] = useState(null); // null = not loaded yet
     const [loadingStatements, setLoadingStatements] = useState(true);
     const [statementsError, setStatementsError] = useState(null);
+    const [submitError, setSubmitError] = useState(null);
+    const [successMessage, setSuccessMessage] = useState(null);
 
     useEffect(() => {
         let mounted = true;
@@ -99,25 +101,81 @@ export default function CustomEA() {
         setIsCreating(false);
     };
 
-    const handleSubmitStatement = (newStatement) => {
-        setStatements([
-            {
-                id: statements.length + 1,
-                ...newStatement,
-                date: new Date().toLocaleDateString("en-US", {
-                    month: "short",
-                    day: "numeric",
-                    year: "numeric",
-                }),
-                collaborators: 1,
-            },
-            ...statements,
-        ]);
-        setIsCreating(false);
+    const handleSubmitStatement = async (newStatement) => {
+        // client-side validation: require problem name/title
+        setSubmitError(null);
+        const titleCandidate =
+            (newStatement &&
+                (newStatement.problemName || newStatement.title)) ||
+            "";
+        if (!titleCandidate || titleCandidate.toString().trim() === "") {
+            setSubmitError("Problem name is required.");
+            return;
+        }
+
+        setIsLoading(true);
+        try {
+            const base =
+                env("NEXT_PUBLIC_BACKEND_BASE_URL") ?? "http://localhost:8080";
+
+            // build payload according to API: title + description_json
+            const payload = {
+                title:
+                    newStatement.problemName ||
+                    newStatement.title ||
+                    "Untitled Problem",
+                // send the entire form object as description_json so backend has full data
+                description_json: newStatement,
+            };
+
+            const res = await fetch(base + "/api/v1/problems", {
+                method: "POST",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(payload),
+            });
+
+            if (res.status === 401) {
+                window.location.href = "/auth";
+                return;
+            }
+
+            if (!res.ok) {
+                const text = await res.text();
+                throw new Error(`Error ${res.status}: ${text}`);
+            }
+
+            const createdProblem = await res.json();
+
+            // Normalize response (accept { data: obj } or obj)
+            const added =
+                createdProblem && createdProblem.data
+                    ? createdProblem.data
+                    : createdProblem;
+
+            // Prepend created problem safely even if statements is null
+            setStatements([added, ...(statements || [])]);
+            setIsCreating(false);
+
+            // show inline success message briefly
+            setSuccessMessage(
+                `Created problem "${added.title || added.id || "Untitled"}"`,
+            );
+            setTimeout(() => setSuccessMessage(null), 4000);
+            setSubmitError(null);
+        } catch (err) {
+            console.error("Failed to create problem:", err);
+            alert(`Failed to create problem: ${err.message}`);
+            setSubmitError(err.message ?? "Failed to create problem.");
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return isLoading ? (
-        <Loader type={"full"} message={"Running Algorithm..."} />
+        <Loader type={"full"} message={"Creating Problem Statement..."} />
     ) : (
         <main className="flex flex-col justify-center items-center justify-items-center min-h-screen font-[family-name:var(--font-geist-mono)] p-8">
             <div className="text-center">
