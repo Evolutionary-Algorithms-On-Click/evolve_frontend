@@ -60,6 +60,7 @@ const ProblemStatementForm = ({ onCancel, onSubmit }) => {
         onSubmit(formData);
     };
 
+    const [advancedOpen, setAdvancedOpen] = useState(false);
     return (
         <div className="h-full bg-white">
             <div className="p-8 h-full overflow-y-auto w-full">
@@ -274,381 +275,446 @@ const ProblemStatementForm = ({ onCancel, onSubmit }) => {
                         </div>
                     </div>
 
-                    {/* Evolutionary Operators */}
-                    <div className="space-y-4">
-                        <h3 className="text-lg font-semibold text-gray-900 border-b pb-2">
-                            4. Evolutionary Operators
+                    {/* Advanced Options toggle */}
+                    <div className="flex items-center justify-between pt-2">
+                        <h3 className="text-lg font-semibold text-gray-900">
+                            Advanced Options
                         </h3>
-
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Selection Method *
-                            </label>
-                            <input
-                                type="text"
-                                name="selectionMethod"
-                                value={formData.selectionMethod}
-                                onChange={(e) => handleChange(e.target)}
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                placeholder="e.g., tournament, roulette wheel, rank"
-                            />
-                        </div>
-
-                        <div className="grid grid-cols-2 gap-4">
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
-                                    Crossover Operator *
-                                </label>
-                                <input
-                                    type="text"
-                                    name="crossoverOperator"
-                                    value={formData.crossoverOperator}
-                                    onChange={(e) => handleChange(e.target)}
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                    placeholder="e.g., single-point, uniform"
-                                />
-                            </div>
-
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
-                                    Crossover Probability (%) *
-                                </label>
-                                <input
-                                    type="number"
-                                    name="crossoverProbability"
-                                    value={formData.crossoverProbability}
-                                    onChange={(e) => handleChange(e.target)}
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                    placeholder="0-100"
-                                    min="0"
-                                    max="100"
-                                />
-                            </div>
-                        </div>
-
-                        <div className="grid grid-cols-2 gap-4">
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
-                                    Mutation Operator *
-                                </label>
-                                <input
-                                    type="text"
-                                    name="mutationOperator"
-                                    value={formData.mutationOperator}
-                                    onChange={(e) => handleChange(e.target)}
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                    placeholder="e.g., bit-flip, gaussian"
-                                />
-                            </div>
-
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
-                                    Mutation Probability (%) *
-                                </label>
-                                <input
-                                    type="number"
-                                    name="mutationProbability"
-                                    value={formData.mutationProbability}
-                                    onChange={(e) => handleChange(e.target)}
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                    placeholder="0-100"
-                                    min="0"
-                                    max="100"
-                                />
-                            </div>
-                        </div>
+                        <button
+                            type="button"
+                            onClick={() => setAdvancedOpen(!advancedOpen)}
+                            className="text-sm text-blue-600 hover:underline"
+                        >
+                            {advancedOpen ? "Hide" : "Show"} Advanced Options
+                        </button>
                     </div>
 
-                    {/* Algorithm Parameters */}
-                    <div className="space-y-4">
-                        <h3 className="text-lg font-semibold text-gray-900 border-b pb-2">
-                            5. Algorithm Parameters
-                        </h3>
+                    {advancedOpen ? (
+                        <>
+                            {/* Evolutionary Operators */}
+                            <div className="space-y-4">
+                                <h3 className="text-lg font-semibold text-gray-900 border-b pb-2">
+                                    4. Evolutionary Operators
+                                </h3>
 
-                        <div className="grid grid-cols-2 gap-4">
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
-                                    Population Size *
-                                </label>
-                                <input
-                                    type="number"
-                                    name="populationSize"
-                                    value={formData.populationSize}
-                                    onChange={(e) => handleChange(e.target)}
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                    placeholder="e.g., 100"
-                                    min="1"
-                                />
-                            </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        Selection Method *
+                                    </label>
+                                    <input
+                                        type="text"
+                                        name="selectionMethod"
+                                        value={formData.selectionMethod}
+                                        onChange={(e) => handleChange(e.target)}
+                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        placeholder="e.g., tournament, roulette wheel, rank"
+                                    />
+                                </div>
 
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
-                                    Number of Generations *
-                                </label>
-                                <input
-                                    type="number"
-                                    name="numGenerations"
-                                    value={formData.numGenerations}
-                                    onChange={(e) => handleChange(e.target)}
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                    placeholder="e.g., 1000"
-                                    min="1"
-                                />
-                            </div>
-                        </div>
-
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Elitism (yes/no, percentage)
-                            </label>
-                            <input
-                                type="text"
-                                name="elitism"
-                                value={formData.elitism}
-                                onChange={(e) => handleChange(e.target)}
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                placeholder="e.g., yes - 10%, no"
-                            />
-                        </div>
-
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Termination Condition *
-                            </label>
-                            <div className="space-y-2">
-                                <label className="flex items-center cursor-pointer">
-                                    <input
-                                        type="radio"
-                                        name="terminationCondition"
-                                        value="maxGenerations"
-                                        checked={
-                                            formData.terminationCondition ===
-                                            "maxGenerations"
-                                        }
-                                        onChange={(e) => handleChange(e.target)}
-                                        className="mr-2"
-                                    />
-                                    <span>Max generations</span>
-                                </label>
-                                <label className="flex items-center cursor-pointer">
-                                    <input
-                                        type="radio"
-                                        name="terminationCondition"
-                                        value="fitnessThreshold"
-                                        checked={
-                                            formData.terminationCondition ===
-                                            "fitnessThreshold"
-                                        }
-                                        onChange={(e) => handleChange(e.target)}
-                                        className="mr-2"
-                                    />
-                                    <span>Fitness threshold</span>
-                                </label>
-                                <label className="flex items-center cursor-pointer">
-                                    <input
-                                        type="radio"
-                                        name="terminationCondition"
-                                        value="timeBudget"
-                                        checked={
-                                            formData.terminationCondition ===
-                                            "timeBudget"
-                                        }
-                                        onChange={(e) => handleChange(e.target)}
-                                        className="mr-2"
-                                    />
-                                    <span>Time budget</span>
-                                </label>
-                                <label className="flex items-center cursor-pointer">
-                                    <input
-                                        type="radio"
-                                        name="terminationCondition"
-                                        value="other"
-                                        checked={
-                                            formData.terminationCondition ===
-                                            "other"
-                                        }
-                                        onChange={(e) => handleChange(e.target)}
-                                        className="mr-2"
-                                    />
-                                    <span>Other:</span>
-                                    {formData.terminationCondition ===
-                                        "other" && (
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                                            Crossover Operator *
+                                        </label>
                                         <input
                                             type="text"
-                                            name="terminationOther"
-                                            value={formData.terminationOther}
+                                            name="crossoverOperator"
+                                            value={formData.crossoverOperator}
                                             onChange={(e) =>
                                                 handleChange(e.target)
                                             }
-                                            className="ml-2 flex-1 px-3 py-1 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                            placeholder="Specify"
+                                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                            placeholder="e.g., single-point, uniform"
                                         />
-                                    )}
-                                </label>
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                                            Crossover Probability (%) *
+                                        </label>
+                                        <input
+                                            type="number"
+                                            name="crossoverProbability"
+                                            value={
+                                                formData.crossoverProbability
+                                            }
+                                            onChange={(e) =>
+                                                handleChange(e.target)
+                                            }
+                                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                            placeholder="0-100"
+                                            min="0"
+                                            max="100"
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                                            Mutation Operator *
+                                        </label>
+                                        <input
+                                            type="text"
+                                            name="mutationOperator"
+                                            value={formData.mutationOperator}
+                                            onChange={(e) =>
+                                                handleChange(e.target)
+                                            }
+                                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                            placeholder="e.g., bit-flip, gaussian"
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                                            Mutation Probability (%) *
+                                        </label>
+                                        <input
+                                            type="number"
+                                            name="mutationProbability"
+                                            value={formData.mutationProbability}
+                                            onChange={(e) =>
+                                                handleChange(e.target)
+                                            }
+                                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                            placeholder="0-100"
+                                            min="0"
+                                            max="100"
+                                        />
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
 
-                    {/* Execution Setup */}
-                    <div className="space-y-4">
-                        <h3 className="text-lg font-semibold text-gray-900 border-b pb-2">
-                            6. Execution Setup
-                        </h3>
+                            {/* Algorithm Parameters */}
+                            <div className="space-y-4">
+                                <h3 className="text-lg font-semibold text-gray-900 border-b pb-2">
+                                    5. Algorithm Parameters
+                                </h3>
 
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Execution Mode *
-                            </label>
-                            <div className="flex gap-6">
-                                <label className="flex items-center cursor-pointer">
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                                            Population Size *
+                                        </label>
+                                        <input
+                                            type="number"
+                                            name="populationSize"
+                                            value={formData.populationSize}
+                                            onChange={(e) =>
+                                                handleChange(e.target)
+                                            }
+                                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                            placeholder="e.g., 100"
+                                            min="1"
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                                            Number of Generations *
+                                        </label>
+                                        <input
+                                            type="number"
+                                            name="numGenerations"
+                                            value={formData.numGenerations}
+                                            onChange={(e) =>
+                                                handleChange(e.target)
+                                            }
+                                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                            placeholder="e.g., 1000"
+                                            min="1"
+                                        />
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        Elitism (yes/no, percentage)
+                                    </label>
                                     <input
-                                        type="radio"
-                                        name="executionMode"
-                                        value="local"
-                                        checked={
-                                            formData.executionMode === "local"
-                                        }
+                                        type="text"
+                                        name="elitism"
+                                        value={formData.elitism}
                                         onChange={(e) => handleChange(e.target)}
-                                        className="mr-2"
+                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        placeholder="e.g., yes - 10%, no"
                                     />
-                                    <span>Local</span>
-                                </label>
-                                <label className="flex items-center cursor-pointer">
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        Termination Condition *
+                                    </label>
+                                    <div className="space-y-2">
+                                        <label className="flex items-center cursor-pointer">
+                                            <input
+                                                type="radio"
+                                                name="terminationCondition"
+                                                value="maxGenerations"
+                                                checked={
+                                                    formData.terminationCondition ===
+                                                    "maxGenerations"
+                                                }
+                                                onChange={(e) =>
+                                                    handleChange(e.target)
+                                                }
+                                                className="mr-2"
+                                            />
+                                            <span>Max generations</span>
+                                        </label>
+                                        <label className="flex items-center cursor-pointer">
+                                            <input
+                                                type="radio"
+                                                name="terminationCondition"
+                                                value="fitnessThreshold"
+                                                checked={
+                                                    formData.terminationCondition ===
+                                                    "fitnessThreshold"
+                                                }
+                                                onChange={(e) =>
+                                                    handleChange(e.target)
+                                                }
+                                                className="mr-2"
+                                            />
+                                            <span>Fitness threshold</span>
+                                        </label>
+                                        <label className="flex items-center cursor-pointer">
+                                            <input
+                                                type="radio"
+                                                name="terminationCondition"
+                                                value="timeBudget"
+                                                checked={
+                                                    formData.terminationCondition ===
+                                                    "timeBudget"
+                                                }
+                                                onChange={(e) =>
+                                                    handleChange(e.target)
+                                                }
+                                                className="mr-2"
+                                            />
+                                            <span>Time budget</span>
+                                        </label>
+                                        <label className="flex items-center cursor-pointer">
+                                            <input
+                                                type="radio"
+                                                name="terminationCondition"
+                                                value="other"
+                                                checked={
+                                                    formData.terminationCondition ===
+                                                    "other"
+                                                }
+                                                onChange={(e) =>
+                                                    handleChange(e.target)
+                                                }
+                                                className="mr-2"
+                                            />
+                                            <span>Other:</span>
+                                            {formData.terminationCondition ===
+                                                "other" && (
+                                                <input
+                                                    type="text"
+                                                    name="terminationOther"
+                                                    value={
+                                                        formData.terminationOther
+                                                    }
+                                                    onChange={(e) =>
+                                                        handleChange(e.target)
+                                                    }
+                                                    className="ml-2 flex-1 px-3 py-1 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                    placeholder="Specify"
+                                                />
+                                            )}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Execution Setup */}
+                            <div className="space-y-4">
+                                <h3 className="text-lg font-semibold text-gray-900 border-b pb-2">
+                                    6. Execution Setup
+                                </h3>
+
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        Execution Mode *
+                                    </label>
+                                    <div className="flex gap-6">
+                                        <label className="flex items-center cursor-pointer">
+                                            <input
+                                                type="radio"
+                                                name="executionMode"
+                                                value="local"
+                                                checked={
+                                                    formData.executionMode ===
+                                                    "local"
+                                                }
+                                                onChange={(e) =>
+                                                    handleChange(e.target)
+                                                }
+                                                className="mr-2"
+                                            />
+                                            <span>Local</span>
+                                        </label>
+                                        <label className="flex items-center cursor-pointer">
+                                            <input
+                                                type="radio"
+                                                name="executionMode"
+                                                value="remote"
+                                                checked={
+                                                    formData.executionMode ===
+                                                    "remote"
+                                                }
+                                                onChange={(e) =>
+                                                    handleChange(e.target)
+                                                }
+                                                className="mr-2"
+                                            />
+                                            <span>Remote</span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        Evaluation Budget (max fitness
+                                        evaluations)
+                                    </label>
                                     <input
-                                        type="radio"
-                                        name="executionMode"
-                                        value="remote"
-                                        checked={
-                                            formData.executionMode === "remote"
-                                        }
+                                        type="number"
+                                        name="evaluationBudget"
+                                        value={formData.evaluationBudget}
                                         onChange={(e) => handleChange(e.target)}
-                                        className="mr-2"
+                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        placeholder="e.g., 10000"
+                                        min="1"
                                     />
-                                    <span>Remote</span>
-                                </label>
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        Required Outputs
+                                    </label>
+                                    <div className="space-y-2">
+                                        <label className="flex items-center cursor-pointer">
+                                            <input
+                                                type="checkbox"
+                                                name="outputBestSolution"
+                                                checked={
+                                                    formData.outputBestSolution
+                                                }
+                                                onChange={(e) =>
+                                                    setFormData({
+                                                        ...formData,
+                                                        outputBestSolution:
+                                                            e.target.checked,
+                                                    })
+                                                }
+                                                className="mr-2"
+                                            />
+                                            <span>Best solution only</span>
+                                        </label>
+                                        <label className="flex items-center cursor-pointer">
+                                            <input
+                                                type="checkbox"
+                                                name="outputProgressLog"
+                                                checked={
+                                                    formData.outputProgressLog
+                                                }
+                                                onChange={(e) =>
+                                                    setFormData({
+                                                        ...formData,
+                                                        outputProgressLog:
+                                                            e.target.checked,
+                                                    })
+                                                }
+                                                className="mr-2"
+                                            />
+                                            <span>
+                                                Evolutionary progress log
+                                            </span>
+                                        </label>
+                                        <label className="flex items-center cursor-pointer">
+                                            <input
+                                                type="checkbox"
+                                                name="outputVisualization"
+                                                checked={
+                                                    formData.outputVisualization
+                                                }
+                                                onChange={(e) =>
+                                                    setFormData({
+                                                        ...formData,
+                                                        outputVisualization:
+                                                            e.target.checked,
+                                                    })
+                                                }
+                                                className="mr-2"
+                                            />
+                                            <span>Visualization / Graphs</span>
+                                        </label>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
 
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Evaluation Budget (max fitness evaluations)
-                            </label>
-                            <input
-                                type="number"
-                                name="evaluationBudget"
-                                value={formData.evaluationBudget}
-                                onChange={(e) => handleChange(e.target)}
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                placeholder="e.g., 10000"
-                                min="1"
-                            />
-                        </div>
+                            {/* Customization / Domain Knowledge */}
+                            <div className="space-y-4">
+                                <h3 className="text-lg font-semibold text-gray-900 border-b pb-2">
+                                    7. Customization / Domain Knowledge
+                                    (Optional)
+                                </h3>
 
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Required Outputs
-                            </label>
-                            <div className="space-y-2">
-                                <label className="flex items-center cursor-pointer">
-                                    <input
-                                        type="checkbox"
-                                        name="outputBestSolution"
-                                        checked={formData.outputBestSolution}
-                                        onChange={(e) =>
-                                            setFormData({
-                                                ...formData,
-                                                outputBestSolution:
-                                                    e.target.checked,
-                                            })
-                                        }
-                                        className="mr-2"
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        Custom Operators (if any)
+                                    </label>
+                                    <textarea
+                                        name="customOperators"
+                                        value={formData.customOperators}
+                                        onChange={(e) => handleChange(e.target)}
+                                        rows={2}
+                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        placeholder="Describe any custom operators"
                                     />
-                                    <span>Best solution only</span>
-                                </label>
-                                <label className="flex items-center cursor-pointer">
-                                    <input
-                                        type="checkbox"
-                                        name="outputProgressLog"
-                                        checked={formData.outputProgressLog}
-                                        onChange={(e) =>
-                                            setFormData({
-                                                ...formData,
-                                                outputProgressLog:
-                                                    e.target.checked,
-                                            })
-                                        }
-                                        className="mr-2"
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        Known Heuristics / Rules
+                                    </label>
+                                    <textarea
+                                        name="knownHeuristics"
+                                        value={formData.knownHeuristics}
+                                        onChange={(e) => handleChange(e.target)}
+                                        rows={2}
+                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        placeholder="Any domain-specific knowledge"
                                     />
-                                    <span>Evolutionary progress log</span>
-                                </label>
-                                <label className="flex items-center cursor-pointer">
-                                    <input
-                                        type="checkbox"
-                                        name="outputVisualization"
-                                        checked={formData.outputVisualization}
-                                        onChange={(e) =>
-                                            setFormData({
-                                                ...formData,
-                                                outputVisualization:
-                                                    e.target.checked,
-                                            })
-                                        }
-                                        className="mr-2"
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        Example Valid Solutions (if available)
+                                    </label>
+                                    <textarea
+                                        name="exampleSolutions"
+                                        value={formData.exampleSolutions}
+                                        onChange={(e) => handleChange(e.target)}
+                                        rows={2}
+                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        placeholder="Provide example solutions"
                                     />
-                                    <span>Visualization / Graphs</span>
-                                </label>
+                                </div>
                             </div>
+                        </>
+                    ) : (
+                        <div className="text-sm text-gray-500">
+                            Advanced options are hidden. Click "Show Advanced
+                            Options" to reveal evolutionary operators, algorithm
+                            parameters, execution setup, and customization
+                            fields.
                         </div>
-                    </div>
-
-                    {/* Customization / Domain Knowledge */}
-                    <div className="space-y-4">
-                        <h3 className="text-lg font-semibold text-gray-900 border-b pb-2">
-                            7. Customization / Domain Knowledge (Optional)
-                        </h3>
-
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Custom Operators (if any)
-                            </label>
-                            <textarea
-                                name="customOperators"
-                                value={formData.customOperators}
-                                onChange={(e) => handleChange(e.target)}
-                                rows={2}
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                placeholder="Describe any custom operators"
-                            />
-                        </div>
-
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Known Heuristics / Rules
-                            </label>
-                            <textarea
-                                name="knownHeuristics"
-                                value={formData.knownHeuristics}
-                                onChange={(e) => handleChange(e.target)}
-                                rows={2}
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                placeholder="Any domain-specific knowledge"
-                            />
-                        </div>
-
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Example Valid Solutions (if available)
-                            </label>
-                            <textarea
-                                name="exampleSolutions"
-                                value={formData.exampleSolutions}
-                                onChange={(e) => handleChange(e.target)}
-                                rows={2}
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                placeholder="Provide example solutions"
-                            />
-                        </div>
-                    </div>
+                    )}
 
                     <div className="flex gap-4 pt-4">
                         <button
