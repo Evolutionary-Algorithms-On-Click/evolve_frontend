@@ -4,83 +4,60 @@ import React from "react";
 import Link from "next/link";
 import { LogOut, Plus, PlayCircle, BookOpen } from "lucide-react";
 
-// Card Component
+// Card Component (simple, minimal)
 const Card = ({ item, type }) => {
-    const gradients = [
-        "from-amber-700 to-amber-900",
-        "from-emerald-700 to-emerald-900",
-        "from-blue-600 to-blue-800",
-        "from-purple-700 to-purple-900",
-        "from-rose-700 to-rose-900",
-        "from-teal-700 to-teal-900",
+    const accents = [
+        "bg-amber-200",
+        "bg-emerald-200",
+        "bg-blue-200",
+        "bg-purple-200",
+        "bg-rose-200",
+        "bg-teal-200",
     ];
 
-    const gradient = gradients[item.id % gradients.length];
+    const accent = accents[item.id % accents.length];
 
     return (
-        <div
-            className={`relative rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer group overflow-hidden bg-gradient-to-br ${gradient}`}
-        >
-            {/* Three dots menu */}
-            <div className="absolute top-4 right-4 z-10">
-                <button className="w-8 h-8 rounded-full hover:bg-white/20 grid place-items-center opacity-0 group-hover:opacity-100 transition-opacity">
-                    <div className="grid gap-1">
-                        <div className="w-1 h-1 rounded-full bg-white"></div>
-                        <div className="w-1 h-1 rounded-full bg-white"></div>
-                        <div className="w-1 h-1 rounded-full bg-white"></div>
-                    </div>
-                </button>
-            </div>
+        <div className="relative rounded-2xl bg-white border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer overflow-hidden">
+            <div className={`absolute left-0 top-0 bottom-0 w-1 ${accent}`} />
 
-            {/* Card content */}
-            <div className="p-6">
-                {/* Icon */}
-                <div className="mb-6">
-                    <div className="w-16 h-16 grid place-items-center">
-                        {type === "run" ? (
-                            <PlayCircle className="w-12 h-12 text-white/90" />
-                        ) : (
-                            <BookOpen className="w-12 h-12 text-white/90" />
-                        )}
-                    </div>
+            <div className="p-4 pl-7 flex items-center gap-4">
+                <div className="w-10 h-10 grid place-items-center">
+                    {type === "run" ? (
+                        <PlayCircle className="w-6 h-6 text-gray-600" />
+                    ) : (
+                        <BookOpen className="w-6 h-6 text-gray-600" />
+                    )}
                 </div>
 
-                {/* Title */}
-                <h3 className="text-xl font-medium text-white mb-3 line-clamp-2 min-h-[3.5rem]">
-                    {item.title}
-                </h3>
-
-                {/* Metadata */}
-                <div className="grid grid-flow-col auto-cols-max gap-3 text-sm text-white/80">
-                    <span>{item.date}</span>
-                    {item.metadata && (
-                        <>
-                            <span>•</span>
-                            <span>{item.metadata}</span>
-                        </>
-                    )}
+                <div className="flex-1 min-w-0">
+                    <h3 className="text-base font-medium text-gray-900 truncate">
+                        {item.title}
+                    </h3>
+                    <div className="text-xs text-gray-500 mt-1 truncate">
+                        {item.date}
+                        {item.metadata ? ` • ${item.metadata}` : ""}
+                    </div>
                 </div>
             </div>
         </div>
     );
 };
 
-// Create New Card Component
+// Create New Card Component (subtle)
 const CreateCard = ({ onClick, label }) => {
     return (
         <button
             onClick={onClick}
-            className="relative rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer group overflow-hidden border-2 border-dashed border-gray-300 hover:border-gray-400 bg-gray-50 hover:bg-gray-100 h-full min-h-[240px]"
+            className="relative rounded-2xl border border-dashed border-gray-200 hover:border-gray-300 bg-white h-full  transition-shadow hover:shadow-md p-6 flex items-center justify-center"
         >
-            <div className="p-6 h-full grid place-items-center">
-                <div className="grid gap-4 place-items-center">
-                    <div className="w-16 h-16 rounded-full bg-gray-200 group-hover:bg-gray-300 grid place-items-center transition-colors">
-                        <Plus className="w-8 h-8 text-gray-600" />
-                    </div>
-                    <span className="text-lg font-medium text-gray-700">
-                        {label}
-                    </span>
+            <div className="flex gap-3 place-items-center">
+                <div className="w-12 h-12 rounded-full bg-gray-100 grid place-items-center">
+                    <Plus className="w-6 h-6 text-gray-600" />
                 </div>
+                <span className="text-base font-medium text-gray-700">
+                    {label}
+                </span>
             </div>
         </button>
     );
@@ -163,22 +140,6 @@ export default function NotebookDashboard() {
             <div className="w-full max-w-8xl mt-8 bg-gray-50 rounded-2xl overflow-hidden shadow-md">
                 <div className="p-8">
                     <div className="grid grid-cols-2 gap-8">
-                        {/* Previous Runs Section */}
-                        <div>
-                            <h2 className="text-3xl font-bold text-gray-800 mb-6">
-                                Previous Runs
-                            </h2>
-                            <div className="grid grid-cols-2 gap-6">
-                                {previousRuns.map((run) => (
-                                    <Card
-                                        key={`run-${run.id}`}
-                                        item={run}
-                                        type="run"
-                                    />
-                                ))}
-                            </div>
-                        </div>
-
                         {/* Notebooks Section */}
                         <div>
                             <h2 className="text-3xl font-bold text-gray-800 mb-6">
@@ -194,6 +155,22 @@ export default function NotebookDashboard() {
                                         key={`nb-${notebook.id}`}
                                         item={notebook}
                                         type="notebook"
+                                    />
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Previous Runs Section */}
+                        <div>
+                            <h2 className="text-3xl font-bold text-gray-800 mb-6">
+                                Previous Runs
+                            </h2>
+                            <div className="grid grid-cols-2 gap-6">
+                                {previousRuns.map((run) => (
+                                    <Card
+                                        key={`run-${run.id}`}
+                                        item={run}
+                                        type="run"
                                     />
                                 ))}
                             </div>
