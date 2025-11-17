@@ -208,7 +208,17 @@ export default function NotebookDashboard() {
             // navigate to notebook view if id present
             const nbId = added.id ?? added._id ?? null;
             if (nbId) {
-                router.push(`/notebooks/${nbId}`);
+                const encodedNbId = encodeURIComponent(nbId);
+                if (routeProblemId && routeProblemId.trim() !== "") {
+                    const pid = encodeURIComponent(routeProblemId.trim());
+                    // navigate to /create/custom-ea/[problemID]/notebook/[notebookID]
+                    router.push(
+                        `/create/custom-ea/${pid}/notebook/${encodedNbId}`,
+                    );
+                    return;
+                }
+                // fallback
+                router.push(`/notebooks/${encodedNbId}`);
                 return;
             }
             alert(`Created notebook "${added.name || added.id}"`);
@@ -295,9 +305,39 @@ export default function NotebookDashboard() {
                                 ) : (
                                     notebooks.map((notebook) => (
                                         <Card
-                                            key={`nb-${notebook.id}`}
+                                            key={`nb-${notebook.id ?? notebook._id ?? notebook._id}`}
                                             item={notebook}
                                             type="notebook"
+                                            onClick={() => {
+                                                const nbId =
+                                                    notebook.id ??
+                                                    notebook._id ??
+                                                    null;
+                                                if (!nbId) {
+                                                    alert(
+                                                        "Notebook id not found",
+                                                    );
+                                                    return;
+                                                }
+                                                const encodedNbId =
+                                                    encodeURIComponent(nbId);
+                                                if (
+                                                    routeProblemId &&
+                                                    routeProblemId.trim() !== ""
+                                                ) {
+                                                    const pid =
+                                                        encodeURIComponent(
+                                                            routeProblemId.trim(),
+                                                        );
+                                                    router.push(
+                                                        `/create/custom-ea/${pid}/notebook/${encodedNbId}`,
+                                                    );
+                                                    return;
+                                                }
+                                                router.push(
+                                                    `/notebooks/${encodedNbId}`,
+                                                );
+                                            }}
                                         />
                                     ))
                                 )}
