@@ -2,6 +2,7 @@
 
 import Loader from "@/app/_components/Loader";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { LogOut } from "lucide-react";
 import CreateNewAction from "./_components/non-functional/newPSActionButton";
@@ -11,6 +12,7 @@ import { env } from "next-runtime-env";
 
 // Parent Component
 export default function CustomEA() {
+    const router = useRouter();
     const [userData, setUserData] = useState({});
     // useEffect(() => {
     //     if (!localStorage.getItem("id")) {
@@ -159,9 +161,16 @@ export default function CustomEA() {
             setStatements([added, ...(statements || [])]);
             setIsCreating(false);
 
-            // show inline success message briefly
+            // navigate to the notebook page for the created problem
+            const newId = added.id ?? added._id ?? null;
+            if (newId) {
+                router.push(`/create/custom-ea/${newId}/notebook`);
+                return; // navigation will happen
+            }
+
+            // show inline success message briefly if no id to navigate
             setSuccessMessage(
-                `Created problem "${added.title || added.id || "Untitled"}"`,
+                `Created problem "${added.title || added.id || "Untitled"}`,
             );
             setTimeout(() => setSuccessMessage(null), 4000);
             setSubmitError(null);
