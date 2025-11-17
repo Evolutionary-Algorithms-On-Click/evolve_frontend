@@ -7,7 +7,7 @@ import { LogOut, Plus, PlayCircle, BookOpen } from "lucide-react";
 import formatDate from "@/app/utils/formatDate";
 import Loader from "@/app/_components/Loader";
 import { env } from "next-runtime-env";
-import { Card, CreateCard } from "./_components";
+import { Card, CreateCard, PSDetails } from "./_components";
 
 // Main App
 export default function NotebookDashboard() {
@@ -22,6 +22,10 @@ export default function NotebookDashboard() {
     // route params (client) - preferred source for problem id
     const params = useParams();
     const routeProblemId = params?.problemID ?? null;
+
+    const [problemStatement, setProblemStatement] = useState(null);
+    const [loadingProblem, setLoadingProblem] = useState(false);
+    const [problemError, setProblemError] = useState(null);
 
     const previousRuns = [
         {
@@ -101,6 +105,51 @@ export default function NotebookDashboard() {
         };
 
         fetchNotebooks();
+
+        // fetch problem statement details (if routeProblemId present)
+        const fetchProblem = async () => {
+            if (!routeProblemId) return;
+            setLoadingProblem(true);
+            setProblemError(null);
+            try {
+                const base =
+                    env("NEXT_PUBLIC_BACKEND_BASE_URL") ??
+                    "http://localhost:8080";
+                const res = await fetch(
+                    base + `/api/v1/problems/${routeProblemId}`,
+                    {
+                        method: "GET",
+                        credentials: "include",
+                        signal: controller.signal,
+                    },
+                );
+
+                if (!mounted) return;
+
+                if (res.status === 401) {
+                    window.location.href = "/auth";
+                    return;
+                }
+
+                if (!res.ok) {
+                    const text = await res.text();
+                    throw new Error(`Error ${res.status}: ${text}`);
+                }
+
+                const data = await res.json();
+                const stmt = data && data.data ? data.data : data;
+                setProblemStatement(stmt);
+            } catch (err) {
+                if (controller.signal.aborted) return;
+                console.error("Failed to fetch problem statement:", err);
+                setProblemError(err.message ?? "Failed to load problem.");
+                setProblemStatement(null);
+            } finally {
+                if (mounted) setLoadingProblem(false);
+            }
+        };
+
+        fetchProblem();
 
         return () => {
             mounted = false;
@@ -191,6 +240,32 @@ export default function NotebookDashboard() {
 
             <div className="w-full max-w-8xl mt-8 bg-gray-50 rounded-2xl overflow-hidden shadow-md">
                 <div className="p-8">
+                    {/* Problem Statement preview (compact) */}
+                    {routeProblemId && (
+                        <div className="mb-6">
+                            <h2 className="text-2xl font-bold text-gray-800 mb-4">
+                                Problem Statement
+                            </h2>
+                            {loadingProblem ? (
+                                <div className="text-sm text-gray-500">
+                                    Loading problem...
+                                </div>
+                            ) : problemError ? (
+                                <div className="text-sm text-red-500">
+                                    {problemError}
+                                </div>
+                            ) : problemStatement ? (
+                                <div className="mb-6">
+                                    <PSDetails statement={problemStatement} />
+                                </div>
+                            ) : (
+                                <div className="text-sm text-gray-500">
+                                    Problem not found.
+                                </div>
+                            )}
+                        </div>
+                    )}
+
                     <div className="grid grid-cols-2 gap-8">
                         {/* Notebooks Section */}
                         <div>
