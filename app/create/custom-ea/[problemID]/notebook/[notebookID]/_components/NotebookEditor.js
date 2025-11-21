@@ -50,38 +50,59 @@ export default function NotebookEditor({ notebookId, problemId }) {
     const { connected, sendExecute } = useKernelSocket(session);
 
     async function runCell(cell) {
-        // Only use websocket execution — no HTTP or simulated fallbacks.
         if (session && session.current_kernel_id && connected && sendExecute) {
             try {
-                const result = await sendExecute(cell.content);
-                // normalize outputs to strings for display
-                const outputs = (result.outputs || []).map((o) => {
-                    try {
-                        // prefer o.data, then o (raw obj)
-                        const payload = o.data ?? o;
-                        return typeof payload === "string"
-                            ? payload
-                            : JSON.stringify(payload);
-                    } catch (e) {
-                        return String(o);
-                    }
+                // live update callback
+                const handleOutputUpdate = (outputs, execution_count) => {
+                    // use latest cell from state by id if you want to be super correct,
+                    // but for now this is fine:
+                    updateCell({
+                        ...cell,
+                        outputs,
+                        execution_count,
+                    });
+                };
+
+                const result = await sendExecute(
+                    cell.content,
+                    handleOutputUpdate,
+                );
+                const { outputs, execution_count } = result;
+
+                // final state (in case something changed at the very end)
+                updateCell({
+                    ...cell,
+                    outputs,
+                    execution_count,
                 });
-                updateCell({ ...cell, outputs });
                 return;
             } catch (e) {
                 console.error("WS execute failed", e);
                 updateCell({
                     ...cell,
-                    outputs: [`WebSocket execution failed: ${String(e)}`],
+                    outputs: [
+                        {
+                            type: "error",
+                            ename: "ClientError",
+                            evalue: String(e),
+                            traceback: [],
+                        },
+                    ],
                 });
                 return;
             }
         }
 
-        // If websocket not connected or session missing, produce an explicit error output
         updateCell({
             ...cell,
-            outputs: ["Error: WebSocket not connected or session not started"],
+            outputs: [
+                {
+                    type: "error",
+                    ename: "ConnectionError",
+                    evalue: "WebSocket not connected or session not started",
+                    traceback: [],
+                },
+            ],
         });
     }
 
