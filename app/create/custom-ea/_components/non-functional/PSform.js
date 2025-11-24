@@ -1,6 +1,40 @@
 "use client";
 import { useState } from "react";
 
+// Configuration object for Evolutionary Algorithm parameters
+const eaConfig = {
+    binary: {
+        crossoverOperators: ["Single-Point Crossover", "Two-Point Crossover", "Uniform Crossover"],
+        mutationOperators: ["Bit-Flip Mutation"],
+    },
+    integer: { // Assuming integer has similar operators to real for now
+        crossoverOperators: ["Simulated Binary Crossover (SBX)", "BLX-alpha", "Uniform Crossover"],
+        mutationOperators: ["Gaussian Mutation", "Polynomial Mutation"],
+    },
+    real: {
+        crossoverOperators: ["Simulated Binary Crossover (SBX)", "BLX-alpha", "Uniform Crossover"],
+        mutationOperators: ["Gaussian Mutation", "Polynomial Mutation"],
+    },
+    permutation: {
+        crossoverOperators: ["Partially Mapped Crossover (PMX)", "Order Crossover (OX)", "Cycle Crossover (CX)"],
+        mutationOperators: ["Swap Mutation", "Inversion Mutation", "Scramble Mutation"],
+    },
+    tree: {
+        crossoverOperators: ["Subtree Crossover"],
+        mutationOperators: ["Subtree Mutation", "Point Mutation", "Hoist Mutation"],
+    },
+    graph: {
+        crossoverOperators: ["Subgraph Exchange"],
+        mutationOperators: ["Add/Remove Node", "Add/Remove Edge", "Change Node/Edge Attribute"],
+    },
+    custom: { // Allows for custom representation
+        crossoverOperators: [],
+        mutationOperators: [],
+    }
+};
+
+const selectionMethods = ["Tournament", "Roulette Wheel", "Rank"];
+
 // Problem Statement Form Component (Left side form state)
 const ProblemStatementForm = ({ onCancel, onSubmit }) => {
     const [formData, setFormData] = useState({
@@ -14,7 +48,15 @@ const ProblemStatementForm = ({ onCancel, onSubmit }) => {
         // Representation / Encoding
         solutionRepresentation: "binary",
         solutionSize: "",
-        domainOfVariables: "",
+        domainOfVariables: "[0, 1]",
+        // -- Tree/GP Specific --
+        functionSet: "'+', '-', '*', '/'",
+        terminalSet: "'x', 'y', 'R'",
+        initialTreeDepth: "2",
+        maxTreeDepth: "5",
+        // -- Graph Specific --
+        allowedNodeTypes: "",
+        allowedEdgeTypes: "",
 
         // Fitness Function
         fitnessDescription: "",
@@ -23,21 +65,24 @@ const ProblemStatementForm = ({ onCancel, onSubmit }) => {
 
         // Evolutionary Operators
         selectionMethod: "",
+        selectionMethodCustomName: "",
         crossoverOperator: "",
-        crossoverProbability: "",
+        crossoverOperatorCustomName: "",
+        crossoverProbability: "80",
         mutationOperator: "",
-        mutationProbability: "",
+        mutationOperatorCustomName: "",
+        mutationProbability: "10",
 
         // Algorithm Parameters
-        populationSize: "",
-        numGenerations: "",
-        elitism: "",
+        populationSize: "100",
+        numGenerations: "1000",
+        elitism: "yes, 1",
         terminationCondition: "maxGenerations",
         terminationOther: "",
 
         // Execution Setup
         executionMode: "local",
-        evaluationBudget: "",
+        evaluationBudget: "10000",
         outputBestSolution: true,
         outputProgressLog: false,
         outputVisualization: false,
@@ -49,10 +94,51 @@ const ProblemStatementForm = ({ onCancel, onSubmit }) => {
     });
 
     const handleChange = (e) => {
-        setFormData({
-            ...formData,
-            [e.name]: e.value,
-        });
+        const { name, value, type, checked } = e.target;
+        const finalValue = type === 'checkbox' ? checked : value;
+    
+        let newFormData = { ...formData, [name]: finalValue };
+    
+        // When representation changes, reset ALL representation-specific fields
+        if (name === "solutionRepresentation") {
+            // Reset common fields
+            newFormData.crossoverOperator = "";
+            newFormData.mutationOperator = "";
+            newFormData.crossoverOperatorCustomName = "";
+            newFormData.mutationOperatorCustomName = "";
+            
+            // Reset vector/permutation-based fields
+            newFormData.domainOfVariables = "";
+            newFormData.solutionSize = "";
+            
+            // Reset tree-based fields
+            newFormData.functionSet = "";
+            newFormData.terminalSet = "";
+            newFormData.initialTreeDepth = "2";
+            newFormData.maxTreeDepth = "5";
+
+            // Reset graph-based fields
+            newFormData.allowedNodeTypes = "";
+            newFormData.allowedEdgeTypes = "";
+
+            // Set default for binary
+            if (value === 'binary') {
+                newFormData.domainOfVariables = "[0, 1]";
+            }
+        }
+    
+        // If user selects a non-custom option, clear the corresponding custom name field
+        if (name === "selectionMethod" && value !== "custom") {
+            newFormData.selectionMethodCustomName = "";
+        }
+        if (name === "crossoverOperator" && value !== "custom") {
+            newFormData.crossoverOperatorCustomName = "";
+        }
+        if (name === "mutationOperator" && value !== "custom") {
+            newFormData.mutationOperatorCustomName = "";
+        }
+    
+        setFormData(newFormData);
     };
 
     const handleSubmit = (e) => {
@@ -60,7 +146,171 @@ const ProblemStatementForm = ({ onCancel, onSubmit }) => {
         onSubmit(formData);
     };
 
+    const getLabel = (key, defaultLabel) => {
+        const labels = {
+            binary: {
+                solutionSize: "Chromosome Length",
+                domainOfVariables: "Domain of Variables",
+            },
+            permutation: {
+                solutionSize: "Number of Items",
+                domainOfVariables: "Set of Items to Permute",
+            },
+            real: {
+                solutionSize: "Number of Variables",
+                domainOfVariables: "Domain of Variables (e.g., min/max for each)",
+            },
+            integer: {
+                solutionSize: "Number of Variables",
+                domainOfVariables: "Domain of Variables (e.g., min/max for each)",
+            },
+            custom: {
+                solutionSize: "Solution Size / Length",
+                domainOfVariables: "Domain of Variables / Allowed Values",
+            }
+        };
+        return labels[formData.solutionRepresentation]?.[key] || defaultLabel;
+    }
+
     const [advancedOpen, setAdvancedOpen] = useState(false);
+
+    const renderRepresentationFields = () => {
+        switch (formData.solutionRepresentation) {
+            case 'tree':
+                return (
+                    <>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Function Set (operators) *
+                            </label>
+                            <textarea
+                                name="functionSet"
+                                value={formData.functionSet}
+                                onChange={handleChange}
+                                rows={2}
+                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                placeholder="e.g., '+', '-', '*', 'sin', 'cos'"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Terminal Set (leaves) *
+                            </label>
+                            <textarea
+                                name="terminalSet"
+                                value={formData.terminalSet}
+                                onChange={handleChange}
+                                rows={2}
+                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                placeholder="e.g., 'x', 'y' (variables), '-1', '3.14' (constants)"
+                            />
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    Initial Tree Depth *
+                                </label>
+                                <input
+                                    type="text"
+                                    name="initialTreeDepth"
+                                    value={formData.initialTreeDepth}
+                                    onChange={handleChange}
+                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    placeholder="e.g., 2-4"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    Maximum Tree Depth *
+                                </label>
+                                <input
+                                    type="text"
+                                    name="maxTreeDepth"
+                                    value={formData.maxTreeDepth}
+                                    onChange={handleChange}
+                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    placeholder="e.g., 8 or 17"
+                                />
+                            </div>
+                        </div>
+                    </>
+                );
+            case 'graph':
+                return (
+                    <>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Allowed Node Types
+                            </label>
+                            <textarea
+                                name="allowedNodeTypes"
+                                value={formData.allowedNodeTypes}
+                                onChange={handleChange}
+                                rows={2}
+                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                placeholder="e.g., 'input', 'hidden', 'output', 'resistor'"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Allowed Edge Types
+                            </label>
+                            <textarea
+                                name="allowedEdgeTypes"
+                                value={formData.allowedEdgeTypes}
+                                onChange={handleChange}
+                                rows={2}
+                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                placeholder="e.g., 'directed', 'weighted', 'recurrent'"
+                            />
+                        </div>
+                    </>
+                );
+            case 'binary':
+            case 'integer':
+            case 'real':
+            case 'permutation':
+            case 'custom':
+            default:
+                return (
+                    <>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                {getLabel('solutionSize', 'Solution Size / Length *')}
+                            </label>
+                            <input
+                                type="text"
+                                name="solutionSize"
+                                value={formData.solutionSize}
+                                onChange={handleChange}
+                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                placeholder="e.g., 10, 100, variable"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                {getLabel('domainOfVariables', 'Domain of Variables *')}
+                            </label>
+                            <input
+                                type="text"
+                                name="domainOfVariables"
+                                value={formData.domainOfVariables}
+                                onChange={handleChange}
+                                disabled={formData.solutionRepresentation === 'binary'}
+                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100"
+                                placeholder={
+                                    formData.solutionRepresentation === 'permutation' 
+                                    ? "e.g., A, B, C, D" 
+                                    : "e.g., [0,1], [-5, 5], 1-100"
+                                }
+                            />
+                        </div>
+                    </>
+                );
+        }
+    };
+
     return (
         <div className="h-full bg-white">
             <div className="p-8 h-full overflow-y-auto w-full">
@@ -88,7 +338,7 @@ const ProblemStatementForm = ({ onCancel, onSubmit }) => {
                                 type="text"
                                 name="problemName"
                                 value={formData.problemName}
-                                onChange={(e) => handleChange(e.target)}
+                                onChange={handleChange}
                                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                 placeholder="Enter problem name"
                             />
@@ -108,7 +358,7 @@ const ProblemStatementForm = ({ onCancel, onSubmit }) => {
                                             formData.objectiveType ===
                                             "minimization"
                                         }
-                                        onChange={(e) => handleChange(e.target)}
+                                        onChange={handleChange}
                                         className="mr-2"
                                     />
                                     <span>Minimization</span>
@@ -122,7 +372,7 @@ const ProblemStatementForm = ({ onCancel, onSubmit }) => {
                                             formData.objectiveType ===
                                             "maximization"
                                         }
-                                        onChange={(e) => handleChange(e.target)}
+                                        onChange={handleChange}
                                         className="mr-2"
                                     />
                                     <span>Maximization</span>
@@ -138,7 +388,7 @@ const ProblemStatementForm = ({ onCancel, onSubmit }) => {
                                 type="text"
                                 name="objectiveFunction"
                                 value={formData.objectiveFunction}
-                                onChange={(e) => handleChange(e.target)}
+                                onChange={handleChange}
                                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                 placeholder="e.g., f(x) = x^2 + 3x + 5"
                             />
@@ -151,7 +401,7 @@ const ProblemStatementForm = ({ onCancel, onSubmit }) => {
                             <textarea
                                 name="goalDescription"
                                 value={formData.goalDescription}
-                                onChange={(e) => handleChange(e.target)}
+                                onChange={handleChange}
                                 rows={3}
                                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                 placeholder="Describe what you want to achieve"
@@ -165,7 +415,7 @@ const ProblemStatementForm = ({ onCancel, onSubmit }) => {
                             <textarea
                                 name="constraints"
                                 value={formData.constraints}
-                                onChange={(e) => handleChange(e.target)}
+                                onChange={handleChange}
                                 rows={2}
                                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                 placeholder="Any limitations or restrictions"
@@ -186,44 +436,20 @@ const ProblemStatementForm = ({ onCancel, onSubmit }) => {
                             <select
                                 name="solutionRepresentation"
                                 value={formData.solutionRepresentation}
-                                onChange={(e) => handleChange(e.target)}
+                                onChange={handleChange}
                                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             >
                                 <option value="binary">Binary</option>
                                 <option value="integer">Integer</option>
                                 <option value="real">Real-valued</option>
                                 <option value="permutation">Permutation</option>
+                                <option value="tree">Tree / Genetic Programming</option>
+                                <option value="graph">Graph</option>
                                 <option value="custom">Custom</option>
                             </select>
                         </div>
-
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Solution Size / Length *
-                            </label>
-                            <input
-                                type="text"
-                                name="solutionSize"
-                                value={formData.solutionSize}
-                                onChange={(e) => handleChange(e.target)}
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                placeholder="e.g., 10, 100, variable"
-                            />
-                        </div>
-
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Domain of Variables / Allowed Values *
-                            </label>
-                            <input
-                                type="text"
-                                name="domainOfVariables"
-                                value={formData.domainOfVariables}
-                                onChange={(e) => handleChange(e.target)}
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                placeholder="e.g., [0,1], [0,100], any integer"
-                            />
-                        </div>
+                        
+                        {renderRepresentationFields()}
                     </div>
 
                     {/* Fitness Function */}
@@ -239,7 +465,7 @@ const ProblemStatementForm = ({ onCancel, onSubmit }) => {
                             <textarea
                                 name="fitnessDescription"
                                 value={formData.fitnessDescription}
-                                onChange={(e) => handleChange(e.target)}
+                                onChange={handleChange}
                                 rows={3}
                                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                 placeholder="How will solutions be evaluated?"
@@ -254,7 +480,7 @@ const ProblemStatementForm = ({ onCancel, onSubmit }) => {
                                 type="text"
                                 name="formalEquation"
                                 value={formData.formalEquation}
-                                onChange={(e) => handleChange(e.target)}
+                                onChange={handleChange}
                                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                 placeholder="Mathematical formula"
                             />
@@ -268,7 +494,7 @@ const ProblemStatementForm = ({ onCancel, onSubmit }) => {
                                 type="text"
                                 name="constraintHandling"
                                 value={formData.constraintHandling}
-                                onChange={(e) => handleChange(e.target)}
+                                onChange={handleChange}
                                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                 placeholder="e.g., penalties, repair, discard"
                             />
@@ -301,14 +527,26 @@ const ProblemStatementForm = ({ onCancel, onSubmit }) => {
                                     <label className="block text-sm font-medium text-gray-700 mb-2">
                                         Selection Method *
                                     </label>
-                                    <input
-                                        type="text"
+                                    <select
                                         name="selectionMethod"
                                         value={formData.selectionMethod}
-                                        onChange={(e) => handleChange(e.target)}
+                                        onChange={handleChange}
                                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                        placeholder="e.g., tournament, roulette wheel, rank"
-                                    />
+                                    >
+                                        <option value="">-- Select a method --</option>
+                                        {selectionMethods.map(method => <option key={method} value={method}>{method}</option>)}
+                                        <option value="custom">Custom...</option>
+                                    </select>
+                                    {formData.selectionMethod === 'custom' && (
+                                        <textarea
+                                            name="selectionMethodCustomName"
+                                            value={formData.selectionMethodCustomName}
+                                            onChange={handleChange}
+                                            rows={2}
+                                            className="mt-2 w-full px-4 py-3 border border-gray-300 rounded-lg"
+                                            placeholder="Describe your custom selection logic in natural language..."
+                                        />
+                                    )}
                                 </div>
 
                                 <div className="grid grid-cols-2 gap-4">
@@ -316,16 +554,27 @@ const ProblemStatementForm = ({ onCancel, onSubmit }) => {
                                         <label className="block text-sm font-medium text-gray-700 mb-2">
                                             Crossover Operator *
                                         </label>
-                                        <input
-                                            type="text"
+                                        <select
                                             name="crossoverOperator"
                                             value={formData.crossoverOperator}
-                                            onChange={(e) =>
-                                                handleChange(e.target)
-                                            }
-                                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                            placeholder="e.g., single-point, uniform"
-                                        />
+                                            onChange={handleChange}
+                                            disabled={!formData.solutionRepresentation}
+                                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100"
+                                        >
+                                            <option value="">-- Select an operator --</option>
+                                            {eaConfig[formData.solutionRepresentation]?.crossoverOperators.map(op => <option key={op} value={op}>{op}</option>)}
+                                            <option value="custom">Custom...</option>
+                                        </select>
+                                        {formData.crossoverOperator === 'custom' && (
+                                            <textarea
+                                                name="crossoverOperatorCustomName"
+                                                value={formData.crossoverOperatorCustomName}
+                                                onChange={handleChange}
+                                                rows={2}
+                                                className="mt-2 w-full px-4 py-3 border border-gray-300 rounded-lg"
+                                                placeholder="Describe your custom crossover logic in natural language..."
+                                            />
+                                        )}
                                     </div>
 
                                     <div>
@@ -335,12 +584,8 @@ const ProblemStatementForm = ({ onCancel, onSubmit }) => {
                                         <input
                                             type="number"
                                             name="crossoverProbability"
-                                            value={
-                                                formData.crossoverProbability
-                                            }
-                                            onChange={(e) =>
-                                                handleChange(e.target)
-                                            }
+                                            value={formData.crossoverProbability}
+                                            onChange={handleChange}
                                             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                             placeholder="0-100"
                                             min="0"
@@ -354,16 +599,27 @@ const ProblemStatementForm = ({ onCancel, onSubmit }) => {
                                         <label className="block text-sm font-medium text-gray-700 mb-2">
                                             Mutation Operator *
                                         </label>
-                                        <input
-                                            type="text"
+                                        <select
                                             name="mutationOperator"
                                             value={formData.mutationOperator}
-                                            onChange={(e) =>
-                                                handleChange(e.target)
-                                            }
-                                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                            placeholder="e.g., bit-flip, gaussian"
-                                        />
+                                            onChange={handleChange}
+                                            disabled={!formData.solutionRepresentation}
+                                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100"
+                                        >
+                                            <option value="">-- Select an operator --</option>
+                                            {eaConfig[formData.solutionRepresentation]?.mutationOperators.map(op => <option key={op} value={op}>{op}</option>)}
+                                            <option value="custom">Custom...</option>
+                                        </select>
+                                        {formData.mutationOperator === 'custom' && (
+                                            <textarea
+                                                name="mutationOperatorCustomName"
+                                                value={formData.mutationOperatorCustomName}
+                                                onChange={handleChange}
+                                                rows={2}
+                                                className="mt-2 w-full px-4 py-3 border border-gray-300 rounded-lg"
+                                                placeholder="Describe your custom mutation logic in natural language..."
+                                            />
+                                        )}
                                     </div>
 
                                     <div>
@@ -374,9 +630,7 @@ const ProblemStatementForm = ({ onCancel, onSubmit }) => {
                                             type="number"
                                             name="mutationProbability"
                                             value={formData.mutationProbability}
-                                            onChange={(e) =>
-                                                handleChange(e.target)
-                                            }
+                                            onChange={handleChange}
                                             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                             placeholder="0-100"
                                             min="0"
@@ -401,9 +655,7 @@ const ProblemStatementForm = ({ onCancel, onSubmit }) => {
                                             type="number"
                                             name="populationSize"
                                             value={formData.populationSize}
-                                            onChange={(e) =>
-                                                handleChange(e.target)
-                                            }
+                                            onChange={handleChange}
                                             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                             placeholder="e.g., 100"
                                             min="1"
@@ -418,9 +670,7 @@ const ProblemStatementForm = ({ onCancel, onSubmit }) => {
                                             type="number"
                                             name="numGenerations"
                                             value={formData.numGenerations}
-                                            onChange={(e) =>
-                                                handleChange(e.target)
-                                            }
+                                            onChange={handleChange}
                                             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                             placeholder="e.g., 1000"
                                             min="1"
@@ -436,7 +686,7 @@ const ProblemStatementForm = ({ onCancel, onSubmit }) => {
                                         type="text"
                                         name="elitism"
                                         value={formData.elitism}
-                                        onChange={(e) => handleChange(e.target)}
+                                        onChange={handleChange}
                                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                         placeholder="e.g., yes - 10%, no"
                                     />
@@ -456,9 +706,7 @@ const ProblemStatementForm = ({ onCancel, onSubmit }) => {
                                                     formData.terminationCondition ===
                                                     "maxGenerations"
                                                 }
-                                                onChange={(e) =>
-                                                    handleChange(e.target)
-                                                }
+                                                onChange={handleChange}
                                                 className="mr-2"
                                             />
                                             <span>Max generations</span>
@@ -472,9 +720,7 @@ const ProblemStatementForm = ({ onCancel, onSubmit }) => {
                                                     formData.terminationCondition ===
                                                     "fitnessThreshold"
                                                 }
-                                                onChange={(e) =>
-                                                    handleChange(e.target)
-                                                }
+                                                onChange={handleChange}
                                                 className="mr-2"
                                             />
                                             <span>Fitness threshold</span>
@@ -488,9 +734,7 @@ const ProblemStatementForm = ({ onCancel, onSubmit }) => {
                                                     formData.terminationCondition ===
                                                     "timeBudget"
                                                 }
-                                                onChange={(e) =>
-                                                    handleChange(e.target)
-                                                }
+                                                onChange={handleChange}
                                                 className="mr-2"
                                             />
                                             <span>Time budget</span>
@@ -504,9 +748,7 @@ const ProblemStatementForm = ({ onCancel, onSubmit }) => {
                                                     formData.terminationCondition ===
                                                     "other"
                                                 }
-                                                onChange={(e) =>
-                                                    handleChange(e.target)
-                                                }
+                                                onChange={handleChange}
                                                 className="mr-2"
                                             />
                                             <span>Other:</span>
@@ -518,9 +760,7 @@ const ProblemStatementForm = ({ onCancel, onSubmit }) => {
                                                     value={
                                                         formData.terminationOther
                                                     }
-                                                    onChange={(e) =>
-                                                        handleChange(e.target)
-                                                    }
+                                                    onChange={handleChange}
                                                     className="ml-2 flex-1 px-3 py-1 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                                     placeholder="Specify"
                                                 />
@@ -550,9 +790,7 @@ const ProblemStatementForm = ({ onCancel, onSubmit }) => {
                                                     formData.executionMode ===
                                                     "local"
                                                 }
-                                                onChange={(e) =>
-                                                    handleChange(e.target)
-                                                }
+                                                onChange={handleChange}
                                                 className="mr-2"
                                             />
                                             <span>Local</span>
@@ -566,9 +804,7 @@ const ProblemStatementForm = ({ onCancel, onSubmit }) => {
                                                     formData.executionMode ===
                                                     "remote"
                                                 }
-                                                onChange={(e) =>
-                                                    handleChange(e.target)
-                                                }
+                                                onChange={handleChange}
                                                 className="mr-2"
                                             />
                                             <span>Remote</span>
@@ -585,7 +821,7 @@ const ProblemStatementForm = ({ onCancel, onSubmit }) => {
                                         type="number"
                                         name="evaluationBudget"
                                         value={formData.evaluationBudget}
-                                        onChange={(e) => handleChange(e.target)}
+                                        onChange={handleChange}
                                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                         placeholder="e.g., 10000"
                                         min="1"
@@ -604,13 +840,7 @@ const ProblemStatementForm = ({ onCancel, onSubmit }) => {
                                                 checked={
                                                     formData.outputBestSolution
                                                 }
-                                                onChange={(e) =>
-                                                    setFormData({
-                                                        ...formData,
-                                                        outputBestSolution:
-                                                            e.target.checked,
-                                                    })
-                                                }
+                                                onChange={handleChange}
                                                 className="mr-2"
                                             />
                                             <span>Best solution only</span>
@@ -622,13 +852,7 @@ const ProblemStatementForm = ({ onCancel, onSubmit }) => {
                                                 checked={
                                                     formData.outputProgressLog
                                                 }
-                                                onChange={(e) =>
-                                                    setFormData({
-                                                        ...formData,
-                                                        outputProgressLog:
-                                                            e.target.checked,
-                                                    })
-                                                }
+                                                onChange={handleChange}
                                                 className="mr-2"
                                             />
                                             <span>
@@ -642,13 +866,7 @@ const ProblemStatementForm = ({ onCancel, onSubmit }) => {
                                                 checked={
                                                     formData.outputVisualization
                                                 }
-                                                onChange={(e) =>
-                                                    setFormData({
-                                                        ...formData,
-                                                        outputVisualization:
-                                                            e.target.checked,
-                                                    })
-                                                }
+                                                onChange={handleChange}
                                                 className="mr-2"
                                             />
                                             <span>Visualization / Graphs</span>
@@ -671,7 +889,7 @@ const ProblemStatementForm = ({ onCancel, onSubmit }) => {
                                     <textarea
                                         name="customOperators"
                                         value={formData.customOperators}
-                                        onChange={(e) => handleChange(e.target)}
+                                        onChange={handleChange}
                                         rows={2}
                                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                         placeholder="Describe any custom operators"
@@ -685,7 +903,7 @@ const ProblemStatementForm = ({ onCancel, onSubmit }) => {
                                     <textarea
                                         name="knownHeuristics"
                                         value={formData.knownHeuristics}
-                                        onChange={(e) => handleChange(e.target)}
+                                        onChange={handleChange}
                                         rows={2}
                                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                         placeholder="Any domain-specific knowledge"
@@ -699,7 +917,7 @@ const ProblemStatementForm = ({ onCancel, onSubmit }) => {
                                     <textarea
                                         name="exampleSolutions"
                                         value={formData.exampleSolutions}
-                                        onChange={(e) => handleChange(e.target)}
+                                        onChange={handleChange}
                                         rows={2}
                                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                         placeholder="Provide example solutions"
