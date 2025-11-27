@@ -13,15 +13,7 @@ const SummaryRow = ({ label, value }) => {
     );
 };
 
-const PSDetails = ({ statement }) => {
-    const [open, setOpen] = useState(false);
-
-    // The API may either return the full problem in the top-level object,
-    // or provide a `description_json` property with the full form data.
-    const payload = statement && (statement.description_json || statement);
-
-    // Try to decode payload when it's an encoded string (JSON string or base64)
-    const tryDecodePayload = (p) => {
+export const tryDecodePayload = (p) => {
         if (p === null || p === undefined) return p;
         if (typeof p === "object") return p;
         if (typeof p !== "string") return p;
@@ -76,6 +68,14 @@ const PSDetails = ({ statement }) => {
         }
     };
 
+const PSDetails = ({ statement }) => {
+    const [open, setOpen] = useState(false);
+
+    // The API may either return the full problem in the top-level object,
+    // or provide a `description_json` property with the full form data.
+    const payload = statement && (statement.description_json || statement);
+
+    // Try to decode payload when it's an encoded string (JSON string or base64)
     const decoded = tryDecodePayload(payload);
 
     const title = statement?.title || decoded?.problemName || "Untitled";

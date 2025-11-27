@@ -1,40 +1,104 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
+import { Remarkable } from "remarkable";
 
-function simpleMarkdownToHtml(md) {
-    if (!md) return "";
-    // Very small markdown -> HTML converter: headings and paragraphs and code blocks
-    const escaped = md
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;");
+// Using a proper markdown parser
+const md = new Remarkable({
+    html: false, // Don't allow HTML in markdown input
+    xhtmlOut: false,
+    breaks: true,
+    linkify: true,
+});
 
-    const lines = escaped.split(/\n\n+/).map((para) => {
-        // heading
-        if (/^#{1,6} /.test(para)) {
-            const m = para.match(/^(#{1,6}) (.*)$/m);
-            const level = m[1].length;
-            return `<h${level} class="font-semibold mt-2 mb-1">${m[2]}</h${level}>`;
+export default function MarkdownCell({ cell, onChange, onRemove }) {
+    const [isEditing, setIsEditing] = useState(false);
+    const [content, setContent] = useState(cell.content || "");
+
+    const handleContentChange = (e) => {
+        setContent(e.target.value);
+        if (onChange) {
+            onChange({ ...cell, content: e.target.value });
         }
-        if (/^```/.test(para)) {
-            const code = para.replace(/^```\w*\n?|```$/g, "");
-            return `<pre class="bg-gray-800 text-gray-100 p-2 rounded"><code>${code}</code></pre>`;
-        }
-        return `<p class="mb-2">${para.replace(/\n/g, "<br />")}</p>`;
-    });
-    return lines.join("\n");
-}
+    };
 
-export default function MarkdownCell({ cell }) {
+    const handleViewClick = () => {
+        setIsEditing(true);
+    };
+
+    const handleEditorBlur = () => {
+        setIsEditing(false);
+    };
+
+    if (isEditing) {
+        return (
+            <div className="group relative mb-4">
+                <textarea
+                    className="w-full min-h-[100px] bg-white font-sans text-sm p-3 rounded-lg border border-blue-300 focus:ring-2 focus:ring-blue-500 outline-none"
+                    value={content}
+                    onChange={handleContentChange}
+                    onBlur={handleEditorBlur}
+                    autoFocus
+                />
+                <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <button
+                        onClick={onRemove}
+                        className="p-1.5 bg-gray-100 hover:bg-red-100 rounded text-gray-500 hover:text-red-600"
+                        aria-label="Remove cell"
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="16"
+                            height="16"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                        >
+                            <path d="M18 6 6 18" />
+                            <path d="m6 6 12 12" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        );
+    }
+
     return (
-        <div className="mb-4">
+        <div
+            className="group relative mb-4 p-4 bg-white border border-gray-100 rounded-lg prose dark:prose-invert max-w-none cursor-pointer min-h-[50px]"
+            onClick={handleViewClick}
+        >
             <div
-                className="bg-white border border-gray-100 rounded-lg p-4 prose dark:prose-invert max-w-none"
                 dangerouslySetInnerHTML={{
-                    __html: simpleMarkdownToHtml(cell.content),
+                    __html: md.render(content),
                 }}
             />
+            <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                <button
+                    onClick={onRemove}
+                    className="p-1.5 bg-gray-100 hover:bg-red-100 rounded text-gray-500 hover:text-red-600"
+                    aria-label="Remove cell"
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                    >
+
+                        <path d="M18 6 6 18" />
+                        <path d="m6 6 12 12" />
+                    </svg>
+                </button>
+            </div>
         </div>
     );
 }
