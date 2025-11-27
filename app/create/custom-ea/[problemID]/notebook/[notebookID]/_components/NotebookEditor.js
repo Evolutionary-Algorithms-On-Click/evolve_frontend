@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import NotebookLayout from "./NotebookLayout";
 import Toolbar from "./Toolbar";
 import KernelControls from "./KernelControls";
@@ -8,11 +8,32 @@ import CodeCell from "./CodeCell";
 import MarkdownCell from "./MarkdownCell";
 import { env } from "next-runtime-env";
 import useKernelSocket from "./useKernelSocket";
+import Loader from "@/app/_components/Loader";
+import { tryDecodePayload } from "../../_components/PSDetails";
 
 function uid(prefix = "id") {
     return `${prefix}_${Math.random().toString(36).slice(2, 9)}`;
 }
 
+// Helper to remove empty values from an object
+const removeEmpty = (obj) => {
+    if (obj === null || obj === undefined) return null;
+    if (Array.isArray(obj)) {
+        return obj.map(removeEmpty).filter((item) => item !== null);
+    }
+    if (typeof obj === "object") {
+        return Object.entries(obj)
+            .map(([key, value]) => [key, removeEmpty(value)])
+            .filter(
+                ([, value]) =>
+                    value !== null && value !== "" && value !== undefined,
+            )
+            .reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {});
+    }
+    return obj;
+};
+
+// Main component
 export default function NotebookEditor({ notebookId, problemId }) {
     const [cells, setCells] = useState([
         { id: uid("md"), type: "markdown", content: "# New Notebook" },
@@ -41,14 +62,14 @@ export default function NotebookEditor({ notebookId, problemId }) {
     }
 
     function updateCell(updated) {
-        setCells((s) => s.map((c) => (c.id === updated.id ? updated : c)));
+        setCells((s) =>
+            (s || []).map((c) => (c.id === updated.id ? updated : c)),
+        );
     }
 
     function removeCell(id) {
-        setCells((s) => s.filter((c) => c.id !== id));
+        setCells((s) => (s || []).filter((c) => c.id !== id));
     }
-
-    const { connected, sendExecute } = useKernelSocket(session);
 
     async function runCell(cell) {
         // auto-start session if none
@@ -127,9 +148,25 @@ export default function NotebookEditor({ notebookId, problemId }) {
     }
 
     function handleSave() {
-        // Save notebook state somewhere. This is a placeholder.
-        console.log("Save notebook", { notebookId, problemId, cells });
-        alert("Notebook saved (simulated)");
+        if (!cells) {
+            alert("No notebook content to save.");
+            return;
+        }
+        saveNotebook(cells);
+        alert("Notebook saved!");
+    }
+
+    if (loading) {
+        return <Loader message="Loading notebook..." />;
+    }
+
+    if (error) {
+        return (
+            <div className="p-8 text-red-500">
+                <h2 className="text-xl font-bold mb-2">Error</h2>
+                <p>{error}</p>
+            </div>
+        );
     }
 
     return (
@@ -171,13 +208,14 @@ export default function NotebookEditor({ notebookId, problemId }) {
             </div>
 
             <div>
-                {cells.map((cell) => (
+                {(cells || []).map((cell) => (
                     <div key={cell.id} className="mb-6">
                         {cell.type === "code" ? (
                             <CodeCell
                                 cell={cell}
                                 onChange={updateCell}
                                 onRun={runCell}
+                                onRemove={() => removeCell(cell.id)}
                             />
                         ) : (
                             <MarkdownCell
