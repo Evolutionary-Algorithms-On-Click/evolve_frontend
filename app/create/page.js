@@ -107,6 +107,20 @@ export default function ChooseGpOrNotGp() {
                         </div>
                     </Link>
                     <Link
+                        href="/create/bo"
+                        className="block h-full rounded-xl   shadow-md hover:shadow-lg transition-shadow duration-300"
+                    >
+                        <div className="bg-gradient-to-br h-full rounded-xl overflow-hidden from-rose-50 to-rose-100 p-6 flex flex-col items-center justify-center">
+                            <div className="text-5xl mb-3">🔍</div>
+                            <div className="font-bold text-lg text-center text-gray-700">
+                                Bayesian Optimization (BO)
+                            </div>
+                            <div className="text-sm text-gray-500 text-center mt-2">
+                                Guided Exploration
+                            </div>
+                        </div>
+                    </Link>
+                    <Link
                         href="/create/ml"
                         className="block h-full rounded-xl   shadow-md hover:shadow-lg transition-shadow duration-300"
                     >
