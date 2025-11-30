@@ -1,18 +1,20 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { env } from "next-runtime-env";
 
 export default function KernelControls({
     notebookId,
     language = "python3",
     onSessionCreated,
+    onStartAvailable,
 }) {
     const [session, setSession] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
-    async function startSession() {
+    // expose startSession to parent so Run can auto-start a session when needed
+    const startSession = useCallback(async () => {
         setLoading(true);
         setError(null);
         try {
@@ -31,12 +33,18 @@ export default function KernelControls({
             const data = await res.json();
             setSession(data);
             onSessionCreated && onSessionCreated(data);
+            return data;
         } catch (err) {
             setError(String(err));
+            return null;
         } finally {
             setLoading(false);
         }
-    }
+    }, [notebookId, language, onSessionCreated]);
+
+    useEffect(() => {
+        if (onStartAvailable) onStartAvailable(startSession);
+    }, [onStartAvailable, startSession]);
 
     async function stopSession() {
         if (!session) return;

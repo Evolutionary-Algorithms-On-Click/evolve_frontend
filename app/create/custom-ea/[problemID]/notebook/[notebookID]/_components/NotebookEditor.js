@@ -24,6 +24,7 @@ export default function NotebookEditor({ notebookId, problemId }) {
         },
     ]);
     const [session, setSession] = useState(null);
+    const startSessionRef = React.useRef(null);
 
     function addCodeCell() {
         setCells((s) => [
@@ -50,6 +51,12 @@ export default function NotebookEditor({ notebookId, problemId }) {
     const { connected, sendExecute } = useKernelSocket(session);
 
     async function runCell(cell) {
+        // auto-start session if none
+        if (!session && startSessionRef.current) {
+            const s = await startSessionRef.current();
+            if (s) setSession(s);
+        }
+
         if (session && session.current_kernel_id && connected && sendExecute) {
             try {
                 // live update callback
@@ -114,27 +121,34 @@ export default function NotebookEditor({ notebookId, problemId }) {
 
     return (
         <NotebookLayout>
-            <div className="mb-6 flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                    <div className="text-sm text-gray-700">
-                        Problem: {problemId || "—"}
+            <div className="mb-6">
+                <div className="flex items-center justify-between mb-3">
+                    <div>
+                        <div className="text-sm font-semibold text-gray-800">
+                            {cells[0]?.type === "markdown" && cells[0].content
+                                ? cells[0].content
+                                      .split("\n")[0]
+                                      .replace(/^#+\s*/, "")
+                                : `Notebook ${notebookId ? "" : ""}`}
+                        </div>
+                        <div className="text-xs text-gray-500">
+                            {session
+                                ? `Kernel: ${session.current_kernel_id}`
+                                : "No session"}
+                        </div>
                     </div>
-                    <div className="text-sm text-gray-700">
-                        Notebook: {notebookId || "—"}
+                    <div className="flex items-center gap-3">
+                        <KernelControls
+                            notebookId={notebookId}
+                            language="python3"
+                            onSessionCreated={setSession}
+                            onStartAvailable={(fn) =>
+                                (startSessionRef.current = fn)
+                            }
+                        />
                     </div>
                 </div>
-                <KernelControls
-                    notebookId={notebookId}
-                    language="python3"
-                    onSessionCreated={setSession}
-                />
             </div>
-
-            <Toolbar
-                onAddCode={addCodeCell}
-                onAddMarkdown={addMarkdownCell}
-                onSave={handleSave}
-            />
 
             <div>
                 {cells.map((cell) => (
