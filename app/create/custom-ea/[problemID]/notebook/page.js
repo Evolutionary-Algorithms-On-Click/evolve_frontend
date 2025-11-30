@@ -169,7 +169,7 @@ export default function NotebookDashboard() {
             const base =
                 env("NEXT_PUBLIC_BACKEND_BASE_URL") ?? "http://localhost:8080";
             const payload = {
-                name: name.trim(),
+                title: name.trim(),
                 problem_statement_id:
                     problemId && problemId.trim() !== ""
                         ? problemId.trim()
