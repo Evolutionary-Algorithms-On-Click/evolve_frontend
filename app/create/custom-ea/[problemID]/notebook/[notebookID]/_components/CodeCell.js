@@ -6,6 +6,7 @@ import OutputArea from "./OutputArea";
 
 export default function CodeCell({ cell, onChange, onRun, readOnly = false }) {
     const [value, setValue] = useState(cell.content || "");
+    const [editorHeight, setEditorHeight] = useState(cell._editorHeight || 200);
 
     function handleChange(v) {
         // monaco passes value directly
@@ -26,10 +27,10 @@ export default function CodeCell({ cell, onChange, onRun, readOnly = false }) {
 
     return (
         <div className="mb-4">
-            <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
-                <div className="flex items-start gap-4 p-3 border-b border-gray-100 bg-gray-50">
+            <div className="bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden">
+                <div className="flex items-start gap-4 p-3 border-b border-gray-100 bg-white">
                     <div className="flex items-center gap-2">
-                        <div className="text-xs text-gray-600 font-semibold px-2 py-1 bg-gray-100 rounded">
+                        <div className="text-xs text-gray-700 font-semibold px-2 py-1 bg-gray-100 rounded">
                             In [{execCount}]
                         </div>
                     </div>
@@ -47,7 +48,7 @@ export default function CodeCell({ cell, onChange, onRun, readOnly = false }) {
                     </div>
                 </div>
 
-                <div className="p-2">
+                <div className="p-2 bg-white">
                     <div
                         className="rounded overflow-hidden"
                         style={{ width: "100%" }}
@@ -56,18 +57,12 @@ export default function CodeCell({ cell, onChange, onRun, readOnly = false }) {
                             // height is controlled via state so editor expands with content
                             height={
                                 String(
-                                    Math.max(
-                                        120,
-                                        Math.min(
-                                            1800,
-                                            cell._editorHeight || 200,
-                                        ),
-                                    ),
+                                    Math.max(120, Math.min(2000, editorHeight)),
                                 ) + "px"
                             }
                             defaultLanguage="python"
                             language="python"
-                            theme="vs-dark"
+                            theme="vs"
                             value={value}
                             onChange={handleChange}
                             onMount={(editor) => {
@@ -86,10 +81,10 @@ export default function CodeCell({ cell, onChange, onRun, readOnly = false }) {
                                             80,
                                             Math.min(2000, contentHeight),
                                         );
-                                        // store a transient property on cell so re-renders can pick it up
-                                        if (cell) cell._editorHeight = h;
-                                        // trigger a reflow by forcing a small timeout update
-                                        // (parent state update is handled by onChange when content changes)
+                                        // update local state so the Editor receives new height
+                                        try {
+                                            setEditorHeight(h);
+                                        } catch (e) {}
                                         try {
                                             editor.layout({
                                                 width: editor.getLayoutInfo()
@@ -118,6 +113,8 @@ export default function CodeCell({ cell, onChange, onRun, readOnly = false }) {
                             }}
                             options={{
                                 fontSize: 13,
+                                fontFamily:
+                                    'ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Courier New", monospace',
                                 lineNumbers: "on",
                                 automaticLayout: true,
                                 glyphMargin: true,

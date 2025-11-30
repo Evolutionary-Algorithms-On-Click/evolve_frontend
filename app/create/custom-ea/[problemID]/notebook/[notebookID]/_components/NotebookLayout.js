@@ -17,15 +17,8 @@ export default function NotebookLayout({ children }) {
                             </div>
                         </div>
                         <div className="flex items-center gap-2">
-                            <button className="px-3 py-1 text-sm bg-white border rounded text-gray-700">
-                                File
-                            </button>
-                            <button className="px-3 py-1 text-sm bg-white border rounded text-gray-700">
-                                Edit
-                            </button>
-                            <button className="px-3 py-1 text-sm bg-white border rounded text-gray-700">
-                                View
-                            </button>
+                            {/* Placeholder area for actions - File/Edit/View were placeholders */}
+                            <div className="text-sm text-gray-500">&nbsp;</div>
                         </div>
                     </div>
                     <div className="p-6 space-y-4">{children}</div>
