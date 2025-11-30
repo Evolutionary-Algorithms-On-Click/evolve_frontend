@@ -113,6 +113,19 @@ export default function NotebookEditor({ notebookId, problemId }) {
         });
     }
 
+    async function runAll() {
+        for (const c of cells) {
+            if (c.type === "code") {
+                // run sequentially so outputs make sense in order
+                // find latest cell from state by id
+                const stateCell = cells.find((x) => x.id === c.id) || c;
+                // await runCell will handle session auto-start
+                // eslint-disable-next-line no-await-in-loop
+                await runCell(stateCell);
+            }
+        }
+    }
+
     function handleSave() {
         // Save notebook state somewhere. This is a placeholder.
         console.log("Save notebook", { notebookId, problemId, cells });
@@ -121,10 +134,10 @@ export default function NotebookEditor({ notebookId, problemId }) {
 
     return (
         <NotebookLayout>
-            <div className="mb-6">
-                <div className="flex items-center justify-between mb-3">
+            <div className="mb-4">
+                <div className="flex items-start justify-between mb-3">
                     <div>
-                        <div className="text-sm font-semibold text-gray-800">
+                        <div className="text-lg font-semibold text-gray-800">
                             {cells[0]?.type === "markdown" && cells[0].content
                                 ? cells[0].content
                                       .split("\n")[0]
@@ -148,6 +161,13 @@ export default function NotebookEditor({ notebookId, problemId }) {
                         />
                     </div>
                 </div>
+
+                <Toolbar
+                    onAddCode={addCodeCell}
+                    onAddMarkdown={addMarkdownCell}
+                    onSave={handleSave}
+                    onRunAll={runAll}
+                />
             </div>
 
             <div>
@@ -160,7 +180,11 @@ export default function NotebookEditor({ notebookId, problemId }) {
                                 onRun={runCell}
                             />
                         ) : (
-                            <MarkdownCell cell={cell} />
+                            <MarkdownCell
+                                cell={cell}
+                                onChange={updateCell}
+                                onRemove={removeCell}
+                            />
                         )}
                     </div>
                 ))}
