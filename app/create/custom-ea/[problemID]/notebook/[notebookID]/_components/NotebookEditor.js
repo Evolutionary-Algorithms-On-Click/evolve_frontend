@@ -9,8 +9,59 @@ import MarkdownCell from "./MarkdownCell";
 import { env } from "next-runtime-env";
 import useKernelSocket from "./useKernelSocket";
 import Loader from "@/app/_components/Loader";
-import { tryDecodePayload } from "../../_components/PSDetails";
+// Local fallback for decoding problem payloads (mirrors implementation in PSDetails)
+const tryDecodePayload = (p) => {
+    if (p === null || p === undefined) return p;
+    if (typeof p === "object") return p;
+    if (typeof p !== "string") return p;
 
+    const s = p.trim();
+
+    // If it looks like JSON, parse it
+    if (s.startsWith("{") || s.startsWith("[")) {
+        try {
+            return JSON.parse(s);
+        } catch (e) {
+            // fall through
+        }
+    }
+
+    // Try Base64 (including URL-safe) decode
+    try {
+        let b64 = s.replace(/-/g, "+").replace(/_/g, "/");
+        while (b64.length % 4 !== 0) b64 += "=";
+        const decoded = atob(b64);
+
+        // Try parse decoded as JSON
+        try {
+            return JSON.parse(decoded);
+        } catch (e) {
+            // Try decoding as UTF-8 percent-encoded
+            try {
+                const utf8 = decodeURIComponent(
+                    Array.prototype.map
+                        .call(
+                            decoded,
+                            (c) =>
+                                "%" +
+                                ("00" + c.charCodeAt(0).toString(16)).slice(-2),
+                        )
+                        .join(""),
+                );
+                try {
+                    return JSON.parse(utf8);
+                } catch (e2) {
+                    return utf8;
+                }
+            } catch (e3) {
+                return decoded;
+            }
+        }
+    } catch (err) {
+        // not base64 - return original
+        return s;
+    }
+};
 function uid(prefix = "id") {
     return `${prefix}_${Math.random().toString(36).slice(2, 9)}`;
 }
@@ -135,14 +186,11 @@ export default function NotebookEditor({ notebookId, problemId }) {
     }
 
     async function runAll() {
-        for (const c of cells) {
+        const snapshot = [...(cells || [])];
+        for (const c of snapshot) {
             if (c.type === "code") {
-                // run sequentially so outputs make sense in order
-                // find latest cell from state by id
-                const stateCell = cells.find((x) => x.id === c.id) || c;
-                // await runCell will handle session auto-start
                 // eslint-disable-next-line no-await-in-loop
-                await runCell(stateCell);
+                await runCell(c);
             }
         }
     }
@@ -156,9 +204,7 @@ export default function NotebookEditor({ notebookId, problemId }) {
         alert("Notebook saved!");
     }
 
-    if (loading) {
-        return <Loader message="Loading notebook..." />;
-    }
+    if (loading) return <Loader message="Loading notebook..." />;
 
     if (error) {
         return (
@@ -175,11 +221,13 @@ export default function NotebookEditor({ notebookId, problemId }) {
                 <div className="flex items-start justify-between mb-3">
                     <div>
                         <div className="text-lg font-semibold text-gray-800">
-                            {cells[0]?.type === "markdown" && cells[0].content
+                            {cells &&
+                            cells[0]?.type === "markdown" &&
+                            cells[0].content
                                 ? cells[0].content
                                       .split("\n")[0]
                                       .replace(/^#+\s*/, "")
-                                : `Notebook ${notebookId ? "" : ""}`}
+                                : `Notebook ${notebookId || ""}`}
                         </div>
                         <div className="text-xs text-gray-500">
                             {session
