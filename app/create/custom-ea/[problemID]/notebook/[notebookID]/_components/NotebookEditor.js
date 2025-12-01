@@ -9,8 +9,59 @@ import MarkdownCell from "./MarkdownCell";
 import { env } from "next-runtime-env";
 import useKernelSocket from "./useKernelSocket";
 import Loader from "@/app/_components/Loader";
-import { tryDecodePayload } from "../../_components/PSDetails";
+// Local fallback for decoding problem payloads (mirrors implementation in PSDetails)
+const tryDecodePayload = (p) => {
+    if (p === null || p === undefined) return p;
+    if (typeof p === "object") return p;
+    if (typeof p !== "string") return p;
 
+    const s = p.trim();
+
+    // If it looks like JSON, parse it
+    if (s.startsWith("{") || s.startsWith("[")) {
+        try {
+            return JSON.parse(s);
+        } catch (e) {
+            // fall through
+        }
+    }
+
+    // Try Base64 (including URL-safe) decode
+    try {
+        let b64 = s.replace(/-/g, "+").replace(/_/g, "/");
+        while (b64.length % 4 !== 0) b64 += "=";
+        const decoded = atob(b64);
+
+        // Try parse decoded as JSON
+        try {
+            return JSON.parse(decoded);
+        } catch (e) {
+            // Try decoding as UTF-8 percent-encoded
+            try {
+                const utf8 = decodeURIComponent(
+                    Array.prototype.map
+                        .call(
+                            decoded,
+                            (c) =>
+                                "%" +
+                                ("00" + c.charCodeAt(0).toString(16)).slice(-2),
+                        )
+                        .join(""),
+                );
+                try {
+                    return JSON.parse(utf8);
+                } catch (e2) {
+                    return utf8;
+                }
+            } catch (e3) {
+                return decoded;
+            }
+        }
+    } catch (err) {
+        // not base64 - return original
+        return s;
+    }
+};
 function uid(prefix = "id") {
     return `${prefix}_${Math.random().toString(36).slice(2, 9)}`;
 }
@@ -38,44 +89,12 @@ export default function NotebookEditor({ notebookId, problemId }) {
     const [cells, setCells] = useState(null); // null = loading
     const [session, setSession] = useState(null);
     const startSessionRef = React.useRef(null);
-
-    function addCodeCell() {
-        setCells((s) => [
-            ...s,
-            { id: uid("code"), type: "code", content: "", outputs: [] },
-        ]);
-    }
-
-    function addMarkdownCell() {
-        setCells((s) => [
-            ...s,
-            { id: uid("md"), type: "markdown", content: "New paragraph" },
-        ]);
-    }
-
-    function updateCell(updated) {
-        setCells((s) => s.map((c) => (c.id === updated.id ? updated : c)));
-    }
-
-    function removeCell(id) {
-        setCells((s) => s.filter((c) => c.id !== id));
-    }
-
-    const { connected, sendExecute } = useKernelSocket(session);
-
-    async function runCell(cell) {
-        // auto-start session if none
-        if (!session && startSessionRef.current) {
-            const s = await startSessionRef.current();
-            if (s) setSession(s);
-        }
-
-        if (session && session.current_kernel_id && connected && sendExecute) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     const { connected, sendExecute } = useKernelSocket(session);
 
+    // Fetch notebook on mount / when notebookId changes
     useEffect(() => {
         let mounted = true;
         const controller = new AbortController();
@@ -124,18 +143,24 @@ export default function NotebookEditor({ notebookId, problemId }) {
                     await generateAndPopulateNotebook(controller.signal);
                 } else {
                     setCells(
-                        currentCells.map((c) => ({ ...c, id: uid(c.type) })),
+                        currentCells.map((c) => ({
+                            ...c,
+                            id: uid(c.type || "cell"),
+                        })),
                     );
                 }
             } catch (err) {
                 if (controller.signal.aborted) return;
                 console.error(err);
                 setError(err.message || "An error occurred.");
+                // fallback to simple state
+                setCells([]);
             } finally {
                 if (mounted) setLoading(false);
             }
         };
-
+        // fetchNotebook will trigger notebook generation when needed.
+        // Payload construction for LLM is handled inside generateAndPopulateNotebook.
         fetchNotebook();
 
         return () => {
@@ -146,7 +171,6 @@ export default function NotebookEditor({ notebookId, problemId }) {
 
     const generateAndPopulateNotebook = async (signal) => {
         try {
-            // 1. Fetch problem statement
             const base =
                 env("NEXT_PUBLIC_BACKEND_BASE_URL") ?? "http://localhost:8080";
             const problemRes = await fetch(
@@ -160,18 +184,22 @@ export default function NotebookEditor({ notebookId, problemId }) {
             const problemData = await problemRes.json();
             const problemDetails = problemData?.data ?? problemData;
 
-            // 2. Clean and prepare payload for LLM
             let payload =
                 problemDetails &&
                 (problemDetails.description_json || problemDetails);
             const decoded = tryDecodePayload(payload);
             const cleanedProblem = removeEmpty(decoded);
+
+            const user_id = session?.user_id ? String(session.user_id) : "";
+            const notebook_id = notebookId ? String(notebookId) : "";
+
             payload = {
-                ...cleanedProblem,
-                session_id: notebookId,
+                ...(cleanedProblem || {}),
+                session_id: String(notebookId),
+                notebook_id,
+                user_id,
             };
 
-            // 3. Generate notebook from LLM
             const llmRes = await fetch(`${base}/api/v1/llm/generate`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -185,19 +213,18 @@ export default function NotebookEditor({ notebookId, problemId }) {
             const llmNotebook = await llmRes.json();
             const newCells =
                 llmNotebook?.notebook?.cells.map((c) => ({
-                    ...c,
-                    id: uid(c.cell_type),
-                    type: c.cell_type,
-                    content: c.source,
+                    id: uid(c.cell_type || "cell"),
+                    type: c.cell_type || c.cellType || "code",
+                    content: Array.isArray(c.source)
+                        ? c.source.join("")
+                        : c.source || "",
                     outputs: [],
                 })) ?? [];
 
             if (newCells.length > 0) {
-                // 4. Save the new cells to the backend
                 await saveNotebook(newCells);
                 setCells(newCells);
             } else {
-                // Fallback to a default empty notebook if LLM returns nothing
                 setCells([
                     {
                         id: uid("md"),
@@ -209,7 +236,6 @@ export default function NotebookEditor({ notebookId, problemId }) {
         } catch (err) {
             console.error(err);
             setError(err.message);
-            // Provide a default empty state on error
             setCells([
                 { id: uid("md"), type: "markdown", content: "# Error" },
                 {
@@ -232,26 +258,27 @@ export default function NotebookEditor({ notebookId, problemId }) {
                 headers: { "Content-Type": "application/json" },
                 credentials: "include",
                 body: JSON.stringify({
-                    cells: currentCells.map(
-                        ({ id, ...rest }) => rest, // strip client-side id
-                    ),
+                    cells: currentCells.map(({ id, ...rest }) => rest),
                 }),
             });
         } catch (err) {
             console.error("Failed to save notebook:", err);
-            // Optionally, inform the user about the save failure
             alert("Warning: Failed to save notebook state to the server.");
         }
     };
 
-    function addCell(type, content) {
-        const newCell = {
-            id: uid(type),
-            type,
-            content,
-            outputs: type === "code" ? [] : undefined,
-        };
-        setCells((s) => [...(s || []), newCell]);
+    function addCodeCell() {
+        setCells((s) => [
+            ...(s || []),
+            { id: uid("code"), type: "code", content: "", outputs: [] },
+        ]);
+    }
+
+    function addMarkdownCell() {
+        setCells((s) => [
+            ...(s || []),
+            { id: uid("md"), type: "markdown", content: "New paragraph" },
+        ]);
     }
 
     function updateCell(updated) {
@@ -265,6 +292,12 @@ export default function NotebookEditor({ notebookId, problemId }) {
     }
 
     async function runCell(cell) {
+        // auto-start session if none
+        if (!session && startSessionRef.current) {
+            const s = await startSessionRef.current();
+            if (s) setSession(s);
+        }
+
         if (!session?.current_kernel_id || !connected || !sendExecute) {
             updateCell({
                 ...cell,
@@ -279,14 +312,21 @@ export default function NotebookEditor({ notebookId, problemId }) {
             });
             return;
         }
+        // mark cell as running and clear previous outputs while executing
+        updateCell({ ...cell, _isRunning: true, outputs: [], execution_count: null });
 
         try {
             const handleOutputUpdate = (outputs, execution_count) => {
-                updateCell({ ...cell, outputs, execution_count });
+                updateCell({
+                    ...cell,
+                    outputs,
+                    execution_count,
+                    _isRunning: true,
+                });
             };
 
             const result = await sendExecute(cell.content, handleOutputUpdate);
-            updateCell({ ...cell, ...result });
+            updateCell({ ...cell, ...result, _isRunning: false });
         } catch (e) {
             console.error("WS execute failed", e);
             updateCell({
@@ -299,19 +339,17 @@ export default function NotebookEditor({ notebookId, problemId }) {
                         traceback: [],
                     },
                 ],
+                _isRunning: false,
             });
         }
     }
 
     async function runAll() {
-        for (const c of cells) {
+        const snapshot = [...(cells || [])];
+        for (const c of snapshot) {
             if (c.type === "code") {
-                // run sequentially so outputs make sense in order
-                // find latest cell from state by id
-                const stateCell = cells.find((x) => x.id === c.id) || c;
-                // await runCell will handle session auto-start
                 // eslint-disable-next-line no-await-in-loop
-                await runCell(stateCell);
+                await runCell(c);
             }
         }
     }
@@ -325,9 +363,7 @@ export default function NotebookEditor({ notebookId, problemId }) {
         alert("Notebook saved!");
     }
 
-    if (loading) {
-        return <Loader message="Loading notebook..." />;
-    }
+    if (loading) return <Loader message="Loading notebook..." />;
 
     if (error) {
         return (
@@ -344,11 +380,13 @@ export default function NotebookEditor({ notebookId, problemId }) {
                 <div className="flex items-start justify-between mb-3">
                     <div>
                         <div className="text-lg font-semibold text-gray-800">
-                            {cells[0]?.type === "markdown" && cells[0].content
+                            {cells &&
+                            cells[0]?.type === "markdown" &&
+                            cells[0].content
                                 ? cells[0].content
                                       .split("\n")[0]
                                       .replace(/^#+\s*/, "")
-                                : `Notebook ${notebookId ? "" : ""}`}
+                                : `Notebook ${notebookId || ""}`}
                         </div>
                         <div className="text-xs text-gray-500">
                             {session
@@ -399,4 +437,3 @@ export default function NotebookEditor({ notebookId, problemId }) {
         </NotebookLayout>
     );
 }
-
