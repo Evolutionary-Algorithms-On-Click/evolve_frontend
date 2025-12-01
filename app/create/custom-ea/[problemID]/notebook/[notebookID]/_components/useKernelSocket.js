@@ -298,7 +298,7 @@ export default function useKernelSocket(session) {
         };
     }, [session?.current_kernel_id, session?.id, session?.session]);
 
-    function sendExecute(code) {
+    function sendExecute(code, onOutput) {
         return new Promise((resolve, reject) => {
             const ws = wsRef.current;
             if (!ws || ws.readyState !== WebSocket.OPEN) {
@@ -336,6 +336,7 @@ export default function useKernelSocket(session) {
                 reject,
                 outputs: [],
                 execution_count: null,
+                onOutput,
             };
 
             try {

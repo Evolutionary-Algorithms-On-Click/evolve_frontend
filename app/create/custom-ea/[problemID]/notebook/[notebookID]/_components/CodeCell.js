@@ -33,7 +33,17 @@ export default function CodeCell({
 
     return (
         <div className="mb-4">
-            <div className="bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden">
+            <div className="bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden relative">
+                {cell._isRunning && (
+                    <div className="absolute inset-0 bg-white/60 flex items-center justify-center z-10">
+                        <div className="flex items-center gap-2">
+                            <div className="w-5 h-5 border-2 border-t-transparent border-blue-600 rounded-full animate-spin" />
+                            <div className="text-sm text-blue-700 font-medium">
+                                Running…
+                            </div>
+                        </div>
+                    </div>
+                )}
                 <div className="flex items-start gap-4 p-3 border-b border-gray-100 bg-white">
                     <div className="flex items-center gap-2">
                         <div className="text-xs text-gray-700 font-semibold px-2 py-1 bg-gray-100 rounded">
@@ -46,10 +56,18 @@ export default function CodeCell({
                     <div className="flex items-center gap-2">
                         <button
                             onClick={handleRun}
-                            className="px-3 py-1 bg-blue-600 text-white rounded text-sm"
-                            title="Run cell"
+                            disabled={!!cell._isRunning}
+                            className={
+                                "px-3 py-1 rounded text-sm " +
+                                (cell._isRunning
+                                    ? "bg-gray-300 text-gray-600 cursor-not-allowed"
+                                    : "bg-blue-600 text-white")
+                            }
+                            title={
+                                cell._isRunning ? "Cell is running" : "Run cell"
+                            }
                         >
-                            Run
+                            {cell._isRunning ? "Running…" : "Run"}
                         </button>
                     </div>
                 </div>
