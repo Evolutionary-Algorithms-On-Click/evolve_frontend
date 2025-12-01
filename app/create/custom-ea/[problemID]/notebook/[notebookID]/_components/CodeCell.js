@@ -4,7 +4,13 @@ import React, { useState, useMemo, useRef, useEffect } from "react";
 import Editor from "@monaco-editor/react";
 import OutputArea from "./OutputArea";
 
-export default function CodeCell({ cell, onChange, onRun, readOnly = false }) {
+export default function CodeCell({
+    cell,
+    onChange,
+    onRun,
+    onRemove,
+    readOnly = false,
+}) {
     const [value, setValue] = useState(cell.content || "");
     const [editorHeight, setEditorHeight] = useState(cell._editorHeight || 200);
 
@@ -126,6 +132,29 @@ export default function CodeCell({ cell, onChange, onRun, readOnly = false }) {
             </div>
 
             <OutputArea outputs={cell.outputs || []} />
+
+            <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                <button
+                    onClick={onRemove}
+                    className="p-1.5 bg-gray-100 hover:bg-red-100 rounded text-gray-500 hover:text-red-600"
+                    aria-label="Remove cell"
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                    >
+                        <path d="M18 6 6 18" />
+                        <path d="m6 6 12 12" />
+                    </svg>
+                </button>
+            </div>
         </div>
     );
 }

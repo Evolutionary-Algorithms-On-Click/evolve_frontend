@@ -28,6 +28,7 @@
         "react-dom": "^19.0.0",
         "react-dropzone": "^14.2.10",
         "react-markdown": "^10.1.0",
+        "remarkable": "^2.0.1",
         "sharp": "^0.33.5",
         "zod": "^3.24.2"
     },
