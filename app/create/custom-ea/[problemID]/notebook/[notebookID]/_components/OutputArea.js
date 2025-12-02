@@ -25,7 +25,7 @@ export default function OutputArea({ outputs = [] }) {
     })();
 
     return (
-        <div className="mt-3 bg-white text-gray-800 rounded-lg p-3 text-sm font-mono border border-gray-200 shadow-sm">
+        <div className="mt-3 bg-gray-900 text-gray-100 rounded-lg p-3 text-sm font-mono border border-gray-800">
             {execCount !== null && (
                 <div className="text-xs text-gray-400 mb-2">
                     Out [{execCount}]:
@@ -45,10 +45,10 @@ export default function OutputArea({ outputs = [] }) {
                                 <pre
                                     key={idx}
                                     className={
-                                        "whitespace-pre-wrap p-2 rounded text-sm font-mono bg-gray-50" +
+                                        "whitespace-pre-wrap p-2 rounded text-sm font-mono bg-gray-800" +
                                         (isErr
-                                            ? " text-red-600"
-                                            : " text-gray-800")
+                                            ? " text-red-300"
+                                            : " text-gray-100")
                                     }
                                 >
                                     {text}
@@ -70,7 +70,7 @@ export default function OutputArea({ outputs = [] }) {
                                         key={idx}
                                         src={`data:image/png;base64,${data["image/png"]}`}
                                         alt="png output"
-                                        className="my-2 max-w-full rounded border border-gray-100"
+                                        className="my-2 max-w-full rounded border border-gray-700"
                                     />
                                 );
                             }
@@ -117,7 +117,7 @@ export default function OutputArea({ outputs = [] }) {
                             return (
                                 <pre
                                     key={idx}
-                                    className="whitespace-pre-wrap p-2 rounded bg-gray-50 text-gray-800"
+                                    className="whitespace-pre-wrap p-2 rounded bg-gray-800 text-gray-100"
                                 >
                                     {data["text/plain"] ||
                                         JSON.stringify(data, null, 2)}
@@ -136,7 +136,7 @@ export default function OutputArea({ outputs = [] }) {
                             return (
                                 <pre
                                     key={idx}
-                                    className="whitespace-pre-wrap p-2 rounded bg-red-50 text-red-600"
+                                    className="whitespace-pre-wrap p-2 rounded bg-red-900 text-red-300"
                                 >
                                     {tb}
                                 </pre>
@@ -148,7 +148,7 @@ export default function OutputArea({ outputs = [] }) {
                             return (
                                 <pre
                                     key={idx}
-                                    className="whitespace-pre-wrap text-blue-300"
+                                    className="whitespace-pre-wrap px-2 py-1 rounded text-blue-300 bg-transparent"
                                 >
                                     In [{out.execution_count}]: {out.code}
                                 </pre>

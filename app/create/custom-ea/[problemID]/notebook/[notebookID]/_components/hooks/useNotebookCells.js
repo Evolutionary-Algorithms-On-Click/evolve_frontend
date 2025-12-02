@@ -1,0 +1,94 @@
+"use client";
+
+import { useState } from "react";
+
+function uid(prefix = "id") {
+    return `${prefix}_${Math.random().toString(36).slice(2, 9)}`;
+}
+
+export default function useNotebookCells(initial = null) {
+    const [cells, setCells] = useState(initial);
+
+    const setInitial = (initialCells) => setCells(initialCells);
+
+    function addCodeCell() {
+        setCells((s) => {
+            const arr = [...(s || [])];
+            arr.push({
+                id: uid("code"),
+                type: "code",
+                content: "",
+                outputs: [],
+            });
+            return arr.map((c, i) => ({ ...c, idx: i }));
+        });
+    }
+
+    function addMarkdownCell() {
+        setCells((s) => {
+            const arr = [...(s || [])];
+            arr.push({
+                id: uid("md"),
+                type: "markdown",
+                content: "New paragraph",
+            });
+            return arr.map((c, i) => ({ ...c, idx: i }));
+        });
+    }
+
+    function updateCell(updated) {
+        setCells((s) => {
+            const arr = (s || []).map((c) =>
+                c.id === updated.id ? { ...updated } : c,
+            );
+            return arr.map((c, i) => ({ ...c, idx: i }));
+        });
+    }
+
+    function removeCell(id) {
+        setCells((s) => {
+            const arr = (s || []).filter((c) => c.id !== id);
+            return arr.map((c, i) => ({ ...c, idx: i }));
+        });
+    }
+
+    function moveCellUp(id) {
+        setTimeout(() => {
+            setCells((s) => {
+                const arr = [...(s || [])];
+                const idx = arr.findIndex((c) => c.id === id);
+                if (idx > 0) {
+                    const [item] = arr.splice(idx, 1);
+                    arr.splice(idx - 1, 0, item);
+                }
+                return arr.map((c, i) => ({ ...c, idx: i }));
+            });
+        }, 0);
+    }
+
+    function moveCellDown(id) {
+        setTimeout(() => {
+            setCells((s) => {
+                const arr = [...(s || [])];
+                const idx = arr.findIndex((c) => c.id === id);
+                if (idx >= 0 && idx < arr.length - 1) {
+                    const [item] = arr.splice(idx, 1);
+                    arr.splice(idx + 1, 0, item);
+                }
+                return arr.map((c, i) => ({ ...c, idx: i }));
+            });
+        }, 0);
+    }
+
+    return {
+        cells,
+        setInitial,
+        addCodeCell,
+        addMarkdownCell,
+        updateCell,
+        removeCell,
+        moveCellUp,
+        moveCellDown,
+        setCells,
+    };
+}
