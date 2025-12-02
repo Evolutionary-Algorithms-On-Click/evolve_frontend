@@ -7,9 +7,10 @@ function uid(prefix = "id") {
 }
 
 export default function useNotebookCells(initial = null) {
-    const [cells, setCells] = useState(initial);
+    const [cells, setCells] = useState(initial || []);
 
-    const setInitial = (initialCells) => setCells(initialCells);
+    const setInitial = (initialCells) =>
+        setCells((initialCells || []).map((c, i) => ({ ...c, idx: i })));
 
     function addCodeCell() {
         setCells((s) => {
@@ -53,31 +54,27 @@ export default function useNotebookCells(initial = null) {
     }
 
     function moveCellUp(id) {
-        setTimeout(() => {
-            setCells((s) => {
-                const arr = [...(s || [])];
-                const idx = arr.findIndex((c) => c.id === id);
-                if (idx > 0) {
-                    const [item] = arr.splice(idx, 1);
-                    arr.splice(idx - 1, 0, item);
-                }
-                return arr.map((c, i) => ({ ...c, idx: i }));
-            });
-        }, 0);
+        setCells((s) => {
+            const arr = [...(s || [])];
+            const idx = arr.findIndex((c) => c.id === id);
+            if (idx > 0) {
+                const [item] = arr.splice(idx, 1);
+                arr.splice(idx - 1, 0, item);
+            }
+            return arr.map((c, i) => ({ ...c, idx: i }));
+        });
     }
 
     function moveCellDown(id) {
-        setTimeout(() => {
-            setCells((s) => {
-                const arr = [...(s || [])];
-                const idx = arr.findIndex((c) => c.id === id);
-                if (idx >= 0 && idx < arr.length - 1) {
-                    const [item] = arr.splice(idx, 1);
-                    arr.splice(idx + 1, 0, item);
-                }
-                return arr.map((c, i) => ({ ...c, idx: i }));
-            });
-        }, 0);
+        setCells((s) => {
+            const arr = [...(s || [])];
+            const idx = arr.findIndex((c) => c.id === id);
+            if (idx >= 0 && idx < arr.length - 1) {
+                const [item] = arr.splice(idx, 1);
+                arr.splice(idx + 1, 0, item);
+            }
+            return arr.map((c, i) => ({ ...c, idx: i }));
+        });
     }
 
     return {

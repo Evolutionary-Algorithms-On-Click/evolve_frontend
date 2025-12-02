@@ -3,19 +3,12 @@
 import React from "react";
 
 function stripAnsi(str = "") {
-    return str.replace(
-        // ANSI color escape sequences
-        /\x1b\[[0-9;]*m/g,
-        "",
-    );
+    return str.replace(/\x1b\[[0-9;]*m/g, "");
 }
 
 export default function OutputArea({ outputs = [] }) {
-    if (!outputs || outputs.length === 0) {
-        return null;
-    }
+    if (!outputs || outputs.length === 0) return null;
 
-    // try to find an execution count for labeling
     const execCount = (() => {
         for (const o of outputs) {
             if (o.execution_count) return o.execution_count;
@@ -35,12 +28,9 @@ export default function OutputArea({ outputs = [] }) {
                 <div className="max-h-96 overflow-auto space-y-1">
                     {outputs.map((out, idx) => {
                         if (!out || !out.type) return null;
-
-                        // ----- STDOUT / STDERR -----
                         if (out.type === "stream") {
                             const isErr = out.name === "stderr";
                             const text = stripAnsi(out.text || "");
-
                             return (
                                 <pre
                                     key={idx}
@@ -55,16 +45,12 @@ export default function OutputArea({ outputs = [] }) {
                                 </pre>
                             );
                         }
-
-                        // ----- EXECUTE RESULT / DISPLAY DATA -----
                         if (
                             out.type === "execute_result" ||
                             out.type === "display_data"
                         ) {
                             const data = out.data || {};
-
-                            // ----- IMAGE PNG -----
-                            if (data["image/png"]) {
+                            if (data["image/png"])
                                 return (
                                     <img
                                         key={idx}
@@ -73,10 +59,7 @@ export default function OutputArea({ outputs = [] }) {
                                         className="my-2 max-w-full rounded border border-gray-700"
                                     />
                                 );
-                            }
-
-                            // ----- IMAGE JPEG -----
-                            if (data["image/jpeg"]) {
+                            if (data["image/jpeg"])
                                 return (
                                     <img
                                         key={idx}
@@ -85,10 +68,7 @@ export default function OutputArea({ outputs = [] }) {
                                         className="my-2 max-w-full rounded"
                                     />
                                 );
-                            }
-
-                            // ----- SVG -----
-                            if (data["image/svg+xml"]) {
+                            if (data["image/svg+xml"])
                                 return (
                                     <div
                                         key={idx}
@@ -98,10 +78,7 @@ export default function OutputArea({ outputs = [] }) {
                                         }}
                                     />
                                 );
-                            }
-
-                            // ----- HTML -----
-                            if (data["text/html"]) {
+                            if (data["text/html"])
                                 return (
                                     <div
                                         key={idx}
@@ -111,9 +88,6 @@ export default function OutputArea({ outputs = [] }) {
                                         }}
                                     />
                                 );
-                            }
-
-                            // ----- FALLBACK: text/plain -----
                             return (
                                 <pre
                                     key={idx}
@@ -124,15 +98,11 @@ export default function OutputArea({ outputs = [] }) {
                                 </pre>
                             );
                         }
-
-                        // ----- PYTHON ERRORS -----
                         if (out.type === "error") {
                             const raw = Array.isArray(out.traceback)
                                 ? out.traceback.join("\n")
                                 : `${out.ename || "Error"}: ${out.evalue || ""}`;
-
                             const tb = stripAnsi(raw);
-
                             return (
                                 <pre
                                     key={idx}
@@ -142,8 +112,6 @@ export default function OutputArea({ outputs = [] }) {
                                 </pre>
                             );
                         }
-
-                        // ----- EXECUTE INPUT (In [x]) -----
                         if (out.type === "execute_input") {
                             return (
                                 <pre
@@ -154,22 +122,17 @@ export default function OutputArea({ outputs = [] }) {
                                 </pre>
                             );
                         }
-
-                        // ----- STATUS / EXECUTE_REPLY / CLEAR_OUTPUT -----
-                        // We usually hide these in UI.
                         if (
                             out.type === "status" ||
                             out.type === "execute_reply" ||
                             out.type === "clear_output"
-                        ) {
+                        )
                             return null;
-                        }
-
-                        // ----- Unknown fallback (rare)
                         return (
-                            <pre key={idx} className="text-yellow-300">
-                                {`[${out.type}] ${JSON.stringify(out, null, 2)}`}
-                            </pre>
+                            <pre
+                                key={idx}
+                                className="text-yellow-300"
+                            >{`[${out.type}] ${JSON.stringify(out, null, 2)}`}</pre>
                         );
                     })}
                 </div>
