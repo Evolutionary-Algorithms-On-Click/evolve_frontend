@@ -2,16 +2,43 @@
 
 import React, { useState } from "react";
 import { Remarkable } from "remarkable";
+import * as linkifyImport from "remarkable/linkify";
 
-// Using a proper markdown parser
+// Using a proper markdown parser and the linkify plugin.
+// The linkify module can export different shapes depending on bundler;
+// support default and named exports gracefully.
 const md = new Remarkable({
-    html: false, // Don't allow HTML in markdown input
+    html: false,
     xhtmlOut: false,
     breaks: true,
-    linkify: true,
 });
 
-export default function MarkdownCell({ cell, onChange, onRemove }) {
+try {
+    const linkify = linkifyImport && (linkifyImport.default || linkifyImport);
+    if (typeof linkify === "function") {
+        md.use(linkify);
+    }
+} catch (e) {
+    // If plugin doesn't load, continue without linkify (fallback)
+    // Linkifying will still work for many cases or can be added later.
+}
+
+function simpleMarkdownToHtml(s) {
+    if (!s) return "";
+    try {
+        return md.render(String(s));
+    } catch (e) {
+        return String(s);
+    }
+}
+
+export default function MarkdownCell({
+    cell,
+    onChange,
+    onRemove,
+    onMoveUp,
+    onMoveDown,
+}) {
     const [editing, setEditing] = React.useState(false);
     const [value, setValue] = React.useState(cell.content || "");
 
@@ -30,14 +57,28 @@ export default function MarkdownCell({ cell, onChange, onRemove }) {
     }
 
     return (
-        <div className="mb-4">
+        <div className="mb-4 group">
             <div className="flex items-start justify-between mb-2">
-                <div className="text-sm text-gray-600">Markdown</div>
-                <div className="flex items-center gap-2">
+                <div className="text-sm text-slate-600">Markdown</div>
+                <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <button
+                        onClick={onMoveUp}
+                        title="Move cell up"
+                        className="text-xs p-1 bg-gray-50 hover:bg-gray-100 rounded border border-gray-100"
+                    >
+                        ▲
+                    </button>
+                    <button
+                        onClick={onMoveDown}
+                        title="Move cell down"
+                        className="text-xs p-1 bg-gray-50 hover:bg-gray-100 rounded border border-gray-100"
+                    >
+                        ▼
+                    </button>
                     {onRemove && (
                         <button
-                            onClick={() => onRemove(cell.id)}
-                            className="text-xs px-2 py-1 border rounded text-gray-600 bg-white"
+                            onClick={() => onRemove()}
+                            className="text-xs px-2 py-1 border rounded text-gray-700 bg-gray-50 border-gray-100"
                         >
                             Delete
                         </button>
@@ -45,7 +86,7 @@ export default function MarkdownCell({ cell, onChange, onRemove }) {
                     {!editing ? (
                         <button
                             onClick={() => setEditing(true)}
-                            className="text-xs px-2 py-1 border rounded bg-white text-gray-700"
+                            className="text-xs px-2 py-1 border rounded bg-gray-50 text-gray-700 border-gray-100"
                         >
                             Edit
                         </button>
@@ -55,13 +96,13 @@ export default function MarkdownCell({ cell, onChange, onRemove }) {
 
             {!editing ? (
                 <div
-                    className="bg-white border border-gray-100 rounded-lg p-4 prose max-w-none shadow-sm"
+                    className="border border-gray-100 rounded-lg p-4 prose max-w-none"
                     dangerouslySetInnerHTML={{
                         __html: simpleMarkdownToHtml(cell.content),
                     }}
                 />
             ) : (
-                <div className="bg-white border border-gray-100 rounded-lg p-3 shadow-sm">
+                <div className="border border-gray-100 rounded-lg p-3">
                     <textarea
                         value={value}
                         onChange={(e) => setValue(e.target.value)}

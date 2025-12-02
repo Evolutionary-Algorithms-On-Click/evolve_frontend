@@ -66,40 +66,45 @@ export default function KernelControls({
         }
     }
 
+    // Determine light color and tooltip
+    let statusColor = "bg-red-500"; // default no session
+    let statusTitle = "No session";
+    if (loading) {
+        statusColor = "bg-yellow-400";
+        statusTitle = "Starting session...";
+    } else if (session) {
+        statusColor = "bg-green-500";
+        statusTitle = `Kernel: ${session.current_kernel_id}`;
+    }
+
     return (
         <div className="flex items-center gap-4">
-            <div className="flex-1">
-                {session ? (
-                    <div className="text-sm">
-                        <div className="font-medium text-gray-900">
-                            Session active
-                        </div>
-                        <div className="text-xs text-gray-500">
-                            Kernel: {session.current_kernel_id}
-                        </div>
-                    </div>
-                ) : (
-                    <div className="text-sm text-gray-600">
-                        No active session
-                    </div>
-                )}
+            <div className="flex items-center gap-2" title={statusTitle}>
+                <span
+                    className={`inline-block w-3 h-3 rounded-full ${statusColor} shadow-sm`}
+                />
+                <span className="sr-only">Session status</span>
             </div>
+
             {error && <div className="text-red-600 text-sm">{error}</div>}
+
             {session ? (
                 <button
                     className="px-3 py-2 bg-red-600 text-white rounded-lg text-sm"
                     onClick={stopSession}
                     disabled={loading}
+                    title={loading ? "Stopping..." : "Stop session"}
                 >
-                    {loading ? "Stopping..." : "Stop Session"}
+                    {loading ? "..." : "Stop Session"}
                 </button>
             ) : (
                 <button
                     className="px-3 py-2 bg-blue-600 text-white rounded-lg text-sm"
                     onClick={startSession}
                     disabled={loading}
+                    title={loading ? "Starting..." : "Start a session"}
                 >
-                    {loading ? "Starting..." : "Start Session"}
+                    {loading ? "..." : "Start Session"}
                 </button>
             )}
         </div>
