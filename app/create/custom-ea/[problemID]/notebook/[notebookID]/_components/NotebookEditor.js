@@ -5,7 +5,7 @@ import NotebookLayout from "./NotebookLayout";
 import Toolbar from "./Toolbar";
 import { NotebookProvider } from "./notebookContext";
 import KernelControls from "./KernelControls";
-import CodeCell from "./CodeCell";
+import CodeCell from "./codeCell/CodeCell";
 import MarkdownCell from "./MarkdownCell";
 import Loader from "@/app/_components/Loader";
 import useNotebook from "./useNotebook";
@@ -116,7 +116,7 @@ export default function NotebookEditor({ notebookId, problemId }) {
 
                 <div>
                     {(cells || []).map((cell) => (
-                        <div key={cell.id} className="mb-6">
+                        <div key={`${cell.id}-${cell.idx}`} className="mb-6">
                             {cell.type === "code" ? (
                                 <CodeCell
                                     cell={cell}
