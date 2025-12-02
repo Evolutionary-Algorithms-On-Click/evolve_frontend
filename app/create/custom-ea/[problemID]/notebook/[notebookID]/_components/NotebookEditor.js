@@ -2,7 +2,7 @@
 
 import React from "react";
 import NotebookLayout from "./NotebookLayout";
-import Toolbar from "./Toolbar";
+import Toolbar from "./toolbars/Toolbar";
 import { NotebookProvider } from "./notebookContext";
 import KernelControls from "./KernelControls";
 import CodeCell from "./codeCell/CodeCell";
