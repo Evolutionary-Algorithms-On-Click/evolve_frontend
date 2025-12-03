@@ -14,6 +14,17 @@ export default function ConfigureBOParams({
     }));
   };
 
+  const handleSubmit = () => {
+  if (params.iterations <= params.initialPoints) {
+    alert("Total evaluations must be greater than initial random points!");
+    return;
+  }
+  submit();
+};
+
+  
+
+
   return (
     <div className="w-full max-w-2xl mx-auto bg-white rounded-xl shadow-md p-6">
       <h2 className="text-2xl font-semibold text-gray-800 mb-3">
@@ -143,7 +154,7 @@ export default function ConfigureBOParams({
         </button>
 
         <button
-          onClick={submit}
+          onClick={handleSubmit}
           className="px-6 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-700"
         >
           <div className="flex flex-row gap-2 justify-center items-center">
