@@ -22,9 +22,6 @@ export default function ConfigureBOParams({
   submit();
 };
 
-  
-
-
   return (
     <div className="w-full max-w-2xl mx-auto bg-white rounded-xl shadow-md p-6">
       <h2 className="text-2xl font-semibold text-gray-800 mb-3">
