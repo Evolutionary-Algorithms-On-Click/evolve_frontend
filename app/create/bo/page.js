@@ -5,18 +5,18 @@ import Loader from "@/app/_components/Loader";
 import { LogOut } from "lucide-react";
 import Link from "next/link";
 
-import ChooseAlgorithmType from "./_components/chooseAlgorithmType";
+import ChooseAlgorithmType from "./sbo_components/chooseAlgorithmType";
 
 // STEP COMPONENTS
-import ChooseObjective from "./_components/chooseObjective";
-import UploadCustomFunction from "./_components/uploadCustomFunction";
-import ChooseDirection from "./_components/chooseDirection";
-import ChooseSurrogate from "./_components/chooseSurrogate";
-import ChooseAcquisition from "./_components/chooseAcquisition";
-import ConfigureKernel from "./_components/configureKernel";
-import ConfigureBounds from "./_components/configureBounds";
-import ConfigureInitialDesign from "./_components/configureInitialDesign";
-import ConfigureBOParams from "./_components/configureBOParams";
+import ChooseObjective from "./sbo_components/chooseObjective";
+import UploadCustomFunction from "./sbo_components/uploadCustomFunction";
+import ChooseDirection from "./sbo_components/chooseDirection";
+import ChooseSurrogate from "./sbo_components/chooseSurrogate";
+import ChooseAcquisition from "./sbo_components/chooseAcquisition";
+import ConfigureKernel from "./sbo_components/configureKernel";
+import ConfigureBounds from "./sbo_components/configureBounds";
+import ConfigureInitialDesign from "./sbo_components/configureInitialDesign";
+import ConfigureBOParams from "./sbo_components/configureBOParams";
 
 // Preview card
 import PreviewBO from "@/app/_components/bo/preview";

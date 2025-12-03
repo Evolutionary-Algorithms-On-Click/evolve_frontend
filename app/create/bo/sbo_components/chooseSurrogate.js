@@ -29,7 +29,7 @@ export default function ChooseSurrogate({
                 >
                     <div className="font-semibold text-lg">Gaussian Process (GP)</div>
                     <div className="text-sm opacity-80 mt-1">
-                        Best for smooth functions. Provides uncertainty estimates.
+                        Best for smooth functions with uncertainty estimation.
                     </div>
                 </button>
 
@@ -44,9 +44,26 @@ export default function ChooseSurrogate({
                 >
                     <div className="font-semibold text-lg">Random Forest (RF)</div>
                     <div className="text-sm opacity-80 mt-1">
-                        More robust to noise. Works well on complex landscapes.
+                        Robust to noise. Good on complex terrains.
                     </div>
                 </button>
+
+                {/* Extra Trees */}
+                <button
+                    onClick={() => setSurrogate("et")}
+                    className={`p-4 rounded-xl border transition-all text-left ${
+                        surrogate === "et"
+                            ? "border-amber-600 bg-amber-600 text-white"
+                            : "border-gray-300 bg-gray-50 hover:shadow"
+                    }`}
+                >
+                    <div className="font-semibold text-lg">Extra Trees (ET)</div>
+                    <div className="text-sm opacity-80 mt-1">
+                        Faster Random Forest variant with more randomness → better exploration.
+                    </div>
+                </button>
+
+            
 
             </div>
 
