@@ -23,12 +23,12 @@ export default function ChooseSurrogate({
                     onClick={() => setSurrogate("gp")}
                     className={`p-4 rounded-xl border transition-all text-left ${
                         surrogate === "gp"
-                            ? "border-blue-600 bg-blue-600 text-white"
+                            ? "border-blue-600 bg-blue-50"
                             : "border-gray-300 bg-gray-50 hover:shadow"
                     }`}
                 >
-                    <div className="font-semibold text-lg">Gaussian Process (GP)</div>
-                    <div className="text-sm opacity-80 mt-1">
+                    <div className="font-semibold text-lg text-gray-900">Gaussian Process (GP)</div>
+                    <div className="text-sm text-gray-700 mt-1">
                         Best for smooth functions with uncertainty estimation.
                     </div>
                 </button>
@@ -38,12 +38,12 @@ export default function ChooseSurrogate({
                     onClick={() => setSurrogate("rf")}
                     className={`p-4 rounded-xl border transition-all text-left ${
                         surrogate === "rf"
-                            ? "border-green-600 bg-green-600 text-white"
+                            ? "border-green-600 bg-green-50"
                             : "border-gray-300 bg-gray-50 hover:shadow"
                     }`}
                 >
-                    <div className="font-semibold text-lg">Random Forest (RF)</div>
-                    <div className="text-sm opacity-80 mt-1">
+                    <div className="font-semibold text-lg text-gray-900">Random Forest (RF)</div>
+                    <div className="text-sm text-gray-700 mt-1">
                         Robust to noise. Good on complex terrains.
                     </div>
                 </button>
@@ -53,12 +53,12 @@ export default function ChooseSurrogate({
                     onClick={() => setSurrogate("et")}
                     className={`p-4 rounded-xl border transition-all text-left ${
                         surrogate === "et"
-                            ? "border-amber-600 bg-amber-600 text-white"
+                            ? "border-amber-600 bg-amber-50"
                             : "border-gray-300 bg-gray-50 hover:shadow"
                     }`}
                 >
-                    <div className="font-semibold text-lg">Extra Trees (ET)</div>
-                    <div className="text-sm opacity-80 mt-1">
+                    <div className="font-semibold text-lg text-gray-900">Extra Trees (ET)</div>
+                    <div className="text-sm text-gray-700 mt-1">
                         Faster Random Forest variant with more randomness → better exploration.
                     </div>
                 </button>

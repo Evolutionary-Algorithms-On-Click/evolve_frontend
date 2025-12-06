@@ -24,27 +24,27 @@ export default function ChooseAcquisition({
                     onClick={() => setAcquisition("ei")}
                     className={`p-4 rounded-xl border transition-all text-left ${
                         acquisition === "ei"
-                            ? "border-purple-600 bg-purple-600 text-white"
+                            ? "border-purple-600 bg-purple-50"
                             : "border-gray-300 bg-gray-50 hover:shadow"
                     }`}
                 >
-                    <div className="font-semibold text-lg">EI — Expected Improvement</div>
-                    <div className="text-sm opacity-80 mt-1">
+                    <div className="font-semibold text-lg text-gray-900">EI — Expected Improvement</div>
+                    <div className="text-sm text-gray-700 mt-1">
                         Best all-round choice. Balances exploration & exploitation.
                     </div>
                 </button>
 
-                {/* Upper Confidence Bound */}
+                {/* Lower Confidence Bound */}
                 <button
                     onClick={() => setAcquisition("lcb")}
                     className={`p-4 rounded-xl border transition-all text-left ${
                         acquisition === "lcb"
-                            ? "border-yellow-600 bg-yellow-600 text-white"
+                            ? "border-yellow-600 bg-yellow-50"
                             : "border-gray-300 bg-gray-50 hover:shadow"
                     }`}
                 >
-                    <div className="font-semibold text-lg">LCB — Lower Confidence Bound</div>
-                    <div className="text-sm opacity-80 mt-1">
+                    <div className="font-semibold text-lg text-gray-900">LCB — Lower Confidence Bound</div>
+                    <div className="text-sm text-gray-700 mt-1">
                         Favors uncertain regions. Great for thorough exploration.
                     </div>
                 </button>
@@ -54,12 +54,12 @@ export default function ChooseAcquisition({
                     onClick={() => setAcquisition("pi")}
                     className={`p-4 rounded-xl border transition-all text-left ${
                         acquisition === "pi"
-                            ? "border-red-600 bg-red-600 text-white"
+                            ? "border-red-600 bg-red-50"
                             : "border-gray-300 bg-gray-50 hover:shadow"
                     }`}
                 >
-                    <div className="font-semibold text-lg">PI — Probability of Improvement</div>
-                    <div className="text-sm opacity-80 mt-1">
+                    <div className="font-semibold text-lg text-gray-900">PI — Probability of Improvement</div>
+                    <div className="text-sm text-gray-700 mt-1">
                         Fast and greedy. May miss global optimum.
                     </div>
                 </button>

@@ -11,13 +11,79 @@ export default function UploadCustomFunction({
     const [code, setCode] = useState(customFunction?.code || "");
     const [functionName, setFunctionName] = useState(customFunction?.name || "");
     const [description, setDescription] = useState(customFunction?.description || "");
+    const [validationError, setValidationError] = useState("");
+
+    // 📊 Auto-detect number of dimensions from x[n]
+    function detectDimensionsFromCode(codeText) {
+        const regex = /x\[(\d+)\]/g;
+        const indices = new Set();
+        let match;
+
+        while ((match = regex.exec(codeText)) !== null) {
+            const idx = parseInt(match[1], 10);
+            if (!isNaN(idx)) {
+                indices.add(idx);
+            }
+        }
+
+        if (indices.size === 0) {
+            // let next step ask for dimension explicitly
+            return null;
+        }
+
+        // 🚨 Check for contiguous indices starting from 0
+        const sortedIndices = Array.from(indices).sort((a, b) => a - b);
+        const minIndex = sortedIndices[0];
+        const maxIndex = sortedIndices[sortedIndices.length - 1];
+        const expectedDimensions = maxIndex + 1;
+
+        // Must start from 0
+        if (minIndex !== 0) {
+            return {
+                error: true,
+                message: `Indices must start from x[0]. You're using x[${sortedIndices.join('], x[')}] but missing x[0]. Please use contiguous indices starting from x[0].`,
+            };
+        }
+
+        // Check for gaps
+        for (let i = 0; i <= maxIndex; i++) {
+            if (!indices.has(i)) {
+                return {
+                    error: true,
+                    message: `Non-contiguous indices detected. You're using x[${sortedIndices.join('], x[')}] but missing x[${i}]. Please use contiguous indices starting from x[0].`,
+                };
+            }
+        }
+
+        return expectedDimensions; // 🚀 max_index + 1
+    }
 
     const handleSave = () => {
+        const result = detectDimensionsFromCode(code);
+        
+        // 🚨 CRITICAL: Check for validation errors BEFORE saving
+        if (result && typeof result === 'object' && result.error) {
+            setValidationError(result.message);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            return; // ← STOP HERE, don't continue!
+        }
+
+        const dim = result;
+        
+        if (dim !== null) {
+            localStorage.setItem("bo_custom_func_dim", String(dim));
+        } 
+        else {
+            localStorage.removeItem("bo_custom_func_dim");
+        }
+
         setCustomFunction({
             code,
             name: functionName || "custom_function",
             description: description || "User-defined function",
         });
+        
+        setValidationError(""); // Clear any previous errors
         nextStep();
     };
 
@@ -47,6 +113,19 @@ export default function UploadCustomFunction({
             <p className="text-gray-600 mb-6">
                 Define your own optimization problem in Python. Your function should accept a numpy array and return a scalar value.
             </p>
+
+            {/* Validation Error - Place at TOP for visibility */}
+            {validationError && (
+                <div className="mb-6 p-4 bg-red-50 border-2 border-red-400 rounded-lg shadow-lg">
+                    <div className="flex items-start gap-3">
+                        <span className="text-2xl">⚠️</span>
+                        <div>
+                            <h3 className="font-bold text-red-800 mb-2">Validation Error</h3>
+                            <p className="text-sm text-red-700 leading-relaxed">{validationError}</p>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {/* Function Name */}
             <div className="mb-4">
@@ -97,6 +176,7 @@ export default function UploadCustomFunction({
                     <li>• Function must accept a numpy array <code className="bg-yellow-100 px-1 rounded">x</code></li>
                     <li>• Must return a single float/int value</li>
                     <li>• Can use: numpy, scipy, math (imported automatically)</li>
+                    <li>• <strong>Use contiguous indices starting from x[0]</strong> (e.g., x[0], x[1], x[2]...)</li>
                     <li>• Define bounds in the next step</li>
                 </ul>
             </div>

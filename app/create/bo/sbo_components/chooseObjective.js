@@ -236,69 +236,69 @@ export default function ChooseObjective({
     },
   ];
 
-  const colorMap = {
+ const colorMap = {
     blue: {
-      active: "border-blue-600 bg-blue-600",
+      active: "border-blue-600 bg-blue-50",
       base: "border-gray-300 bg-gray-50",
     },
     yellow: {
-      active: "border-yellow-600 bg-yellow-600",
+      active: "border-yellow-600 bg-yellow-50",
       base: "border-gray-300 bg-gray-50",
     },
     orange: {
-      active: "border-orange-600 bg-orange-600",
+      active: "border-orange-600 bg-orange-50",
       base: "border-gray-300 bg-gray-50",
     },
     amber: {
-      active: "border-amber-600 bg-amber-600",
+      active: "border-amber-600 bg-amber-50",
       base: "border-gray-300 bg-gray-50",
     },
     slate: {
-      active: "border-slate-600 bg-slate-600",
+      active: "border-slate-600 bg-slate-50",
       base: "border-gray-300 bg-gray-50",
     },
     purple: {
-      active: "border-purple-600 bg-purple-600",
+      active: "border-purple-600 bg-purple-50",
       base: "border-gray-300 bg-gray-50",
     },
     cyan: {
-      active: "border-cyan-600 bg-cyan-600",
+      active: "border-cyan-600 bg-cyan-50",
       base: "border-gray-300 bg-gray-50",
     },
     emerald: {
-      active: "border-emerald-600 bg-emerald-600",
+      active: "border-emerald-600 bg-emerald-50",
       base: "border-gray-300 bg-gray-50",
     },
     teal: {
-      active: "border-teal-600 bg-teal-600",
+      active: "border-teal-600 bg-teal-50",
       base: "border-gray-300 bg-gray-50",
     },
     violet: {
-      active: "border-violet-600 bg-violet-600",
+      active: "border-violet-600 bg-violet-50",
       base: "border-gray-300 bg-gray-50",
     },
     fuchsia: {
-      active: "border-fuchsia-600 bg-fuchsia-600",
+      active: "border-fuchsia-600 bg-fuchsia-50",
       base: "border-gray-300 bg-gray-50",
     },
     red: {
-      active: "border-red-600 bg-red-600",
+      active: "border-red-600 bg-red-50",
       base: "border-gray-300 bg-gray-50",
     },
     lime: {
-      active: "border-lime-600 bg-lime-600",
+      active: "border-lime-600 bg-lime-50",
       base: "border-gray-300 bg-gray-50",
     },
     sky: {
-      active: "border-sky-600 bg-sky-600",
+      active: "border-sky-600 bg-sky-50",
       base: "border-gray-300 bg-gray-50",
     },
     rose: {
-      active: "border-rose-600 bg-rose-600",
+      active: "border-rose-600 bg-rose-50",
       base: "border-gray-300 bg-gray-50",
     },
     black: {
-      active: "border-gray-700 bg-gray-700",
+      active: "border-gray-700 bg-gray-50",
       base: "border-gray-300 bg-gray-50",
     },
   };
@@ -313,8 +313,10 @@ export default function ChooseObjective({
     // AUTO-SET DIRECTION TO MINIMIZE FOR BENCHMARKS
     if (objKey !== "custom") {
       setDirection("minimize");
+      localStorage.removeItem("bo_custom_func_dim");
     } else {
       // Clear direction for custom function
+      localStorage.setItem("bo_custom_func_dim", "true");
       setDirection("");
     }
 
@@ -340,7 +342,7 @@ export default function ChooseObjective({
         key={obj.key}
         onClick={() => handleSelect(obj.key)}
         className={`p-4 rounded-xl border transition-all text-left ${
-          isActive ? `${colors.active} text-white` : `${colors.base} hover:shadow`
+          isActive ? `${colors.active}` : `${colors.base} hover:shadow`
         }`}
       >
         <div className="text-3xl mb-2">{obj.emoji}</div>
@@ -386,7 +388,7 @@ export default function ChooseObjective({
         </button>
       </div>
 
-      {/* Unimodal */}
+       {/* Unimodal */}
       <div className="mb-6">
         <h3 className="text-lg font-medium text-gray-700 mb-3">
           🟢 Unimodal (Easier)
