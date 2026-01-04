@@ -2,10 +2,15 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { env } from "next-runtime-env";
 
 export default function Auth() {
+useEffect(() => {
+    if (localStorage.getItem("id")) {
+        window.location.href = "/create";
+}
+}, []);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [isLoading, setIsLoading] = useState(false);
