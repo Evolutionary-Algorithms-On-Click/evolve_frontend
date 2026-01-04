@@ -1,4 +1,5 @@
 import { treeGeneratorData } from "@/app/_data/treeGenExpression";
+import TheoryTooltip from "@/app/_components/TheoryTooltip";
 
 export default function ChooseTreeGeneratorExpression({
     title = "Step 4: Choose an initial Individual Generator Function",
@@ -15,7 +16,10 @@ export default function ChooseTreeGeneratorExpression({
 }) {
     return (
         <div className="my-4 mt-16">
-            <h4 className="text-lg font-bold mb-4">{title}</h4>
+            <h4 className="flex items-center text-lg font-bold mb-4">
+                {title}
+                <TheoryTooltip id="treeGenerator" />
+            </h4>
             <div className="grid grid-cols-2 gap-4 align-top">
                 {treeGenList.map((algorithm, index) => (
                     <button

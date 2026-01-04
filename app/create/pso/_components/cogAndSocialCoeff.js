@@ -1,3 +1,5 @@
+import TheoryTooltip from "@/app/_components/TheoryTooltip";
+
 export function ConfigureCognitiveAndSocialCoeff({
     phi1,
     phi2,
@@ -17,9 +19,10 @@ export function ConfigureCognitiveAndSocialCoeff({
             <div className="mb-4">
                 <label
                     htmlFor="phi1"
-                    className="block text-gray-700 text-sm font-bold mb-2"
+                    className="flex items-center text-gray-700 text-sm font-bold mb-2"
                 >
                     Cognitive Coefficient (phi1):
+                    <TheoryTooltip id="phi1" />
                 </label>
                 <input
                     type="number"
@@ -36,9 +39,10 @@ export function ConfigureCognitiveAndSocialCoeff({
             <div className="mb-4">
                 <label
                     htmlFor="phi2"
-                    className="block text-gray-700 text-sm font-bold mb-2"
+                    className="flex items-center text-gray-700 text-sm font-bold mb-2"
                 >
                     Social Coefficient (phi2):
+                    <TheoryTooltip id="phi2" />
                 </label>
                 <input
                     type="number"

@@ -1,3 +1,5 @@
+import TheoryTooltip from "@/app/_components/TheoryTooltip";
+
 export function ConfigurePopulationSizeAndGenerations({
     populationSize,
     generations,
@@ -17,9 +19,10 @@ export function ConfigurePopulationSizeAndGenerations({
             <div className="mb-4">
                 <label
                     htmlFor="populationSize"
-                    className="block text-gray-700 text-sm font-bold mb-2"
+                    className="flex items-center text-gray-700 text-sm font-bold mb-2"
                 >
                     Population Size
+                    <TheoryTooltip id="populationSize" />
                 </label>
                 <input
                     type="number"
@@ -37,9 +40,10 @@ export function ConfigurePopulationSizeAndGenerations({
             <div className="mb-4">
                 <label
                     htmlFor="generations"
-                    className="block text-gray-700 text-sm font-bold mb-2"
+                    className="flex items-center text-gray-700 text-sm font-bold mb-2"
                 >
                     Generations
+                    <TheoryTooltip id="generations" />
                 </label>
                 <input
                     type="number"

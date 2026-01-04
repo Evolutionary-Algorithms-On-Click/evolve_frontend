@@ -1,3 +1,5 @@
+import TheoryTooltip from "@/app/_components/TheoryTooltip";
+
 export default function ChooseMutationFunction({
     title = "Step 7: Choose a mutation function.",
     mutationData,
@@ -11,7 +13,10 @@ export default function ChooseMutationFunction({
 }) {
     return (
         <div className="mt-16">
-            <h4 className="text-lg font-bold mb-4">{title}</h4>
+            <h4 className="flex items-center text-lg font-bold mb-4">
+                {title}
+                <TheoryTooltip id="mutationFunction" />
+            </h4>
             {/* grid: each element has a name and description */}
             <div className="grid grid-cols-2 gap-4 align-top">
                 {mutationData.map((mut, index) => (
