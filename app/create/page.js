@@ -124,7 +124,7 @@ export default function ChooseGpOrNotGp() {
             </div>
             <footer className="flex justify-center space-x-4 p-4">
                 <Link
-                    href="/create"
+                    href="/"
                     className="bg-white hover:bg-gray-200 text-gray-700 rounded-full px-6 py-3 transition-colors duration-300 border border-gray-300"
                 >
                     ← Back to Home
