@@ -24,7 +24,7 @@ export default function ConfigureBloatLimits({
                     <input
                         type="number"
                         value={mateHeight}
-                        className="border border-gray-300 p-2 rounded-lg"
+                        className="border border-gray-600 p-2 rounded-lg bg-gray-800 text-foreground"
                         placeholder="Enter a number"
                         onChange={(e) => {
                             if (isNaN(e.target.value)) {
@@ -51,7 +51,7 @@ export default function ConfigureBloatLimits({
                     <input
                         type="number"
                         value={mutHeight}
-                        className="border border-gray-300 p-2 rounded-lg"
+                        className="border border-gray-600 p-2 rounded-lg bg-gray-800 text-foreground"
                         placeholder="Enter a number"
                         onChange={(e) => {
                             if (isNaN(e.target.value)) {

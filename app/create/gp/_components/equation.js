@@ -70,7 +70,7 @@ export default function ConfigureEquation({
                         type="number"
                         min="0"
                         value={degree}
-                        className="border border-gray-300 p-2 rounded-lg w-full"
+                        className="border border-gray-600 p-2 rounded-lg w-full bg-gray-800 text-foreground"
                         placeholder="Enter degree of the polynomial"
                         onChange={(e) => handleDegreeChange(e)}
                     />
@@ -93,7 +93,7 @@ export default function ConfigureEquation({
                                         <input
                                             type="text"
                                             value={coefficients[index] || ""}
-                                            className="border border-gray-300 p-2 rounded-lg w-full"
+                                            className="border border-gray-600 p-2 rounded-lg w-full bg-gray-800 text-foreground"
                                             placeholder={`Enter coefficient for x^${degree - i}`}
                                             onChange={(e) =>
                                                 handleCoefficientChange(
@@ -112,7 +112,7 @@ export default function ConfigureEquation({
                 {/* Display Polynomial Equation */}
                 <div className="mt-4">
                     <h5 className="text-lg font-bold">Polynomial Equation</h5>
-                    <p className="mt-2 p-4 border border-gray-300 rounded-lg bg-gray-50">
+                    <p className="mt-2 p-4 border border-gray-600 rounded-lg bg-gray-800 text-foreground">
                         {formatEquation(equation) ||
                             "Equation will appear here"}
                     </p>

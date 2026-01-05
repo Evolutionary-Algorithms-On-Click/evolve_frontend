@@ -16,7 +16,7 @@ export function GetIndividualSize({
             <input
                 type="number"
                 value={indSize}
-                className="border border-gray-300 p-2 rounded-lg"
+                className="border border-gray-600 p-2 rounded-lg bg-gray-800 text-foreground"
                 placeholder="Enter a number"
                 onChange={(e) => {
                     if (isNaN(e.target.value)) {

@@ -7,7 +7,7 @@ export default function Home() {
         <div className="min-h-screen flex flex-col items-center p-8 sm:p-20 bg-background font-[family-name:var(--font-geist-mono)]">
             <main className="flex flex-col items-center flex-grow w-full max-w-3xl">
                 <div className="flex flex-col items-center justify-center flex-1 w-full">
-                    <div className="flex items-center justify-center overflow-hidden h-40 mb-8">
+                    <div className="flex items-center justify-center overflow-hidden h-40 mb-8 bg-white rounded-lg p-4">
                         <Image
                             src="/LOGO.png"
                             alt="EVOLVE OnClick logo"
@@ -19,14 +19,14 @@ export default function Home() {
 
                     <div className="flex flex-col sm:flex-row gap-4 items-center font-bold w-full max-w-md">
                         <Link
-                            className="rounded-full border border-solid border-black transition-colors flex items-center justify-center bg-background text-foreground gap-2 hover:bg-gray-100 text-sm sm:text-base p-4 w-full h-12"
+                            className="rounded-full border border-solid border-white/20 transition-colors flex items-center justify-center bg-background text-foreground gap-2 hover:bg-gray-900 text-sm sm:text-base p-4 w-full h-12"
                             href="/auth"
                         >
                             <Pickaxe size={24} />
                             Get Started
                         </Link>
                         <Link
-                            className="rounded-full transition-colors flex items-center justify-center bg-yellow-400 text-black hover:bg-yellow-50 text-sm sm:text-base h-12 p-4 w-full border border-black gap-2"
+                            className="rounded-full transition-colors flex items-center justify-center bg-yellow-500 text-black hover:bg-yellow-600 text-sm sm:text-base h-12 p-4 w-full border border-yellow-600 gap-2"
                             href="https://evolutionary-algorithms-on-click.github.io/user_docs/"
                             target="_blank"
                             rel="noopener noreferrer"

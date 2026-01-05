@@ -51,12 +51,12 @@ export default function UploadPage() {
     });
 
     return (
-        <main className="items-center justify-items-center min-h-screen font-[family-name:var(--font-geist-mono)] p-8">
+        <main className="items-center justify-items-center min-h-screen font-[family-name:var(--font-geist-mono)] p-8 bg-background">
             <div>
                 <h1 className="text-3xl sm:text-4xl font-bold text-center mb-4">
                     Evolve OnClick Unpickler
                 </h1>
-                <p className="text-center">
+                <p className="text-center text-foreground">
                     View Pickled Population on your Browser.
                 </p>
             </div>
@@ -66,13 +66,13 @@ export default function UploadPage() {
             </h1>
             <div
                 {...getRootProps()}
-                className={`border-2 border-dashed p-6 rounded-lg ${isDragActive ? "border-blue-500" : "border-gray-400"} mb-4`}
+                className={`border-2 border-dashed p-6 rounded-lg ${isDragActive ? "border-blue-500" : "border-gray-600"} mb-4`}
             >
                 <input {...getInputProps()} />
                 {isDragActive ? (
                     <p className="text-blue-500">Drop the files here...</p>
                 ) : (
-                    <p className="text-gray-600">
+                    <p className="text-gray-400">
                         Drag 'n' drop a .pkl file here, or click to select one
                     </p>
                 )}
@@ -80,7 +80,7 @@ export default function UploadPage() {
 
             {file && (
                 <div className="mb-4">
-                    <p className="text-gray-800">
+                    <p className="text-foreground">
                         Selected File: <strong>{file.name}</strong>
                     </p>
                 </div>
@@ -88,7 +88,7 @@ export default function UploadPage() {
 
             <button
                 onClick={handleSubmit}
-                className="bg-black text-white py-2 px-4 rounded"
+                className="bg-yellow-500 text-black py-2 px-4 rounded hover:bg-yellow-600"
             >
                 Upload
             </button>

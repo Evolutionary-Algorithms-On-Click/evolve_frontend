@@ -154,9 +154,9 @@ export default function ExplainPage() {
 
     if (isLoadingData) {
         return (
-            <main className="flex flex-col items-center justify-center min-h-screen font-[family-name:var(--font-geist-mono)] p-8 bg-slate-100">
-                <Loader2 className="h-12 w-12 animate-spin text-slate-600" />
-                <p className="mt-4 text-slate-600">
+            <main className="flex flex-col items-center justify-center min-h-screen font-[family-name:var(--font-geist-mono)] p-8 bg-background">
+                <Loader2 className="h-12 w-12 animate-spin text-gray-400" />
+                <p className="mt-4 text-gray-400">
                     Loading code and configuration...
                 </p>
             </main>
@@ -165,18 +165,18 @@ export default function ExplainPage() {
 
     if (!codeContent || (!configContent && error)) {
         return (
-            <main className="flex flex-col items-center justify-center min-h-screen font-[family-name:var(--font-geist-mono)] p-8 bg-slate-100">
+            <main className="flex flex-col items-center justify-center min-h-screen font-[family-name:var(--font-geist-mono)] p-8 bg-background">
                 <BadgeX className="h-12 w-12 text-red-500" />
-                <h2 className="mt-4 text-xl font-bold text-red-600">
+                <h2 className="mt-4 text-xl font-bold text-red-400">
                     Error Loading Context
                 </h2>
-                <p className="mt-2 text-center text-red-500 max-w-lg">
+                <p className="mt-2 text-center text-red-400 max-w-lg">
                     {error ||
                         "Could not load essential context data. Please check the run ID or try again."}
                 </p>
                 <button
                     onClick={router.back}
-                    className="mt-6 rounded-full border border-solid border-black/[.08] transition-colors flex items-center justify-center bg-white text-slate-900 hover:bg-slate-900 hover:text-white text-sm sm:text-base px-4 py-2"
+                    className="mt-6 rounded-full border border-solid border-white/[.08] transition-colors flex items-center justify-center bg-gray-900 text-foreground hover:bg-white hover:text-slate-900 text-sm sm:text-base px-4 py-2"
                 >
                     ← Back to Execution Details
                 </button>
@@ -185,11 +185,11 @@ export default function ExplainPage() {
     }
 
     return (
-        <div className="flex h-screen w-screen bg-slate-100 font-[family-name:var(--font-geist-mono)]">
-            <div className="w-[37%] flex-shrink-0 border-r border-slate-300 bg-white">
+        <div className="flex h-screen w-screen bg-background font-[family-name:var(--font-geist-mono)]">
+            <div className="w-[37%] flex-shrink-0 border-r border-gray-700 bg-gray-900">
                 <div className="h-full flex flex-col overflow-hidden">
-                    <div className="p-4 border-b border-slate-200 flex items-center justify-between flex-shrink-0">
-                        <h2 className="text-lg font-semibold text-slate-800 truncate pr-2">
+                    <div className="p-4 border-b border-gray-700 flex items-center justify-between flex-shrink-0">
+                        <h2 className="text-lg font-semibold text-foreground truncate pr-2">
                             Context (ID: {id})
                         </h2>
                         <div className="flex gap-2 items-center flex-shrink-0">
@@ -199,7 +199,7 @@ export default function ExplainPage() {
                                         setShowCode(true);
                                         setShowConfig(false);
                                     }}
-                                    className={`p-2 rounded-lg transition-colors ${showCode ? "bg-blue-100 text-blue-700" : "text-slate-500 hover:bg-slate-100"}`}
+                                    className={`p-2 rounded-lg transition-colors ${showCode ? "bg-blue-600 text-white" : "text-gray-400 hover:bg-gray-800"}`}
                                     title="Show Code"
                                 >
                                     {" "}
@@ -212,7 +212,7 @@ export default function ExplainPage() {
                                         setShowCode(false);
                                         setShowConfig(true);
                                     }}
-                                    className={`p-2 rounded-lg transition-colors ${showConfig ? "bg-green-100 text-green-700" : "text-slate-500 hover:bg-slate-100"}`}
+                                    className={`p-2 rounded-lg transition-colors ${showConfig ? "bg-green-600 text-white" : "text-gray-400 hover:bg-gray-800"}`}
                                     title="Show Configuration"
                                 >
                                     {" "}
@@ -221,7 +221,7 @@ export default function ExplainPage() {
                             )}
                             <button
                                 onClick={() => router.back()}
-                                className="p-2 rounded-lg text-slate-500 hover:bg-slate-100 transition-colors"
+                                className="p-2 rounded-lg text-gray-400 hover:bg-gray-800 transition-colors"
                                 title="Go Back"
                             >
                                 <svg
@@ -241,14 +241,14 @@ export default function ExplainPage() {
                             </button>
                         </div>
                     </div>
-                    <div className="flex-grow overflow-y-auto p-6 bg-slate-50 text-sm">
+                    <div className="flex-grow overflow-y-auto p-6 bg-gray-950 text-sm text-foreground">
                         {showCode && codeContent && (
                             <div>
                                 {" "}
-                                <h3 className="text-base font-medium text-slate-700 mb-2">
+                                <h3 className="text-base font-medium text-foreground mb-2">
                                     code.py
                                 </h3>{" "}
-                                <pre className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm overflow-auto text-xs">
+                                <pre className="bg-gray-800 p-4 rounded-xl border border-gray-700 shadow-sm overflow-auto text-xs text-foreground">
                                     <code>{codeContent}</code>
                                 </pre>{" "}
                             </div>
@@ -256,10 +256,10 @@ export default function ExplainPage() {
                         {showConfig && configContent && (
                             <div>
                                 {" "}
-                                <h3 className="text-base font-medium text-slate-700 mb-2">
+                                <h3 className="text-base font-medium text-foreground mb-2">
                                     input.json
                                 </h3>{" "}
-                                <pre className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm overflow-auto text-xs">
+                                <pre className="bg-gray-800 p-4 rounded-xl border border-gray-700 shadow-sm overflow-auto text-xs text-foreground">
                                     <code>
                                         {JSON.stringify(configContent, null, 2)}
                                     </code>
@@ -267,7 +267,7 @@ export default function ExplainPage() {
                             </div>
                         )}
                         {!codeContent && (
-                            <p className="text-yellow-700 bg-yellow-50 p-3 rounded-lg border border-yellow-200 text-center">
+                            <p className="text-yellow-200 bg-yellow-900 bg-opacity-30 p-3 rounded-lg border border-yellow-700 text-center">
                                 Code context missing.
                             </p>
                         )}
@@ -280,7 +280,7 @@ export default function ExplainPage() {
                 </div>
             </div>
 
-            <div className="w-[63%] flex-shrink-0 bg-slate-100">
+            <div className="w-[63%] flex-shrink-0 bg-gray-950">
                 <div className="h-full flex flex-col overflow-hidden">
                     {(error || chatError) && (
                         <div className="p-3 border-b border-red-200 bg-red-50 text-center flex-shrink-0">
@@ -300,7 +300,7 @@ export default function ExplainPage() {
                             !isChatLoading &&
                             initialPromptSent && (
                                 <div className="flex justify-center items-center h-full">
-                                    <p className="text-slate-500">
+                                    <p className="text-gray-400">
                                         Waiting for initial explanation...
                                     </p>
                                 </div>
@@ -314,7 +314,7 @@ export default function ExplainPage() {
                                     className={`flex items-start gap-3 max-w-[80%] ${m.role === "user" ? "flex-row-reverse" : ""}`}
                                 >
                                     <span
-                                        className={`flex-shrink-0 h-8 w-8 rounded-full flex items-center justify-center text-white ${m.role === "user" ? "bg-blue-500" : "bg-slate-700"}`}
+                                        className={`flex-shrink-0 h-8 w-8 rounded-full flex items-center justify-center text-white ${m.role === "user" ? "bg-blue-600" : "bg-gray-800"}`}
                                     >
                                         {m.role === "user" ? (
                                             <User size={16} />
@@ -323,7 +323,7 @@ export default function ExplainPage() {
                                         )}
                                     </span>
                                     <div
-                                        className={`px-4 py-3 text-sm break-words shadow-sm ${m.role === "user" ? "bg-blue-500 text-white rounded-l-xl rounded-br-xl" : "bg-white text-slate-800 border border-slate-200 rounded-r-xl rounded-bl-xl"}`}
+                                        className={`px-4 py-3 text-sm break-words shadow-sm ${m.role === "user" ? "bg-blue-600 text-white rounded-l-xl rounded-br-xl" : "bg-gray-800 text-foreground border border-gray-700 rounded-r-xl rounded-bl-xl"}`}
                                     >
                                         <ReactMarkdown
                                             components={{
@@ -335,7 +335,7 @@ export default function ExplainPage() {
                                                 ),
                                                 pre: ({ node, ...props }) => (
                                                     <pre
-                                                        className="my-2 bg-slate-100 p-2 rounded-lg overflow-x-auto border border-slate-300 text-xs font-mono"
+                                                        className="my-2 bg-gray-900 p-2 rounded-lg overflow-x-auto border border-gray-600 text-xs font-mono text-foreground"
                                                         {...props}
                                                     />
                                                 ),
@@ -348,7 +348,7 @@ export default function ExplainPage() {
                                                 }) =>
                                                     inline ? (
                                                         <code
-                                                            className="bg-slate-200 text-slate-800 px-1 py-0.5 rounded text-xs mx-0.5"
+                                                            className="bg-gray-700 text-gray-100 px-1 py-0.5 rounded text-xs mx-0.5"
                                                             {...props}
                                                         >
                                                             {children}
@@ -390,11 +390,11 @@ export default function ExplainPage() {
                         {isChatLoading && (
                             <div className="flex justify-start">
                                 <div className="flex items-start gap-3 max-w-[80%]">
-                                    <span className="flex-shrink-0 h-8 w-8 rounded-full flex items-center justify-center bg-slate-700 text-white">
+                                    <span className="flex-shrink-0 h-8 w-8 rounded-full flex items-center justify-center bg-gray-800 text-foreground">
                                         <Bot size={16} />
                                     </span>
-                                    <div className="rounded-r-xl rounded-bl-xl px-4 py-3 text-sm bg-white text-slate-800 border border-slate-200 flex items-center shadow-sm">
-                                        <Loader2 className="h-4 w-4 animate-spin mr-2 text-slate-500" />{" "}
+                                    <div className="rounded-r-xl rounded-bl-xl px-4 py-3 text-sm bg-gray-800 text-foreground border border-gray-700 flex items-center shadow-sm">
+                                        <Loader2 className="h-4 w-4 animate-spin mr-2 text-gray-400" />{" "}
                                         <span>Thinking...</span>
                                     </div>
                                 </div>
@@ -402,7 +402,7 @@ export default function ExplainPage() {
                         )}
                     </div>
 
-                    <div className="p-4 border-t border-slate-200 bg-white flex-shrink-0">
+                    <div className="p-4 border-t border-gray-700 bg-gray-900 flex-shrink-0">
                         <form
                             onSubmit={handleSubmitWithContext}
                             className="flex items-center gap-3"
@@ -416,7 +416,7 @@ export default function ExplainPage() {
                                         ? "Context missing..."
                                         : "Ask EvOC AI..."
                                 }
-                                className="flex-grow border border-slate-300 rounded-full px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 disabled:opacity-50 disabled:bg-slate-100 transition-shadow"
+                                className="flex-grow border border-gray-600 rounded-full px-4 py-2.5 text-sm bg-gray-800 text-foreground focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:opacity-50 disabled:bg-gray-700 transition-shadow"
                                 disabled={
                                     isLoadingData ||
                                     isChatLoading ||
@@ -426,7 +426,7 @@ export default function ExplainPage() {
                             />
                             <button
                                 type="submit"
-                                className="bg-blue-500 hover:bg-blue-600 text-white rounded-full p-2.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-blue-400 transition-all duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                                className="bg-blue-600 hover:bg-blue-700 text-white rounded-full p-2.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-blue-500 transition-all duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                                 disabled={
                                     isChatLoading ||
                                     !input.trim() ||
