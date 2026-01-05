@@ -200,7 +200,7 @@ export default function ConfigurePSO() {
                 </Link>
             </div>
 
-            <div className="flex flex-wrap mt-16 gap-4 border border-gray-400 rounded-2xl bg-gray-100 bg-opacity-70">
+            <div className="flex flex-wrap mt-16 gap-4 border border-gray-600 rounded-2xl bg-gray-900 bg-opacity-70">
                 <PreviewPSO
                     algorithm={algorithm}
                     dimensions={dimensions}
@@ -217,7 +217,7 @@ export default function ConfigurePSO() {
                     currentStep={currentStep}
                 />
 
-                <div className="border border-gray-400 rounded-2xl p-4 bg-white">
+                <div className="border border-gray-600 rounded-2xl p-4 bg-gray-900">
                     <form
                         onSubmit={(e) => {
                             e.preventDefault();
@@ -227,7 +227,7 @@ export default function ConfigurePSO() {
                         <h3 className="text-xl font-bold">
                             Configure Algorithm
                         </h3>
-                        <p className="text-sm text-gray-500">
+                        <p className="text-sm text-gray-400">
                             PSO -{" "}
                             <span className="text-green-500">
                                 ParticleSwarmOptimization

@@ -221,10 +221,10 @@ export default function Results() {
                                                             className="transition-transform duration-500 hover:scale-110"
                                                         />
                                                     </div>
-                                                    <p className="text-gray-600 text-sm truncate">
+                                                    <p className="text-gray-400 text-sm truncate">
                                                         {run.description}
                                                     </p>
-                                                    <p className="text-gray-500 text-xs mt-2">
+                                                    <p className="text-gray-400 text-xs mt-2">
                                                         {run.name.split("-")[0]}{" "}
                                                         generations
                                                     </p>
@@ -271,7 +271,7 @@ export default function Results() {
                                                         </p>
                                                     )}
 
-                                                    <p className="text-gray-500 text-xs mt-2 mb-6">
+                                                    <p className="text-gray-400 text-xs mt-2 mb-6">
                                                         Created At:{" "}
                                                         {
                                                             run.createdAt
@@ -280,7 +280,7 @@ export default function Results() {
                                                         }
                                                     </p>
                                                     <Link
-                                                        className="rounded-full border border-solid border-yellow-900 transition-colors flex items-center justify-center bg-yellow-400 text-black hover:bg-yellow-50 gap-2 text-sm sm:text-base p-2 h-8 mt-auto w-full"
+                                                        className="rounded-full border border-solid border-yellow-600 transition-colors flex items-center justify-center bg-yellow-500 text-black hover:bg-yellow-600 gap-2 text-sm sm:text-base p-2 h-8 mt-auto w-full"
                                                         href={`/bin/${runType}/${run.id}`}
                                                     >
                                                         <DnaIcon size={24} />

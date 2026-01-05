@@ -292,7 +292,7 @@ export default function ConfigureGP() {
                 </Link>
             </div>
 
-            <div className="flex flex-wrap mt-16 gap-4 border border-gray-400 rounded-2xl bg-gray-100 bg-opacity-70">
+            <div className="flex flex-wrap mt-16 gap-4 border border-gray-600 rounded-2xl bg-gray-900 bg-opacity-70">
                 <PreviewGP
                     algo={chosenAlgo}
                     parameters={parameters}
@@ -321,7 +321,7 @@ export default function ConfigureGP() {
                     currentStep={currentStep}
                 />
 
-                <div className="border border-gray-400 rounded-2xl p-4 bg-white">
+                <div className="border border-gray-600 rounded-2xl p-4 bg-gray-900">
                     <form
                         onSubmit={(e) => {
                             e.preventDefault();
@@ -331,7 +331,7 @@ export default function ConfigureGP() {
                         <h3 className="text-xl font-bold">
                             Configure Algorithm
                         </h3>
-                        <p className="text-sm text-gray-500">
+                        <p className="text-sm text-gray-400">
                             Genetic Programming -{" "}
                             <span className="text-green-500">
                                 PrimitiveTree

@@ -83,7 +83,7 @@ export default function VerifyOTP() {
     };
 
     return (
-        <div className="flex flex-col items-center min-h-screen font-[family-name:var(--font-geist-mono)] p-8 bg-gray-100">
+        <div className="flex flex-col items-center min-h-screen font-[family-name:var(--font-geist-mono)] p-8 bg-background">
             <div className="flex items-center justify-center overflow-hidden h-32">
                 <Image
                     src="/LOGO.png"
@@ -95,22 +95,22 @@ export default function VerifyOTP() {
             <div className="flex flex-col flex-grow min-w-[32%] w-full md:max-w-[80%] lg:max-w-[60%] xl:max-w-[40%] mx-auto justify-center items-center align-middle">
                 <form
                     onSubmit={handleSubmit}
-                    className="flex flex-col gap-1 p-4 w-full bg-white shadow-sm border border-dashed border-gray-200 rounded-3xl"
+                    className="flex flex-col gap-1 p-4 w-full bg-gray-900 shadow-sm border border-dashed border-gray-700 rounded-3xl"
                 >
                     <div className="mb-4">
-                        <h2 className="text-xl font-semibold text-center">
+                        <h2 className="text-xl font-semibold text-center text-foreground">
                             Verify OTP
                         </h2>
-                        <p className="text-xs text-gray-500 text-center break-words px-2">
+                        <p className="text-xs text-gray-400 text-center break-words px-2">
                             {`Please enter the OTP sent to ${email ?? "your email"}.`}
                         </p>
-                        <p className="text-xs text-gray-500 text-center break-words px-2 mt-2 mx-auto justify-center items-center align-middle">
+                        <p className="text-xs text-gray-400 text-center break-words px-2 mt-2 mx-auto justify-center items-center align-middle">
                             OTP will be sent only if the email is registered. If
                             you did not receive an OTP, please check the email
                             ID you typed again and{" "}
                             <Link
                                 href="/auth/recover"
-                                className="text-blue-600 hover:text-blue-800 underline cursor-pointer"
+                                className="text-blue-400 hover:text-blue-300 underline cursor-pointer"
                             >
                                 retry
                             </Link>
@@ -123,7 +123,7 @@ export default function VerifyOTP() {
                         placeholder="Enter OTP"
                         value={formData.otp}
                         onChange={handleChange}
-                        className="w-full p-2 mt-4 border rounded-xl"
+                        className="w-full p-2 mt-4 border border-gray-600 rounded-xl bg-gray-800 text-foreground"
                         required
                         pattern="\d*"
                         maxLength={6}
@@ -137,7 +137,7 @@ export default function VerifyOTP() {
                         placeholder="Enter new password"
                         value={formData.newPassword}
                         onChange={handleChange}
-                        className="w-full p-2 mt-4 border rounded-xl"
+                        className="w-full p-2 mt-4 border border-gray-600 rounded-xl bg-gray-800 text-foreground"
                         required
                         disabled={isLoading}
                     />
@@ -147,13 +147,13 @@ export default function VerifyOTP() {
                         placeholder="Confirm new password"
                         value={formData.confirmPassword}
                         onChange={handleChange}
-                        className="w-full p-2 mt-4 border rounded-xl"
+                        className="w-full p-2 mt-4 border border-gray-600 rounded-xl bg-gray-800 text-foreground"
                         required
                         disabled={isLoading}
                     />
                     <button
                         type="submit"
-                        className={`rounded-full transition-colors flex items-center justify-center bg-yellow-400 text-black hover:bg-yellow-50 text-sm sm:text-base p-2 w-full border border-black gap-2 mt-4 ${
+                        className={`rounded-full transition-colors flex items-center justify-center bg-yellow-500 text-black hover:bg-yellow-600 text-sm sm:text-base p-2 w-full border border-yellow-600 gap-2 mt-4 ${
                             isLoading ? "opacity-50 cursor-not-allowed" : ""
                         }`}
                         disabled={isLoading}

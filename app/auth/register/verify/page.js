@@ -65,7 +65,7 @@ export default function VerifyOTP() {
     };
 
     return (
-        <div className="flex flex-col items-center min-h-screen font-[family-name:var(--font-geist-mono)] p-8 bg-gray-100">
+        <div className="flex flex-col items-center min-h-screen font-[family-name:var(--font-geist-mono)] p-8 bg-background">
             <div className="flex items-center justify-center overflow-hidden h-32">
                 <Image
                     src="/LOGO.png"
@@ -77,13 +77,13 @@ export default function VerifyOTP() {
             <div className="flex flex-col items-center justify-center flex-grow w-fit min-w-[32%]">
                 <form
                     onSubmit={handleSubmit}
-                    className="flex flex-col gap-1 p-4 w-full bg-white shadow-sm border border-dashed border-gray-200 rounded-3xl"
+                    className="flex flex-col gap-1 p-4 w-full bg-gray-900 shadow-sm border border-dashed border-gray-700 rounded-3xl"
                 >
                     <div className="mb-4">
-                        <h2 className="text-xl font-semibold text-center">
+                        <h2 className="text-xl font-semibold text-center text-foreground">
                             Verify OTP
                         </h2>
-                        <p className="text-xs text-gray-500 text-center break-words px-2">
+                        <p className="text-xs text-gray-400 text-center break-words px-2">
                             {`Please enter the OTP sent to ${email ?? "your email"}.`}
                         </p>
                     </div>
@@ -93,7 +93,7 @@ export default function VerifyOTP() {
                         placeholder="Enter OTP"
                         value={otp}
                         onChange={(e) => setOtp(e.target.value)}
-                        className="w-full p-2 mt-4 border rounded-xl"
+                        className="w-full p-2 mt-4 border border-gray-600 rounded-xl bg-gray-800 text-foreground"
                         required
                         pattern="\d*"
                         maxLength={6}
@@ -103,7 +103,7 @@ export default function VerifyOTP() {
                     />
                     <button
                         type="submit"
-                        className={`rounded-full transition-colors flex items-center justify-center bg-yellow-400 text-black hover:bg-yellow-50 text-sm sm:text-base p-2 w-full border border-black gap-2 mt-4 ${
+                        className={`rounded-full transition-colors flex items-center justify-center bg-yellow-500 text-black hover:bg-yellow-600 text-sm sm:text-base p-2 w-full border border-yellow-600 gap-2 mt-4 ${
                             isLoading ? "opacity-50 cursor-not-allowed" : ""
                         }`}
                         disabled={isLoading}

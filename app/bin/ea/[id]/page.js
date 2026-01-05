@@ -890,13 +890,13 @@ export default function Execution() {
                                 <button
                                     type="button"
                                     onClick={() => setShowSharePopup(false)}
-                                    className="rounded-full px-4 py-2 text-sm font-medium border border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
+                                    className="rounded-full px-4 py-2 text-sm font-medium border border-gray-600 bg-gray-900 text-foreground hover:bg-gray-800"
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     type="submit"
-                                    className="rounded-full transition-colors flex items-center justify-center bg-yellow-400 text-black hover:bg-yellow-50 text-sm sm:text-base h-12 p-4 w-full   border border-black gap-2"
+                                    className="rounded-full transition-colors flex items-center justify-center bg-yellow-500 text-black hover:bg-yellow-600 text-sm sm:text-base h-12 p-4 w-full   border border-yellow-600 gap-2"
                                 >
                                     Share
                                 </button>

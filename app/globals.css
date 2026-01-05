@@ -7,8 +7,18 @@
 }
 
 :root {
+    --background: #0c0b0b;
+    --foreground: #f0ecec;
+}
+
+[data-theme="light"] {
     --background: #ffffff;
-    --foreground: #343434;
+    --foreground: #1a1a1a;
+}
+
+[data-theme="dark"] {
+    --background: #0c0b0b;
+    --foreground: #f0ecec;
 }
 
 /* @media (prefers-color-scheme: dark) {
@@ -19,7 +29,6 @@
 } */
 
 body {
-    background-color: black;
     color: var(--foreground);
     background: var(--background);
 }

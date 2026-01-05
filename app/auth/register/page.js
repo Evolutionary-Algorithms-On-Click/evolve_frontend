@@ -83,7 +83,7 @@ export default function Register() {
     };
 
     return (
-        <div className="flex flex-col items-center min-h-screen font-[family-name:var(--font-geist-mono)] p-8 bg-gray-100">
+        <div className="flex flex-col items-center min-h-screen font-[family-name:var(--font-geist-mono)] p-8 bg-background">
             <div className="flex items-center justify-center overflow-hidden h-32">
                 <Image
                     src="/LOGO.png"
@@ -95,13 +95,13 @@ export default function Register() {
             <div className="flex flex-col items-center justify-center flex-grow w-fit min-w-[32%]">
                 <form
                     onSubmit={handleSubmit}
-                    className="flex flex-col gap-1 p-4 w-full bg-white shadow-sm border border-dashed border-gray-200 rounded-3xl"
+                    className="flex flex-col gap-1 p-4 w-full bg-gray-900 shadow-sm border border-dashed border-gray-700 rounded-3xl"
                 >
                     <div className="mb-4">
-                        <h2 className="text-xl font-semibold text-center">
+                        <h2 className="text-xl font-semibold text-center text-foreground">
                             Sign Up for EvOC
                         </h2>
-                        <p className="text-xs text-gray-500 text-center">
+                        <p className="text-xs text-gray-400 text-center">
                             Create your account to get started.
                         </p>
                     </div>
@@ -111,7 +111,7 @@ export default function Register() {
                         placeholder="Full Name"
                         value={formData.fullName}
                         onChange={handleChange}
-                        className="w-full p-2 mt-4 border rounded-xl"
+                        className="w-full p-2 mt-4 border border-gray-600 rounded-xl bg-gray-800 text-foreground"
                         required
                         disabled={isLoading}
                     />
@@ -121,7 +121,7 @@ export default function Register() {
                         placeholder="Choose an Username"
                         value={formData.username}
                         onChange={handleChange}
-                        className="w-full p-2 mt-4 border rounded-xl"
+                        className="w-full p-2 mt-4 border border-gray-600 rounded-xl bg-gray-800 text-foreground"
                         required
                         disabled={isLoading}
                     />
@@ -131,7 +131,7 @@ export default function Register() {
                         placeholder="Email"
                         value={formData.email}
                         onChange={handleChange}
-                        className="w-full p-2 mt-4 border rounded-xl"
+                        className="w-full p-2 mt-4 border border-gray-600 rounded-xl bg-gray-800 text-foreground"
                         required
                         disabled={isLoading}
                     />
@@ -141,7 +141,7 @@ export default function Register() {
                         placeholder="Password"
                         value={formData.password}
                         onChange={handleChange}
-                        className="w-full p-2 mt-4 border rounded-xl"
+                        className="w-full p-2 mt-4 border border-gray-600 rounded-xl bg-gray-800 text-foreground"
                         required
                         disabled={isLoading}
                     />
@@ -151,13 +151,13 @@ export default function Register() {
                         placeholder="Confirm Password"
                         value={formData.confirmPassword}
                         onChange={handleChange}
-                        className="w-full p-2 mt-4 mb-3 border rounded-xl"
+                        className="w-full p-2 mt-4 mb-3 border border-gray-600 rounded-xl bg-gray-800 text-foreground"
                         required
                         disabled={isLoading}
                     />
                     <button
                         type="submit"
-                        className={`rounded-full transition-colors flex items-center justify-center bg-yellow-400 text-black hover:bg-yellow-50 text-sm sm:text-base p-2 w-full border border-black gap-2 mt-4 ${
+                        className={`rounded-full transition-colors flex items-center justify-center bg-yellow-500 text-black hover:bg-yellow-600 text-sm sm:text-base p-2 w-full border border-yellow-600 gap-2 mt-4 ${
                             isLoading ? "opacity-50 cursor-not-allowed" : ""
                         }`}
                         disabled={isLoading}
@@ -166,7 +166,7 @@ export default function Register() {
                     </button>
                 </form>
                 <div className="flex flex-wrap gap-4 justify-center mt-8">
-                    <p className="text-gray-500 text-center">
+                    <p className="text-gray-400 text-center">
                         Already have an account?
                     </p>
                     <Link
