@@ -1,6 +1,7 @@
 import localFont from "next/font/local";
 import "./globals.css";
 import { PublicEnvScript } from "next-runtime-env";
+import ClientLayout from "./components/ClientLayout";
 
 const geistSans = localFont({
     src: "./fonts/GeistVF.woff",
@@ -51,7 +52,9 @@ export default function RootLayout({ children }) {
             <body
                 className={`${geistSans.variable} ${geistMono.variable} antialiased`}
             >
-                {children}
+                <ClientLayout>
+                    {children}
+                </ClientLayout>
             </body>
         </html>
     );
