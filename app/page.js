@@ -7,7 +7,7 @@ export default function Home() {
         <div className="min-h-screen flex flex-col items-center p-8 sm:p-20 bg-background font-[family-name:var(--font-geist-mono)]">
             <main className="flex flex-col items-center flex-grow w-full max-w-3xl">
                 <div className="flex flex-col items-center justify-center flex-1 w-full">
-                    <div className="flex items-center justify-center overflow-hidden h-40 mb-8">
+                    <div className="flex items-center justify-center overflow-hidden h-40 mb-8 bg-white rounded-lg p-4">
                         <Image
                             src="/LOGO.png"
                             alt="EVOLVE OnClick logo"

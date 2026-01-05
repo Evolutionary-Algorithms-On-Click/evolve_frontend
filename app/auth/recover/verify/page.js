@@ -84,7 +84,7 @@ export default function VerifyOTP() {
 
     return (
         <div className="flex flex-col items-center min-h-screen font-[family-name:var(--font-geist-mono)] p-8 bg-background">
-            <div className="flex items-center justify-center overflow-hidden h-32">
+            <div className="flex items-center justify-center overflow-hidden h-32 bg-white rounded-lg p-4">
                 <Image
                     src="/LOGO.png"
                     alt="EVOLVE OnClick logo"
@@ -95,16 +95,16 @@ export default function VerifyOTP() {
             <div className="flex flex-col flex-grow min-w-[32%] w-full md:max-w-[80%] lg:max-w-[60%] xl:max-w-[40%] mx-auto justify-center items-center align-middle">
                 <form
                     onSubmit={handleSubmit}
-                    className="flex flex-col gap-1 p-4 w-full bg-gray-900 shadow-sm border border-dashed border-gray-700 rounded-3xl"
+                    className="flex flex-col gap-1 p-4 w-full form-container shadow-sm border border-dashed rounded-3xl"
                 >
                     <div className="mb-4">
                         <h2 className="text-xl font-semibold text-center text-foreground">
                             Verify OTP
                         </h2>
-                        <p className="text-xs text-gray-400 text-center break-words px-2">
+                        <p className="text-xs text-foreground text-center break-words px-2 opacity-60">
                             {`Please enter the OTP sent to ${email ?? "your email"}.`}
                         </p>
-                        <p className="text-xs text-gray-400 text-center break-words px-2 mt-2 mx-auto justify-center items-center align-middle">
+                        <p className="text-xs text-foreground text-center break-words px-2 mt-2 mx-auto justify-center items-center align-middle opacity-60">
                             OTP will be sent only if the email is registered. If
                             you did not receive an OTP, please check the email
                             ID you typed again and{" "}
@@ -123,7 +123,7 @@ export default function VerifyOTP() {
                         placeholder="Enter OTP"
                         value={formData.otp}
                         onChange={handleChange}
-                        className="w-full p-2 mt-4 border border-gray-600 rounded-xl bg-gray-800 text-foreground"
+                        className="w-full p-2 mt-4 border rounded-xl input-field"
                         required
                         pattern="\d*"
                         maxLength={6}
@@ -137,7 +137,7 @@ export default function VerifyOTP() {
                         placeholder="Enter new password"
                         value={formData.newPassword}
                         onChange={handleChange}
-                        className="w-full p-2 mt-4 border border-gray-600 rounded-xl bg-gray-800 text-foreground"
+                        className="w-full p-2 mt-4 border rounded-xl input-field"
                         required
                         disabled={isLoading}
                     />
@@ -147,7 +147,7 @@ export default function VerifyOTP() {
                         placeholder="Confirm new password"
                         value={formData.confirmPassword}
                         onChange={handleChange}
-                        className="w-full p-2 mt-4 border border-gray-600 rounded-xl bg-gray-800 text-foreground"
+                        className="w-full p-2 mt-4 border rounded-xl input-field"
                         required
                         disabled={isLoading}
                     />

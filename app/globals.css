@@ -9,16 +9,22 @@
 :root {
     --background: #0c0b0b;
     --foreground: #f0ecec;
+    --input-bg: #1a1a1a;
+    --input-border: #333333;
 }
 
 [data-theme="light"] {
     --background: #ffffff;
     --foreground: #1a1a1a;
+    --input-bg: #f3f4f6;
+    --input-border: #e5e7eb;
 }
 
 [data-theme="dark"] {
     --background: #0c0b0b;
     --foreground: #f0ecec;
+    --input-bg: #1a1a1a;
+    --input-border: #333333;
 }
 
 /* @media (prefers-color-scheme: dark) {
@@ -31,6 +37,27 @@
 body {
     color: var(--foreground);
     background: var(--background);
+}
+
+input::placeholder {
+    color: var(--foreground);
+    opacity: 0.6;
+}
+
+.input-field {
+    background-color: var(--input-bg);
+    border-color: var(--input-border);
+    color: var(--foreground);
+}
+
+.form-container {
+    background-color: #1a1a1a;
+    border-color: #333333;
+}
+
+[data-theme="light"] .form-container {
+    background-color: #f3f4f6;
+    border-color: #d1d5db;
 }
 
 @layer utilities {

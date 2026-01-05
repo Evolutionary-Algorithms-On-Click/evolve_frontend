@@ -66,7 +66,7 @@ export default function VerifyOTP() {
 
     return (
         <div className="flex flex-col items-center min-h-screen font-[family-name:var(--font-geist-mono)] p-8 bg-background">
-            <div className="flex items-center justify-center overflow-hidden h-32">
+            <div className="flex items-center justify-center overflow-hidden h-32 bg-white rounded-lg p-4">
                 <Image
                     src="/LOGO.png"
                     alt="EVOLVE OnClick logo"
@@ -77,13 +77,13 @@ export default function VerifyOTP() {
             <div className="flex flex-col items-center justify-center flex-grow w-fit min-w-[32%]">
                 <form
                     onSubmit={handleSubmit}
-                    className="flex flex-col gap-1 p-4 w-full bg-gray-900 shadow-sm border border-dashed border-gray-700 rounded-3xl"
+                    className="flex flex-col gap-1 p-4 w-full form-container shadow-sm border border-dashed rounded-3xl"
                 >
                     <div className="mb-4">
                         <h2 className="text-xl font-semibold text-center text-foreground">
                             Verify OTP
                         </h2>
-                        <p className="text-xs text-gray-400 text-center break-words px-2">
+                        <p className="text-xs text-foreground text-center break-words px-2 opacity-60">
                             {`Please enter the OTP sent to ${email ?? "your email"}.`}
                         </p>
                     </div>
@@ -93,7 +93,7 @@ export default function VerifyOTP() {
                         placeholder="Enter OTP"
                         value={otp}
                         onChange={(e) => setOtp(e.target.value)}
-                        className="w-full p-2 mt-4 border border-gray-600 rounded-xl bg-gray-800 text-foreground"
+                        className="w-full p-2 mt-4 border rounded-xl input-field"
                         required
                         pattern="\d*"
                         maxLength={6}

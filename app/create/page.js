@@ -25,7 +25,7 @@ export default function ChooseGpOrNotGp() {
     return (
         <main className="flex flex-col items-center justify-between min-h-screen p-4 bg-background font-[family-name:var(--font-geist-mono)]">
             <header className="flex flex-col w-full justify-center items-center p-4">
-                <div className="flex items-center space-x-2 h-32 bg-white">
+                <div className="flex items-center space-x-2 h-32 bg-white rounded-lg p-4">
                     <Image
                         src="/LOGO.png" 
                         alt="EVOLVE OnClick logo"
