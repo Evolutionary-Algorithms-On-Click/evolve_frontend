@@ -1,12 +1,13 @@
 "use client";
 
 import { ThemeProvider } from "../contexts/ThemeContext";
-import ThemeToggle from "./ThemeToggle";
+import Header from "./Header";
+
 
 export default function ClientLayout({ children }) {
     return (
         <ThemeProvider>
-            <ThemeToggle />
+            <Header />
             {children}
         </ThemeProvider>
     );
