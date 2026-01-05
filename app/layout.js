@@ -43,7 +43,6 @@ export const metadata = {
     metadataBase: new URL("https://evolve-frontend.vercel.app/"),
 };
 
-
 export default function RootLayout({ children }) {
     return (
         <html lang="en">
@@ -58,4 +57,4 @@ export default function RootLayout({ children }) {
             </body>
         </html>
     );
-};
+}
