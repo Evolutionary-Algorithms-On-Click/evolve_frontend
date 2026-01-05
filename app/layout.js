@@ -1,6 +1,7 @@
 import localFont from "next/font/local";
 import "./globals.css";
 import { PublicEnvScript } from "next-runtime-env";
+import VideoAcademy from "./_components/VideoAcademy";
 
 const geistSans = localFont({
     src: "./fonts/GeistVF.woff",
@@ -42,6 +43,7 @@ export const metadata = {
     metadataBase: new URL("https://evolve-frontend.vercel.app/"),
 };
 
+
 export default function RootLayout({ children }) {
     return (
         <html lang="en">
@@ -51,8 +53,9 @@ export default function RootLayout({ children }) {
             <body
                 className={`${geistSans.variable} ${geistMono.variable} antialiased`}
             >
+                <VideoAcademy />
                 {children}
             </body>
         </html>
     );
-}
+};
