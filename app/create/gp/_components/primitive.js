@@ -1,4 +1,5 @@
 import { primitiveSetElements } from "@/app/_data/primitive";
+import TheoryTooltip from "@/app/_components/TheoryTooltip";
 
 export default function ChoosePrimitiveSet({
     currentStep,
@@ -9,8 +10,9 @@ export default function ChoosePrimitiveSet({
 }) {
     return (
         <div className="my-4 mt-16">
-            <h4 className="text-lg font-bold mb-4">
+            <h4 className="flex items-center text-lg font-bold mb-4">
                 Step 3: Choose Primitive Set Elements.
+                <TheoryTooltip id="gpPrimitiveSet" />
             </h4>
             <div className="grid grid-cols-2 gap-4 align-top">
                 {primitiveSetElements.map((element, index) => (
