@@ -12,7 +12,9 @@ export const ThemeProvider = ({ children }) => {
         let savedTheme = "light";
         try {
             savedTheme = localStorage.getItem("theme") || "light";
-        } catch (e) { console.error(e); }
+        } catch (e) {
+            console.error(e);
+        }
         setTheme(savedTheme);
         document.documentElement.setAttribute("data-theme", savedTheme);
         document.body.setAttribute("data-theme", savedTheme);
@@ -26,7 +28,9 @@ export const ThemeProvider = ({ children }) => {
         document.body.setAttribute("data-theme", nextTheme);
         try {
             localStorage.setItem("theme", nextTheme);
-        } catch (e) { console.error(e); }
+        } catch (e) {
+            console.error(e);
+        }
     };
 
     return (

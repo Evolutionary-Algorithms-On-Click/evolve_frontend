@@ -6,9 +6,10 @@ import { useTheme } from "../contexts/ThemeContext";
 export default function ThemeToggle() {
     const { theme, toggleTheme, mounted } = useTheme();
 
-    if (!mounted) return (
-        <div className="h-9 w-[68px] rounded-full bg-background border border-foreground/10 opacity-0" />
-    );
+    if (!mounted)
+        return (
+            <div className="h-9 w-[68px] rounded-full bg-background border border-foreground/10 opacity-0" />
+        );
 
     return (
         <div className="flex items-center">
@@ -19,10 +20,11 @@ export default function ThemeToggle() {
             >
                 {/* Sliding indicator */}
                 <div
-                    className={`absolute top-0.5 bottom-0.5 w-[28px] rounded-full transition-all duration-300 ease-in-out ${theme === 'light'
-                            ? 'left-0.5 bg-yellow-400 border border-black'
-                            : 'left-[35.5px] bg-blue-500 border border-white/20'
-                        }`}
+                    className={`absolute top-0.5 bottom-0.5 w-[28px] rounded-full transition-all duration-300 ease-in-out ${
+                        theme === "light"
+                            ? "left-0.5 bg-yellow-400 border border-black"
+                            : "left-[35.5px] bg-blue-500 border border-white/20"
+                    }`}
                 />
 
                 {/* Icons */}
@@ -30,12 +32,12 @@ export default function ThemeToggle() {
                     <Sun
                         size={14}
                         strokeWidth={2.5}
-                        className={`transition-all duration-300 ${theme === 'light' ? 'text-black' : 'text-foreground/30'}`}
+                        className={`transition-all duration-300 ${theme === "light" ? "text-black" : "text-foreground/30"}`}
                     />
                     <Moon
                         size={14}
                         strokeWidth={2.5}
-                        className={`transition-all duration-300 ${theme === 'dark' ? 'text-white' : 'text-foreground/30'}`}
+                        className={`transition-all duration-300 ${theme === "dark" ? "text-white" : "text-foreground/30"}`}
                     />
                 </div>
             </button>

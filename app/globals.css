@@ -3,7 +3,10 @@
 @tailwind utilities;
 
 * {
-    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+    transition:
+        background-color 0.3s ease,
+        border-color 0.3s ease,
+        color 0.3s ease;
 }
 
 :root {
@@ -26,7 +29,9 @@ body[data-theme="dark"] {
 body {
     color: var(--foreground);
     background: var(--background);
-    transition: background-color 0.3s ease, color 0.3s ease;
+    transition:
+        background-color 0.3s ease,
+        color 0.3s ease;
 }
 
 /* Global Dark Mode Overrides */
