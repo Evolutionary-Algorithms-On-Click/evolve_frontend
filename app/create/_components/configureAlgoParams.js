@@ -1,3 +1,5 @@
+import TheoryTooltip from "../../_components/TheoryTooltip";
+
 export default function ConfigureAlgoParams({
     title = `Step 10: Configure Genetic Algorithm`,
     populationSize,
@@ -23,7 +25,10 @@ export default function ConfigureAlgoParams({
 
             <div className="grid grid-cols-2 gap-4">
                 <div>
-                    <h5 className="text-lg font-bold mb-4">Population Size</h5>
+                    <h5 className="flex items-center text-lg font-bold mb-4">
+                        Population Size
+                        <TheoryTooltip id="populationSize" />
+                    </h5>
                     <input
                         type="number"
                         value={populationSize}
@@ -44,7 +49,10 @@ export default function ConfigureAlgoParams({
                     />
                 </div>
                 <div>
-                    <h5 className="text-lg font-bold mb-4">Generations</h5>
+                    <h5 className="flex items-center text-lg font-bold mb-4">
+                        Generations
+                        <TheoryTooltip id="generations" />
+                    </h5>
                     <input
                         type="number"
                         value={generations}
@@ -66,8 +74,9 @@ export default function ConfigureAlgoParams({
                     />
                 </div>
                 <div>
-                    <h5 className="text-lg font-bold mb-4">
+                    <h5 className="flex items-center text-lg font-bold mb-4">
                         Crossover Probability
+                        <TheoryTooltip id="cxpb" />
                     </h5>
                     <input
                         type="number"
@@ -99,8 +108,9 @@ export default function ConfigureAlgoParams({
                     />
                 </div>
                 <div>
-                    <h5 className="text-lg font-bold mb-4">
+                    <h5 className="flex items-center text-lg font-bold mb-4">
                         Mutation Probability
+                        <TheoryTooltip id="mutpb" />
                     </h5>
                     <input
                         type="number"
@@ -132,8 +142,9 @@ export default function ConfigureAlgoParams({
                     />
                 </div>
                 <div>
-                    <h5 className="text-lg font-bold mb-4">
+                    <h5 className="flex items-center text-lg font-bold mb-4">
                         Hall of Fame Size
+                        <TheoryTooltip id="hof" />
                     </h5>
                     <input
                         type="number"

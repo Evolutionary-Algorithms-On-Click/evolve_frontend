@@ -15,13 +15,21 @@ export const theoryData = {
         title: "Mutation Probability",
         explanation: "The probability that an individual's genes will be randomly altered. This introduces new genetic material, helping the population escape local optima.",
     },
-    weights: {
-        title: "Weights",
-        explanation: "Defines the importance of different objectives. In search, positive weights indicate maximization, while negative weights indicate minimization.",
+    hof: {
+        title: "Hall of Fame",
+        explanation: "A special archive that stores the absolute best individuals found throughout the entire run, ensuring that the top solutions are never lost during evolution.",
     },
-    dimensions: {
-        title: "Dimensions",
-        explanation: "The number of variables or parameters that the algorithm is trying to optimize simultaneously.",
+    mu: {
+        title: "Mu (μ)",
+        explanation: "The number of individuals to be selected as parents for the next generation. It defines the size of the breeding pool.",
+    },
+    lambda: {
+        title: "Lambda (λ)",
+        explanation: "The number of children to be generated in each step. This determines the exploratory capacity of the algorithm per generation.",
+    },
+    tournamentSize: {
+        title: "Tournament Size",
+        explanation: "Used in selection: 'k' individuals are picked at random, and the best one wins. A larger tournament size increases selection pressure.",
     },
     phi1: {
         title: "Cognitive Coefficient (φ1)",
@@ -31,64 +39,72 @@ export const theoryData = {
         title: "Social Coefficient (φ2)",
         explanation: "In PSO, this scales the influence of the swarm's global best performance on a particle's current velocity.",
     },
-    individualSize: {
-        title: "Individual Size",
-        explanation: "The number of elements (genes) within a single solution candidate. This corresponds to the complexity of the solution.",
-    },
-    gpPrimitiveSet: {
-        title: "Primitive Set",
-        explanation: "The building blocks for Genetic Programs. It includes functions (operators like +, -, *, /) and terminals (constants or variables).",
-    },
-    treeGenerator: {
-        title: "Tree Generator",
-        explanation: "The algorithm used to create the initial programs. 'genFull' creates balanced trees, while 'genHalfAndHalf' provides a mix of short and deep trees.",
-    },
-    bloatLimits: {
-        title: "Bloat Control",
-        explanation: "Prevents programs from growing excessively large without improving fitness, ensuring solutions remain efficient.",
-    },
-    datasetUrl: {
-        title: "Dataset URL",
-        explanation: "The source location of your training data. For ML tuning, we fetch this data to evaluate the evolved hyperparameter sets.",
-    },
-    targetColumn: {
-        title: "Target Column",
-        explanation: "The variable your model is trying to predict (the label or dependent variable).",
-    },
-    mlEvalFunction: {
-        title: "ML Evaluation Function",
-        explanation: "The metric (like Accuracy, F1-Score, or MSE) used to determine how well your evolved model performs on the dataset.",
+    dimensions: {
+        title: "Dimensions",
+        explanation: "The number of variables or parameters that the algorithm is trying to optimize simultaneously.",
     },
     algorithmStrategy: {
         title: "Algorithm Strategy",
-        explanation: "The core evolutionary logic. Simple EA uses a basic generation loop, while Mu+Lambda and Mu,Lambda handle parent-child populations differently based on elitism and survival.",
+        explanation: "The high-level logic governing evolution. 'eaSimple' is a basic generational model, while 'eaMuPlusLambda' and 'eaMuCommaLambda' use more advanced selection and replacement mechanics common in Evolution Strategies.",
     },
-    matingFunction: {
-        title: "Mating (Crossover) Function",
-        explanation: "How parent individuals combine their genetic material to create offspring. Standard operators include One-Point, Two-Point, and Uniform crossover.",
+    psoStrategy: {
+        title: "PSO Strategy",
+        explanation: "Defines the velocity and position update logic for particles. 'original' uses the standard PSO formulas, while variants like 'multiswarm' or 'speciation' help the algorithm handle more complex optimization landscapes.",
     },
-    mutationFunction: {
-        title: "Mutation Function",
-        explanation: "Randomly modifies parts of an individual's genetic code to maintain diversity and find new search areas. Common methods include bit-flip, Gaussian, and shuffle mutation.",
-    },
-    selectionFunction: {
-        title: "Selection Function",
-        explanation: "The process of choosing the fittest individuals from the current population to serve as parents for the next generation. Methods like Tournament or Roulette selection favor better solutions while maintaining diversity.",
-    },
-    initializationFunction: {
-        title: "Initialization Function",
-        explanation: "Defines how the first generation (population) is created. This could be random tree generation for GP or random value assignments for EAs, ensuring enough diversity to start the search.",
-    },
-    gpEquation: {
-        title: "Target Equation",
-        explanation: "The mathematical model your Genetic Program is trying to discover. By defining this, we can calculate the 'Fitness' of each evolved program by comparing its symbolic output to this target.",
-    },
-    individualGenerator: {
-        title: "Individual Generator",
-        explanation: "Determines the data format of each individual solution. Floating Point is best for real-valued Optimization, Integers for discrete steps, and Bit-Sets for binary problems.",
+    benchmarkFunction: {
+        title: "Benchmark Function",
+        explanation: "Mathematical functions used to evaluate optimization performance. Each function (like Ackley, Rastrigin, or Rosenbrock) represents a unique 'landscape' with different challenges for the algorithm to solve.",
     },
     psoBenchmark: {
         title: "Evaluation (Benchmark) Function",
         explanation: "The mathematical landscape the particles are searching. Spheres are simple and unimodal, while Ackley or Rastrigin functions are complex and multimodal, testing the swarm's ability to escape local optima.",
+    },
+    weights: {
+        title: "Weights",
+        explanation: "Coefficients that determine the importance of different objectives in the fitness function. If you have multiple goals, weights help the algorithm prioritize between them (e.g., maximizing accuracy vs. minimizing complexity).",
+    },
+    matingFunction: {
+        title: "Mating (Crossover)",
+        explanation: "The mechanism of biological recombination. It combines genetic information from two parents to generate offspring, aiming to produce better solutions by merging high-performing traits.",
+    },
+    mutationFunction: {
+        title: "Mutation",
+        explanation: "Introduces random changes to individuals. This prevents premature convergence and ensures the algorithm explores new areas of the search space, maintaining genetic diversity.",
+    },
+    selectionFunction: {
+        title: "Selection",
+        explanation: "The 'survival of the fittest' phase. It determines which individuals from the current population will be kept as parents for the next generation based on their fitness scores.",
+    },
+    datasetUrl: {
+        title: "Dataset Source",
+        explanation: "The raw data used for training and evaluation. In ML tuning, the algorithm uses this data to test how well different model parameters perform.",
+    },
+    targetColumn: {
+        title: "Target Variable",
+        explanation: "The specific column in your dataset that you want the model to predict (the dependent variable).",
+    },
+    mlEvalFunction: {
+        title: "ML Evaluation",
+        explanation: "The metric used to judge the performance of the machine learning model (e.g., Accuracy, F1-score, or MSE). The EA optimizes this value.",
+    },
+    individualSize: {
+        title: "Individual Size",
+        explanation: "The length of the chromosome or the number of genes representing a solution. For example, in bit manipulation, it's the number of bits per individual.",
+    },
+    minMaxBoundaries: {
+        title: "Search Boundaries",
+        explanation: "The constraints on the search space. Defines the minimum and maximum values that a gene (or particle position) can take.",
+    },
+    gpPrimitiveSet: {
+        title: "Primitive Set",
+        explanation: "The building blocks for Genetic Programs. It includes functions (operators like +, -, *, /) and terminals (constants like 1, 2, or variables like 'x'). Crossing these creates complex tree structures.",
+    },
+    treeGenerator: {
+        title: "Tree Generator",
+        explanation: "The algorithm used to create the initial programs. 'genFull' creates balanced trees, while 'genHalfAndHalf' provides a mix of short and deep trees for better diversity.",
+    },
+    bloatLimits: {
+        title: "Bloat Control",
+        explanation: "Prevents programs from growing excessively large without improving fitness. By setting a height limit, we ensure the solutions remain computationally efficient and readable.",
     }
 };

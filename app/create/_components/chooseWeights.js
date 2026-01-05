@@ -1,5 +1,5 @@
-"use client";
 import { useState } from "react";
+import TheoryTooltip from "@/app/_components/TheoryTooltip";
 
 export default function ChooseWeights({
     title = "Step 2: Parameters to optimize (weights)",
@@ -14,7 +14,10 @@ export default function ChooseWeights({
 
     return (
         <div className="mt-8">
-            <h4 className="text-lg font-bold mb-4">{title}</h4>
+            <h4 className="flex items-center text-lg font-bold mb-4">
+                {title}
+                <TheoryTooltip id="weights" />
+            </h4>
 
             {/* 
             
@@ -104,8 +107,9 @@ export default function ChooseWeights({
                     )}
                 </div>
                 <div className="flex flex-col">
-                    <h5 className="text-lg font-bold">
+                    <h5 className="flex items-center text-lg font-bold">
                         Optimization Parameters
+                        <TheoryTooltip id="weights" />
                     </h5>
 
                     <table className="w-full text-center">

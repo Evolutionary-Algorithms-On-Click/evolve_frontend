@@ -1,4 +1,5 @@
 import { selectionData } from "@/app/_data/selection";
+import TheoryTooltip from "@/app/_components/TheoryTooltip";
 
 export default function ChooseSelectionFunction({
     title = "Step 8: Choose a selection function.",
@@ -13,7 +14,10 @@ export default function ChooseSelectionFunction({
 }) {
     return (
         <div className="mt-16">
-            <h4 className="text-lg font-bold mb-4">{title}</h4>
+            <h4 className="flex items-center text-lg font-bold mb-4">
+                {title}
+                <TheoryTooltip id="selectionFunction" />
+            </h4>
             <div className="grid grid-cols-2 gap-4 align-top">
                 {selData.map((sel, index) => (
                     <button
@@ -45,7 +49,10 @@ export default function ChooseSelectionFunction({
 
             {selectFunc === "selTournament" && (
                 <div className="mt-4">
-                    <h5 className="text-lg font-bold mb-4">Tournament Size</h5>
+                    <h5 className="flex items-center text-lg font-bold mb-4">
+                        Tournament Size
+                        <TheoryTooltip id="tournamentSize" />
+                    </h5>
                     <input
                         type="number"
                         value={tempTourSize}
