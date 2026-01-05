@@ -27,7 +27,7 @@ export default function ChooseGpOrNotGp() {
             <header className="flex flex-col w-full justify-center items-center p-4">
                 <div className="flex items-center space-x-2 h-32 bg-white rounded-lg p-4">
                     <Image
-                        src="/LOGO.png" 
+                        src="/LOGO.png"
                         alt="EVOLVE OnClick logo"
                         height={320}
                         width={680}
