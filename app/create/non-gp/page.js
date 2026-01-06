@@ -281,9 +281,8 @@ export default function ConfigureNonGP() {
                 </Link>
             </div>
 
-            <div className="w-full max-w-7xl mx-auto flex flex-col md:flex-row gap-8 mt-12 px-4 relative">
-                {/* Sidebar - Config Summary */}
-                <aside className="w-full md:w-80 shrink-0 md:sticky md:top-24 h-fit">
+            <div className="flex flex-col md:flex-row mt-16 gap-4 border border-gray-400 rounded-2xl bg-gray-100 bg-opacity-70 p-4">
+                <div className="w-full md:w-80 shrink-0">
                     <Preview
                         algo={chosenAlgo}
                         parameters={parameters}
@@ -302,232 +301,203 @@ export default function ConfigureNonGP() {
                         mutpb={mutpb}
                         hofSize={hof}
                     />
-                </aside>
+                </div>
 
-                {/* Main Content - Form */}
-                <div className="flex-1 min-w-[300px] border border-gray-200 rounded-3xl p-6 md:p-8 bg-white shadow-xl">
+                <div className="flex-1 min-w-[300px] border border-gray-400 rounded-2xl p-4 bg-white self-start">
                     <form
                         onSubmit={(e) => {
                             e.preventDefault();
                         }}
                         className="flex flex-col"
                     >
-                        <div className="mb-6">
-                            <h3 className="text-2xl font-bold text-gray-900 leading-tight">
-                                Configure Algorithm
-                            </h3>
-                            <div className="flex items-center gap-2 mt-1">
-                                <span className="text-sm font-medium text-blue-600 bg-blue-50 px-2.5 py-0.5 rounded-full">Non-GP</span>
-                                <span className="text-sm text-gray-500">• Tailor your evolutionary strategy</span>
-                            </div>
-                        </div>
-                        
-                        <div className="h-px bg-gray-100 w-full mb-8" />
+                        <h3 className="text-xl font-bold">
+                            Configure Algorithm
+                        </h3>
+                        <p className="text-sm text-gray-500">Non-GP</p>
+                        <hr className="my-4" />
 
-                        <div className="space-y-12">
-                            {currentStep >= 1 && (
-                                <section>
-                                    <ChooseAlgo
-                                        chosenAlgo={chosenAlgo}
-                                        setChosenAlgo={setChosenAlgo}
-                                        currentStep={currentStep}
-                                        nextStep={2}
-                                        setCurrentStep={setCurrentStep}
-                                        mu={mu}
-                                        setMu={setMu}
-                                        lambda={lambda}
-                                        setLambda={setLambda}
-                                    />
-                                </section>
+                        {currentStep >= 1 && (
+                            <ChooseAlgo
+                                chosenAlgo={chosenAlgo}
+                                setChosenAlgo={setChosenAlgo}
+                                currentStep={currentStep}
+                                nextStep={2}
+                                setCurrentStep={setCurrentStep}
+                                mu={mu}
+                                setMu={setMu}
+                                lambda={lambda}
+                                setLambda={setLambda}
+                            />
+                        )}
+
+                        {chosenAlgo === "de" && currentStep >= 2 && (
+                            <ConfigureDEParams
+                                phi1={crossOverRate}
+                                phi2={scalingFactor}
+                                setPhi1={setCrossOverRate}
+                                setPhi2={setScalingFactor}
+                                currentStep={currentStep}
+                                nextStep={3}
+                                setCurrentStep={setCurrentStep}
+                            />
+                        )}
+
+                        {currentStep >= 2 && (
+                            <ChooseWeights
+                                currentStep={currentStep}
+                                nextStep={3}
+                                setCurrentStep={setCurrentStep}
+                                parameters={parameters}
+                                setParameters={setParameters}
+                            />
+                        )}
+
+                        {parameters.length > 0 && currentStep >= 3 && (
+                            <ChooseGenerator
+                                indGen={indGen}
+                                setIndGen={setIndGen}
+                                randomRangeStart={randomRangeStart}
+                                setRandomRangeStart={setRandomRangeStart}
+                                randomRangeEnd={randomRangeEnd}
+                                setRandomRangeEnd={setRandomRangeEnd}
+                                currentStep={currentStep}
+                                setCurrentStep={setCurrentStep}
+                                nextStep={4}
+                            />
+                        )}
+
+                        {currentStep >= 4 &&
+                            indGen &&
+                            randomRangeStart &&
+                            randomRangeEnd &&
+                            parseInt(randomRangeStart) <=
+                                parseInt(randomRangeEnd) && (
+                                <GetIndividualSize
+                                    indSize={indSize}
+                                    setIndSize={setIndSize}
+                                    currentStep={currentStep}
+                                    nextStep={5}
+                                    setCurrentStep={setCurrentStep}
+                                />
                             )}
 
-                            {chosenAlgo === "de" && currentStep >= 2 && (
-                                <section>
-                                    <ConfigureDEParams
-                                        phi1={crossOverRate}
-                                        phi2={scalingFactor}
-                                        setPhi1={setCrossOverRate}
-                                        setPhi2={setScalingFactor}
-                                        currentStep={currentStep}
-                                        nextStep={3}
-                                        setCurrentStep={setCurrentStep}
-                                    />
-                                </section>
+                        {currentStep >= 5 && indSize && (
+                            <ChooseInitializationFunction
+                                popFunc={popFunc}
+                                setPopFunc={setPopFunc}
+                                currentStep={currentStep}
+                                nextStep={6}
+                                setCurrentStep={setCurrentStep}
+                            />
+                        )}
+
+                        {currentStep >= 6 && popFunc && (
+                            <ChooseMatingFunction
+                                mateData={
+                                    chosenAlgo === "de"
+                                        ? deMateData
+                                        : indGen === "floatingPoint"
+                                          ? mateData.filter(
+                                                (mate) =>
+                                                    ![
+                                                        "cxPartialyMatched",
+                                                        "cxOrdered",
+                                                        "cxUniformPartialyMatched",
+                                                    ].includes(mate.name),
+                                            )
+                                          : mateData
+                                }
+                                mateFunc={matingFunc}
+                                setMateFunc={setMatingFunc}
+                                currentStep={currentStep}
+                                nextStep={7}
+                                setCurrentStep={setCurrentStep}
+                            />
+                        )}
+
+                        {currentStep >= 7 && matingFunc && (
+                            <ChooseMutationFunction
+                                mutationData={
+                                    chosenAlgo === "de"
+                                        ? deMutationData
+                                        : mutationData
+                                }
+                                mutateFunc={mutateFunc}
+                                setMutateFunc={setMutateFunc}
+                                currentStep={currentStep}
+                                nextStep={8}
+                                setCurrentStep={setCurrentStep}
+                            />
+                        )}
+
+                        {currentStep >= 8 && matingFunc && (
+                            <ChooseSelectionFunction
+                                selData={
+                                    chosenAlgo === "eaMuPlusLambda" ||
+                                    chosenAlgo === "eaMuCommaLambda"
+                                        ? selectionData.filter(
+                                              (sel) =>
+                                                  ![
+                                                      "selRoulette",
+                                                      "selBest",
+                                                      "selWorst",
+                                                  ].includes(sel.name),
+                                          )
+                                        : selectionData
+                                }
+                                selectFunc={selectFunc}
+                                setSelectFunc={setSelectFunc}
+                                currentStep={currentStep}
+                                nextStep={9}
+                                setCurrentStep={setCurrentStep}
+                                tempTourSize={tempTourSize}
+                                setTempTourSize={setTempTourSize}
+                            />
+                        )}
+
+                        {currentStep >= 9 &&
+                            selectFunc &&
+                            (selectFunc !== "selTournament" ||
+                                (selectFunc === "selTournament" &&
+                                    tempTourSize > 0)) && (
+                                <ChooseEvalFunction
+                                    evalFunc={evalFunc}
+                                    setEvalFunc={setEvalFunc}
+                                    currentStep={currentStep}
+                                    nextStep={10}
+                                    setCurrentStep={setCurrentStep}
+                                />
                             )}
 
-                            {currentStep >= 2 && (
-                                <section>
-                                    <ChooseWeights
-                                        currentStep={currentStep}
-                                        nextStep={3}
-                                        setCurrentStep={setCurrentStep}
-                                        parameters={parameters}
-                                        setParameters={setParameters}
-                                    />
-                                </section>
-                            )}
+                        {currentStep >= 10 && evalFunc && (
+                            <ConfigureAlgoParams
+                                populationSize={populationSize}
+                                setPopulationSize={setPopulationSize}
+                                generations={generations}
+                                setGenerations={setGenerations}
+                                cxpb={cxpb}
+                                setCxpb={setCxpb}
+                                mutpb={mutpb}
+                                setMutpb={setMutpb}
+                                hof={hof}
+                                setHof={setHof}
+                            />
+                        )}
 
-                            {parameters.length > 0 && currentStep >= 3 && (
-                                <section>
-                                    <ChooseGenerator
-                                        indGen={indGen}
-                                        setIndGen={setIndGen}
-                                        randomRangeStart={randomRangeStart}
-                                        setRandomRangeStart={setRandomRangeStart}
-                                        randomRangeEnd={randomRangeEnd}
-                                        setRandomRangeEnd={setRandomRangeEnd}
-                                        currentStep={currentStep}
-                                        setCurrentStep={setCurrentStep}
-                                        nextStep={4}
-                                    />
-                                </section>
-                            )}
-
-                            {currentStep >= 4 &&
-                                indGen &&
-                                randomRangeStart &&
-                                randomRangeEnd &&
-                                parseInt(randomRangeStart) <=
-                                    parseInt(randomRangeEnd) && (
-                                    <section>
-                                        <GetIndividualSize
-                                            indSize={indSize}
-                                            setIndSize={setIndSize}
-                                            currentStep={currentStep}
-                                            nextStep={5}
-                                            setCurrentStep={setCurrentStep}
-                                        />
-                                    </section>
-                                )}
-
-                            {currentStep >= 5 && indSize && (
-                                <section>
-                                    <ChooseInitializationFunction
-                                        popFunc={popFunc}
-                                        setPopFunc={setPopFunc}
-                                        currentStep={currentStep}
-                                        nextStep={6}
-                                        setCurrentStep={setCurrentStep}
-                                    />
-                                </section>
-                            )}
-
-                            {currentStep >= 6 && popFunc && (
-                                <section>
-                                    <ChooseMatingFunction
-                                        mateData={
-                                            chosenAlgo === "de"
-                                                ? deMateData
-                                                : indGen === "floatingPoint"
-                                                  ? mateData.filter(
-                                                        (mate) =>
-                                                            ![
-                                                                "cxPartialyMatched",
-                                                                "cxOrdered",
-                                                                "cxUniformPartialyMatched",
-                                                            ].includes(mate.name),
-                                                    )
-                                                  : mateData
-                                        }
-                                        mateFunc={matingFunc}
-                                        setMateFunc={setMatingFunc}
-                                        currentStep={currentStep}
-                                        nextStep={7}
-                                        setCurrentStep={setCurrentStep}
-                                    />
-                                </section>
-                            )}
-
-                            {currentStep >= 7 && matingFunc && (
-                                <section>
-                                    <ChooseMutationFunction
-                                        mutationData={
-                                            chosenAlgo === "de"
-                                                ? deMutationData
-                                                : mutationData
-                                        }
-                                        mutateFunc={mutateFunc}
-                                        setMutateFunc={setMutateFunc}
-                                        currentStep={currentStep}
-                                        nextStep={8}
-                                        setCurrentStep={setCurrentStep}
-                                    />
-                                </section>
-                            )}
-
-                            {currentStep >= 8 && matingFunc && (
-                                <section>
-                                    <ChooseSelectionFunction
-                                        selData={
-                                            chosenAlgo === "eaMuPlusLambda" ||
-                                            chosenAlgo === "eaMuCommaLambda"
-                                                ? selectionData.filter(
-                                                      (sel) =>
-                                                          ![
-                                                              "selRoulette",
-                                                              "selBest",
-                                                              "selWorst",
-                                                          ].includes(sel.name),
-                                                  )
-                                                : selectionData
-                                        }
-                                        selectFunc={selectFunc}
-                                        setSelectFunc={setSelectFunc}
-                                        currentStep={currentStep}
-                                        nextStep={9}
-                                        setCurrentStep={setCurrentStep}
-                                        tempTourSize={tempTourSize}
-                                        setTempTourSize={setTempTourSize}
-                                    />
-                                </section>
-                            )}
-
-                            {currentStep >= 9 &&
-                                selectFunc &&
-                                (selectFunc !== "selTournament" ||
-                                    (selectFunc === "selTournament" &&
-                                        tempTourSize > 0)) && (
-                                    <section>
-                                        <ChooseEvalFunction
-                                            evalFunc={evalFunc}
-                                            setEvalFunc={setEvalFunc}
-                                            currentStep={currentStep}
-                                            nextStep={10}
-                                            setCurrentStep={setCurrentStep}
-                                        />
-                                    </section>
-                                )}
-
-                            {currentStep >= 10 && evalFunc && (
-                                <section>
-                                    <ConfigureAlgoParams
-                                        populationSize={populationSize}
-                                        setPopulationSize={setPopulationSize}
-                                        generations={generations}
-                                        setGenerations={setGenerations}
-                                        cxpb={cxpb}
-                                        setCxpb={setCxpb}
-                                        mutpb={mutpb}
-                                        setMutpb={setMutpb}
-                                        hof={hof}
-                                        setHof={setHof}
-                                    />
-                                </section>
-                            )}
-
-                            {currentStep >= 10 && evalFunc && (
-                                <div className="mt-8 pt-6 border-t border-gray-100">
-                                    <button
-                                        className="bg-gray-900 hover:bg-black text-white p-4 rounded-2xl w-full transition-all transform hover:scale-[1.01] active:scale-[0.99] shadow-lg flex items-center justify-center gap-3 font-bold disabled:opacity-50 disabled:cursor-not-allowed"
-                                        disabled={!validateInput()}
-                                        onClick={(e) => {
-                                            e.preventDefault();
-                                            setIsLoading(true);
-                                            runAlgorithm().then(() => {
-                                                setIsLoading(false);
-                                            });
-                                        }}
-                                    >
+                        {currentStep >= 10 && evalFunc && (
+                            <div className="mt-4">
+                                <button
+                                    className="bg-foreground text-background p-2 rounded-lg w-full"
+                                    disabled={!validateInput()}
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        setIsLoading(true);
+                                        runAlgorithm().then(() => {
+                                            setIsLoading(false);
+                                        });
+                                    }}
+                                >
+                                    <div className="flex flex-row gap-2 justify-center items-center">
                                         <svg
                                             xmlns="http://www.w3.org/2000/svg"
                                             height="24px"
@@ -538,10 +508,10 @@ export default function ConfigureNonGP() {
                                             <path d="M480-80 120-280v-400l360-200 360 200v400L480-80ZM364-590q23-24 53-37t63-13q33 0 63 13t53 37l120-67-236-131-236 131 120 67Zm76 396v-131q-54-14-87-57t-33-98q0-11 1-20.5t4-19.5l-125-70v263l240 133Zm40-206q33 0 56.5-23.5T560-480q0-33-23.5-56.5T480-560q-33 0-56.5 23.5T400-480q0 33 23.5 56.5T480-400Zm40 206 240-133v-263l-125 70q3 10 4 19.5t1 20.5q0 55-33 98t-87 57v131Z" />
                                         </svg>
                                         Execute Algorithm
-                                    </button>
-                                </div>
-                            )}
-                        </div>
+                                    </div>
+                                </button>
+                            </div>
+                        )}
                     </form>
                 </div>
             </div>
