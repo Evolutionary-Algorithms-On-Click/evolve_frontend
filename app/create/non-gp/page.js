@@ -281,7 +281,7 @@ export default function ConfigureNonGP() {
                 </Link>
             </div>
 
-            <div className="flex flex-col md:flex-row mt-16 gap-4 border border-gray-400 rounded-2xl bg-gray-100 bg-opacity-70 p-4">
+            <div className="flex flex-col md:flex-row mt-24 gap-4 border border-gray-400 rounded-2xl bg-gray-100 bg-opacity-70 p-4">
                 <div className="w-full md:w-80 shrink-0">
                     <Preview
                         algo={chosenAlgo}

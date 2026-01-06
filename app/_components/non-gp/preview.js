@@ -19,7 +19,7 @@ export default function Preview({
     currentStep,
 }) {
     return (
-        <div className="flex flex-col items-start p-4 min-w-[280px] w-full h-fit md:sticky top-4 bg-gray-100 bg-opacity-70 text-black rounded-2xl border border-gray-400">
+        <div className="flex flex-col items-start p-4 min-w-[280px] w-full h-fit md:sticky md:top-24 bg-gray-100 bg-opacity-70 text-black rounded-2xl border border-gray-400">
             <h3 className="text-xl font-bold">Config Summary</h3>
             <div className="flex flex-col w-full">
                 {currentStep >= 1 && (
