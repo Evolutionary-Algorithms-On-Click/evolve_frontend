@@ -2,12 +2,15 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { PublicEnvScript } from "next-runtime-env";
 import VideoAcademy from "./_components/VideoAcademy";
+import ClientLayout from "./components/ClientLayout";
+import HelpDocsButton from "./_components/HelpDocsButton";
 
 const geistSans = localFont({
     src: "./fonts/GeistVF.woff",
     variable: "--font-geist-sans",
     weight: "100 900",
 });
+
 const geistMono = localFont({
     src: "./fonts/GeistMonoVF.woff",
     variable: "--font-geist-mono",
@@ -33,7 +36,7 @@ export const metadata = {
         url: "",
         images: [
             {
-                url: "/EvOCicon.png", // LinkedIn preview image
+                url: "/EvOCicon.png",
                 width: 1200,
                 height: 630,
                 alt: "EVOLVE OnClick",
@@ -53,7 +56,10 @@ export default function RootLayout({ children }) {
                 className={`${geistSans.variable} ${geistMono.variable} antialiased`}
             >
                 <VideoAcademy />
-                {children}
+                <ClientLayout>
+                    {children}
+                    <HelpDocsButton />
+                </ClientLayout>
             </body>
         </html>
     );

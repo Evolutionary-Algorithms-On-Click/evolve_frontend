@@ -3,24 +3,124 @@
 @tailwind utilities;
 
 * {
-    transition: all 0.02s ease-in;
+    transition:
+        background-color 0.3s ease,
+        border-color 0.3s ease,
+        color 0.3s ease;
 }
 
 :root {
     --background: #ffffff;
     --foreground: #343434;
+    --border: rgba(0, 0, 0, 0.1);
+    --card-bg: #ffffff;
 }
 
-/* @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-} */
+:root[data-theme="dark"],
+html[data-theme="dark"],
+body[data-theme="dark"] {
+    --background: #0f1115;
+    --foreground: #f0f0f0;
+    --border: rgba(255, 255, 255, 0.1);
+    --card-bg: #1a1d23;
+    color-scheme: dark;
+}
 
 body {
     color: var(--foreground);
     background: var(--background);
+    transition:
+        background-color 0.3s ease,
+        color 0.3s ease;
+}
+
+/* Global Dark Mode Overrides */
+[data-theme="dark"] {
+    background-color: var(--background) !important;
+    color: var(--foreground) !important;
+}
+
+[data-theme="dark"] body,
+[data-theme="dark"] .bg-gray-50,
+[data-theme="dark"] .bg-gray-100,
+[data-theme="dark"] .bg-slate-50,
+[data-theme="dark"] .bg-slate-100 {
+    background-color: var(--background) !important;
+}
+
+[data-theme="dark"] .bg-white {
+    background-color: var(--card-bg) !important;
+}
+
+[data-theme="dark"] .bg-background {
+    background-color: var(--background) !important;
+}
+
+/* Card and Container Overrides */
+[data-theme="dark"] form,
+[data-theme="dark"] .shadow-sm,
+[data-theme="dark"] .rounded-3xl,
+[data-theme="dark"] .rounded-xl {
+    background-color: var(--card-bg) !important;
+    border-color: var(--border) !important;
+}
+
+/* Text Overrides */
+[data-theme="dark"] h1,
+[data-theme="dark"] h2,
+[data-theme="dark"] h3,
+[data-theme="dark"] p,
+[data-theme="dark"] span:not(.absolute),
+[data-theme="dark"] a:not(.rounded-full) {
+    color: var(--foreground) !important;
+}
+
+[data-theme="dark"] .text-gray-500,
+[data-theme="dark"] .text-gray-400,
+[data-theme="dark"] .text-foreground\/70 {
+    color: rgba(255, 255, 255, 0.5) !important;
+}
+
+/* Interactive Elements */
+[data-theme="dark"] input,
+[data-theme="dark"] select,
+[data-theme="dark"] textarea {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+    border-color: var(--border) !important;
+    color: var(--foreground) !important;
+}
+
+[data-theme="dark"] .border-black,
+[data-theme="dark"] .border-gray-200 {
+    border-color: var(--border) !important;
+}
+
+[data-theme="dark"] .text-black,
+[data-theme="dark"] .text-foreground {
+    color: var(--foreground) !important;
+}
+
+/* Specific fix for the Logo (adds a grayish bubble to keep it original and visible) */
+[data-theme="dark"] img[alt*="LOGO"],
+[data-theme="dark"] img[src*="LOGO"] {
+    filter: none !important;
+    background-color: rgba(255, 255, 255, 0.85) !important;
+    padding: 8px 24px !important;
+    border-radius: 12px !important;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
+    display: inline-block;
+}
+
+/* Specific fix for the yellow button in dark mode */
+[data-theme="dark"] .bg-yellow-400 {
+    background-color: #fbbf24 !important;
+    /* Slightly more vibrant orange-yellow */
+    color: #000000 !important;
+    /* Keep text dark for readability */
+}
+
+[data-theme="dark"] .bg-yellow-400:hover {
+    background-color: #f59e0b !important;
 }
 
 @layer utilities {
