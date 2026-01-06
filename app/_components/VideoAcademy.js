@@ -2,12 +2,58 @@
 
 import { useState } from "react";
 import { usePathname } from "next/navigation";
-import { Video, X, Youtube, Play } from "lucide-react";
+import { Video, X, Youtube, Play, WifiOff, AlertCircle, Loader2 } from "lucide-react";
 import { videoLibrary } from "@/app/_data/videoLibrary";
+import { useEffect } from "react";
 
 const VideoAcademy = () => {
     const [isOpen, setIsOpen] = useState(false);
+    const [isOnline, setIsOnline] = useState(true);
+    const [isChecking, setIsChecking] = useState(false);
+    const [connectionError, setConnectionError] = useState(false);
     const pathname = usePathname();
+
+    useEffect(() => {
+        const handleStatusChange = () => {
+            setIsOnline(navigator.onLine);
+            if (navigator.onLine) setConnectionError(false);
+        };
+
+        window.addEventListener("online", handleStatusChange);
+        window.addEventListener("offline", handleStatusChange);
+
+        setIsOnline(navigator.onLine);
+
+        return () => {
+            window.removeEventListener("online", handleStatusChange);
+            window.removeEventListener("offline", handleStatusChange);
+        };
+    }, []);
+
+    const verifyConnectivity = async () => {
+        setIsChecking(true);
+        setConnectionError(false);
+
+        // Even if navigator.onLine is true, we verify if YouTube is reachable
+        try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 5000);
+
+            await fetch("https://www.youtube.com/favicon.ico", {
+                mode: "no-cors",
+                signal: controller.signal,
+                cache: 'no-store'
+            });
+
+            clearTimeout(timeoutId);
+            setIsOpen(true);
+        } catch (error) {
+            setConnectionError(true);
+            setIsOpen(true); // Open anyway to show the error message
+        } finally {
+            setIsChecking(false);
+        }
+    };
 
     if (pathname === "/" || pathname.startsWith("/auth")) return null;
 
@@ -25,12 +71,19 @@ const VideoAcademy = () => {
     return (
         <>
             <button
-                onClick={() => setIsOpen(true)}
-                className="fixed top-3 right-3 md:top-6 md:right-6 z-50 flex items-center gap-2 bg-black hover:bg-gray-800 text-white font-bold py-2.5 px-5 rounded-full shadow-xl transition-all duration-300 transform hover:scale-105 active:scale-95 border border-white/20"
+                onClick={verifyConnectivity}
+                disabled={isChecking}
+                className="fixed top-3 right-3 md:top-6 md:right-6 z-50 flex items-center gap-2 bg-black hover:bg-gray-800 text-white font-bold py-2.5 px-5 rounded-full shadow-xl transition-all duration-300 transform hover:scale-105 active:scale-95 border border-white/20 disabled:opacity-70 disabled:cursor-not-allowed"
                 id="video-academy-button"
             >
-                <Video size={18} />
-                <span className="hidden md:inline text-sm">Video Academy</span>
+                {isChecking ? (
+                    <Loader2 size={18} className="animate-spin text-yellow-400" />
+                ) : (
+                    <Video size={18} />
+                )}
+                <span className="hidden md:inline text-sm">
+                    {isChecking ? "Verifying..." : "Video Academy"}
+                </span>
             </button>
 
             {isOpen && (
@@ -70,16 +123,32 @@ const VideoAcademy = () => {
                         
 
                         <div className="rounded-xl overflow-hidden shadow-xl border border-gray-200 bg-black">
-                            <div className="aspect-video w-full">
-                                <iframe
-                                    className="w-full h-full"
-                                    src={`https://www.youtube.com/embed/${videoData.featured.id}`}
-                                    title={videoData.featured.title}
-                                    frameBorder="0"
-                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                    allowFullScreen
-                                ></iframe>
-                            </div>
+                            {!isOnline || connectionError ? (
+                                <div className="aspect-video w-full bg-gray-900 flex flex-col items-center justify-center p-6 text-center">
+                                    <WifiOff size={48} className="text-gray-600 mb-4" />
+                                    <h4 className="text-white font-bold mb-2">No Internet Access</h4>
+                                    <p className="text-gray-400 text-xs">
+                                        Video tutorials require an active internet connection to load from YouTube.
+                                    </p>
+                                    <button 
+                                        onClick={verifyConnectivity}
+                                        className="mt-4 text-yellow-400 text-xs font-bold hover:underline flex items-center gap-1"
+                                    >
+                                        <AlertCircle size={14} /> Retry connection
+                                    </button>
+                                </div>
+                            ) : (
+                                <div className="aspect-video w-full">
+                                    <iframe
+                                        className="w-full h-full"
+                                        src={`https://www.youtube.com/embed/${videoData.featured.id}`}
+                                        title={videoData.featured.title}
+                                        frameBorder="0"
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                        allowFullScreen
+                                    ></iframe>
+                                </div>
+                            )}
                             <div className="p-4 bg-white">
                                 <h4 className="font-bold text-gray-900 text-sm mb-1">{videoData.featured.title}</h4>
                                 <p className="text-xs text-gray-500 mb-2">{videoData.featured.channel}</p>
@@ -89,21 +158,33 @@ const VideoAcademy = () => {
                     </div>
 
                     <div className="mb-8">
-                        <div className="p-6 bg-gray-50 rounded-xl border border-gray-200 text-center">
-                            <h4 className="font-bold text-gray-900 mb-2">Want to learn more?</h4>
-                            <p className="text-sm text-gray-600 mb-4">
-                                Explore more tutorials and advanced concepts on YouTube.
-                            </p>
-                            <a 
-                                href={`https://www.youtube.com/results?search_query=${encodeURIComponent(videoData.searchQuery)}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="inline-flex items-center gap-2 bg-[#FF0000] text-white hover:bg-[#D90000] px-6 py-3 rounded-full font-bold text-sm transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
-                            >
-                                <Youtube size={18} />
-                                Search on YouTube
-                            </a>
-                        </div>
+                        {(!isOnline || connectionError) ? (
+                            <div className="p-6 bg-red-50 rounded-xl border border-red-100 text-center">
+                                <div className="flex justify-center mb-3">
+                                    <AlertCircle className="text-red-500" size={24} />
+                                </div>
+                                <h4 className="font-bold text-gray-900 mb-2">Offline Mode</h4>
+                                <p className="text-sm text-gray-600">
+                                    It seems you're offline or YouTube is unreachable. Please check your connection to explore more tutorials.
+                                </p>
+                            </div>
+                        ) : (
+                            <div className="p-6 bg-gray-50 rounded-xl border border-gray-200 text-center">
+                                <h4 className="font-bold text-gray-900 mb-2">Want to learn more?</h4>
+                                <p className="text-sm text-gray-600 mb-4">
+                                    Explore more tutorials and advanced concepts on YouTube.
+                                </p>
+                                <a 
+                                    href={`https://www.youtube.com/results?search_query=${encodeURIComponent(videoData.searchQuery)}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center gap-2 bg-[#FF0000] text-white hover:bg-[#D90000] px-6 py-3 rounded-full font-bold text-sm transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+                                >
+                                    <Youtube size={18} />
+                                    Search on YouTube
+                                </a>
+                            </div>
+                        )}
                     </div>
 
                 </div>
