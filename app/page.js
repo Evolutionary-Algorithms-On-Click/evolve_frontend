@@ -1,6 +1,7 @@
 import { BookUp2, Pickaxe } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import ThemeToggle from "./components/ThemeToggle";
 
 export default function Home() {
     return (
@@ -17,23 +18,25 @@ export default function Home() {
                         />
                     </div>
 
-                    <div className="flex flex-col sm:flex-row gap-4 items-center font-bold w-full max-w-md">
-                        <Link
-                            className="rounded-full border border-solid border-black transition-colors flex items-center justify-center bg-background text-foreground gap-2 hover:bg-gray-100 text-sm sm:text-base p-4 w-full h-12"
-                            href="/auth"
-                        >
-                            <Pickaxe size={24} />
-                            Get Started
-                        </Link>
-                        <Link
-                            className="rounded-full transition-colors flex items-center justify-center bg-yellow-400 text-black hover:bg-yellow-50 text-sm sm:text-base h-12 p-4 w-full border border-black gap-2"
-                            href="https://evolutionary-algorithms-on-click.github.io/user_docs/"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                            <BookUp2 size={24} />
-                            Read our docs
-                        </Link>
+                    <div className="flex flex-col items-center gap-8 w-full max-w-md">
+                        <div className="flex flex-col sm:flex-row gap-4 items-center font-bold w-full">
+                            <Link
+                                className="rounded-full border border-solid border-black transition-colors flex items-center justify-center bg-background text-foreground gap-2 hover:bg-gray-100 text-sm sm:text-base p-4 w-full h-12"
+                                href="/auth"
+                            >
+                                <Pickaxe size={24} />
+                                Get Started
+                            </Link>
+                            <Link
+                                className="rounded-full transition-colors flex items-center justify-center bg-yellow-400 text-black hover:bg-yellow-50 text-sm sm:text-base h-12 p-4 w-full border border-black gap-2"
+                                href="https://evolutionary-algorithms-on-click.github.io/user_docs/"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                <BookUp2 size={24} />
+                                Read our docs
+                            </Link>
+                        </div>
                     </div>
                 </div>
 
