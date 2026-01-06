@@ -24,7 +24,7 @@ export default function TheoryTooltip({ id }) {
             </button>
 
             {isVisible && (
-                <div className="absolute z-50 bottom-full left-1/2 -translate-x-1/2 mb-3 w-72 p-4 rounded-2xl bg-white/90 backdrop-blur-xl border border-white/20 shadow-[0_8px_32px_0_rgba(31,38,135,0.15)] transition-all duration-200 ease-out transform opacity-100 scale-100">
+                <div className="absolute z-[100] bottom-full left-1/2 -translate-x-1/2 mb-3 w-72 p-4 rounded-2xl bg-white/90 backdrop-blur-xl border border-white/20 shadow-[0_8px_32px_0_rgba(31,38,135,0.15)] transition-all duration-200 ease-out transform opacity-100 scale-100">
                     <div className="relative">
                         <h5 className="font-bold text-gray-900 text-sm mb-1 uppercase tracking-wider">
                             {data.title}

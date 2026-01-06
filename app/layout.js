@@ -1,6 +1,7 @@
 import localFont from "next/font/local";
 import "./globals.css";
 import { PublicEnvScript } from "next-runtime-env";
+import VideoAcademy from "./_components/VideoAcademy";
 import ClientLayout from "./components/ClientLayout";
 import HelpDocsButton from "./_components/HelpDocsButton";
 
@@ -54,6 +55,7 @@ export default function RootLayout({ children }) {
             <body
                 className={`${geistSans.variable} ${geistMono.variable} antialiased`}
             >
+                <VideoAcademy />
                 <ClientLayout>
                     {children}
                     <HelpDocsButton />

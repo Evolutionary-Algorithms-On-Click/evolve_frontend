@@ -69,6 +69,11 @@ export const theoryData = {
         explanation:
             "Mathematical functions used to evaluate optimization performance. Each function (like Ackley, Rastrigin, or Rosenbrock) represents a unique 'landscape' with different challenges for the algorithm to solve.",
     },
+    psoBenchmark: {
+        title: "Evaluation (Benchmark) Function",
+        explanation:
+            "The mathematical landscape the particles are searching. Spheres are simple and unimodal, while Ackley or Rastrigin functions are complex and multimodal, testing the swarm's ability to escape local optima.",
+    },
     weights: {
         title: "Weights",
         explanation:
