@@ -30,11 +30,11 @@ export default function ChooseWeights({
             * UI split into two halves, add param to right. left is a list of added params.
             */}
 
-            <div className="grid grid-cols-2 gap-8 justify-items-stretch align-top">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 justify-items-stretch align-top">
                 <div className="flex flex-col p-3 rounded-xl w-full h-fit">
                     {/* <h5 className="text-lg font-bold mb-3">Add Parameter</h5> */}
 
-                    <div className="flex gap-0 items-center my-2">
+                    <div className="flex flex-col sm:flex-row gap-0 items-center my-2">
                         <button
                             onClick={(e) => {
                                 e.preventDefault();
@@ -42,10 +42,10 @@ export default function ChooseWeights({
                                 setMinMaxSelected(true);
                             }}
                             className={
-                                "p-1 rounded-l-xl w-full border bg-opacity-30" +
+                                "p-1 rounded-t-xl sm:rounded-tr-none sm:rounded-l-xl w-full border bg-opacity-30" +
                                 (tempParamWeight === 1.0
                                     ? " border-blue-500 bg-blue-100 text-blue-900"
-                                    : "border-gray-300 hover:bg-gray-100 hover:text-foreground")
+                                    : " border-gray-300 hover:bg-gray-100 hover:text-foreground")
                             }
                         >
                             <p>Maximize</p>
@@ -58,10 +58,10 @@ export default function ChooseWeights({
                                 setMinMaxSelected(true);
                             }}
                             className={
-                                "p-1 rounded-r-xl w-full border bg-opacity-30" +
+                                "p-1 rounded-b-xl sm:rounded-bl-none sm:rounded-r-xl w-full border bg-opacity-30" +
                                 (tempParamWeight === -1.0
                                     ? " border-blue-500 bg-blue-100 text-blue-900"
-                                    : "border-gray-300 hover:bg-gray-100 hover:text-foreground")
+                                    : " border-gray-300 hover:bg-gray-100 hover:text-foreground")
                             }
                         >
                             <p>Minimize</p>
@@ -106,13 +106,13 @@ export default function ChooseWeights({
                         </button>
                     )}
                 </div>
-                <div className="flex flex-col">
+                <div className="flex flex-col overflow-x-auto w-full">
                     <h5 className="flex items-center text-lg font-bold">
                         Optimization Parameters
                         <TheoryTooltip id="weights" />
                     </h5>
 
-                    <table className="w-full text-center">
+                    <table className="w-full text-center mt-4">
                         <thead>
                             <tr>
                                 <th className="border-b-2 border-gray-300 p-2">
@@ -137,7 +137,7 @@ export default function ChooseWeights({
                                         <p className="font-bold">
                                             {param + ".0"}
                                         </p>
-                                        <p className="font-extralight">{`dim_${index + 1}`}</p>
+                                        <p className="font-extralight whitespace-nowrap">{`dim_${index + 1}`}</p>
                                     </td>
                                     <td className="border-b border-gray-300 p-2">
                                         <button
@@ -147,11 +147,6 @@ export default function ChooseWeights({
                                                     parameters.filter(
                                                         (_, i) => i !== index,
                                                     ),
-                                                );
-                                                setCurrentStep(
-                                                    currentStep < nextStep
-                                                        ? nextStep
-                                                        : currentStep,
                                                 );
                                             }}
                                             className="text-red-500 underline p-1 rounded-lg"
