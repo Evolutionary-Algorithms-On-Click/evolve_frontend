@@ -18,21 +18,20 @@ export default function Preview({
     scalingFactor = 1,
     currentStep,
 }) {
-    // Section will have a div representing selected values.
     return (
-        <div className="flex flex-col items-start p-4 min-w-16 h-fit md:sticky top-4 bg-grey-100 bg-opacity-70 text-black">
+        <div className="flex flex-col items-start p-4 min-w-16 h-fit md:sticky top-4 bg-gray-100 bg-opacity-70 text-black rounded-2xl">
             <h3 className="text-xl font-bold">Config Summary</h3>
             <div className="flex flex-col">
-                <div className="mt-4">
-                    <h4 className="text-lg font-semibold mb-1">Algorithm</h4>
-                    <code className="border border-blue-400 py-1 px-3 rounded-full text-foreground">
-                        {algo || "None"}
-                    </code>
-                </div>
+                {currentStep >= 1 && (
+                    <div className="mt-4">
+                        <h4 className="text-lg font-semibold mb-1">Algorithm</h4>
+                        <code className="border border-blue-400 py-1 px-3 rounded-full text-foreground">
+                            {algo || "None"}
+                        </code>
+                    </div>
+                )}
 
-                {parameters ? <hr className="my-4" /> : null}
-
-                {parameters && (
+                {currentStep >= 2 && parameters && (
                     <div className="mt-4">
                         <h4 className="text-lg font-semibold mb-1">Weights</h4>
                         {parameters.length > 0 ? (
@@ -65,9 +64,7 @@ export default function Preview({
                     </div>
                 )}
 
-                {indGen ? <hr className="mt-4" /> : null}
-
-                {indGen && (
+                {currentStep >= 3 && indGen && (
                     <div className="mt-4">
                         <h4 className="text-lg font-semibold mb-1">
                             Individual Generator
@@ -78,9 +75,7 @@ export default function Preview({
                     </div>
                 )}
 
-                {indSize ? <hr className="mt-4" /> : null}
-
-                {indSize && (
+                {currentStep >= 4 && indSize > 0 && (
                     <div className="mt-4">
                         <h4 className="text-lg font-semibold mb-1">
                             Individual Size
@@ -91,9 +86,7 @@ export default function Preview({
                     </div>
                 )}
 
-                {popFunc ? <hr className="mt-4" /> : null}
-
-                {popFunc && (
+                {currentStep >= 5 && popFunc && (
                     <div className="mt-4">
                         <h4 className="text-lg font-semibold mb-1">
                             Population Function
@@ -104,9 +97,7 @@ export default function Preview({
                     </div>
                 )}
 
-                {mateFunc ? <hr className="mt-4" /> : null}
-
-                {mateFunc && (
+                {currentStep >= 6 && mateFunc && (
                     <div className="mt-4">
                         <h4 className="text-lg font-semibold mb-1">
                             Mating Function
@@ -117,9 +108,7 @@ export default function Preview({
                     </div>
                 )}
 
-                {mutateFunc ? <hr className="mt-4" /> : null}
-
-                {mutateFunc && (
+                {currentStep >= 7 && mutateFunc && (
                     <div className="mt-4">
                         <h4 className="text-lg font-semibold mb-1">
                             Mutation Function
@@ -130,9 +119,7 @@ export default function Preview({
                     </div>
                 )}
 
-                {selectFunc ? <hr className="mt-4" /> : null}
-
-                {selectFunc && (
+                {currentStep >= 8 && selectFunc && (
                     <div className="mt-4">
                         <h4 className="text-lg font-semibold mb-1">
                             Selection Function
@@ -148,9 +135,7 @@ export default function Preview({
                     </div>
                 )}
 
-                {evalFunc ? <hr className="mt-4" /> : null}
-
-                {evalFunc && (
+                {currentStep >= 9 && evalFunc && (
                     <div className="mt-4">
                         <h4 className="text-lg font-semibold mb-1">
                             Evaluation Function
@@ -163,87 +148,66 @@ export default function Preview({
 
                 {currentStep >= 10 && (
                     <>
-                        {populationSize ? <hr className="mt-4" /> : null}
-
-                        {populationSize && (
-                            <div className="mt-4">
-                                <h4 className="text-lg font-semibold mb-1">
-                                    Population Size
-                                </h4>
-                                <code className="border border-blue-400 py-1 px-2 rounded-xl text-foreground">
-                                    {populationSize}
-                                </code>
-                            </div>
-                        )}
+                        <div className="mt-4">
+                            <h4 className="text-lg font-semibold mb-1">
+                                Population Size
+                            </h4>
+                            <code className="border border-blue-400 py-1 px-2 rounded-xl text-foreground">
+                                {populationSize}
+                            </code>
+                        </div>
 
                         {algo === "de" && (
-                            <>
-                                <hr className="mt-4" />
-                                <div className="mt-4">
-                                    <h4 className="text-lg font-semibold mb-1">
-                                        DE Parameters
-                                    </h4>
+                            <div className="mt-4">
+                                <h4 className="text-lg font-semibold mb-1">
+                                    DE Parameters
+                                </h4>
+                                <div className="flex gap-2">
                                     <code className="border border-blue-400 py-1 px-2 rounded-xl text-foreground">
-                                        {crossOverProb}
+                                        CR: {crossOverProb}
                                     </code>
-                                    <code className="border border-blue-400 py-1 px-2 rounded-xl text-foreground ml-2">
-                                        {scalingFactor}
+                                    <code className="border border-blue-400 py-1 px-2 rounded-xl text-foreground">
+                                        F: {scalingFactor}
                                     </code>
                                 </div>
-                            </>
-                        )}
-
-                        {generations ? <hr className="mt-4" /> : null}
-
-                        {generations && (
-                            <div className="mt-4">
-                                <h4 className="text-lg font-semibold mb-1">
-                                    Generations
-                                </h4>
-                                <code className="border border-blue-400 py-1 px-2 rounded-xl text-foreground">
-                                    {generations}
-                                </code>
                             </div>
                         )}
 
-                        {cxpb ? <hr className="mt-4" /> : null}
+                        <div className="mt-4">
+                            <h4 className="text-lg font-semibold mb-1">
+                                Generations
+                            </h4>
+                            <code className="border border-blue-400 py-1 px-2 rounded-xl text-foreground">
+                                {generations}
+                            </code>
+                        </div>
 
-                        {cxpb && (
-                            <div className="mt-4">
-                                <h4 className="text-lg font-semibold mb-1">
-                                    Crossover Probability
-                                </h4>
-                                <code className="border border-blue-400 py-1 px-2 rounded-xl text-foreground">
-                                    {cxpb}
-                                </code>
-                            </div>
-                        )}
+                        <div className="mt-4">
+                            <h4 className="text-lg font-semibold mb-1">
+                                Crossover Probability
+                            </h4>
+                            <code className="border border-blue-400 py-1 px-2 rounded-xl text-foreground">
+                                {cxpb}
+                            </code>
+                        </div>
 
-                        {mutpb ? <hr className="mt-4" /> : null}
+                        <div className="mt-4">
+                            <h4 className="text-lg font-semibold mb-1">
+                                Mutation Probability
+                            </h4>
+                            <code className="border border-blue-400 py-1 px-2 rounded-xl text-foreground">
+                                {mutpb}
+                            </code>
+                        </div>
 
-                        {mutpb && (
-                            <div className="mt-4">
-                                <h4 className="text-lg font-semibold mb-1">
-                                    Mutation Probability
-                                </h4>
-                                <code className="border border-blue-400 py-1 px-2 rounded-xl text-foreground">
-                                    {mutpb}
-                                </code>
-                            </div>
-                        )}
-
-                        {hofSize ? <hr className="mt-4" /> : null}
-
-                        {hofSize && (
-                            <div className="mt-4">
-                                <h4 className="text-lg font-semibold mb-1">
-                                    Hall of Fame Size
-                                </h4>
-                                <code className="border border-blue-400 py-1 px-2 rounded-xl text-foreground">
-                                    {hofSize}
-                                </code>
-                            </div>
-                        )}
+                        <div className="mt-4">
+                            <h4 className="text-lg font-semibold mb-1">
+                                Hall of Fame Size
+                            </h4>
+                            <code className="border border-blue-400 py-1 px-2 rounded-xl text-foreground">
+                                {hofSize}
+                            </code>
+                        </div>
                     </>
                 )}
             </div>

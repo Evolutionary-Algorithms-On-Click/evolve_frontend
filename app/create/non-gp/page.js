@@ -301,7 +301,7 @@ export default function ConfigureNonGP() {
                     hofSize={hof}
                 />
 
-                <div className="border border-gray-400 rounded-2xl p-4 bg-white">
+                <div className="flex-1 min-w-[300px] border border-gray-400 rounded-2xl p-4 bg-white">
                     <form
                         onSubmit={(e) => {
                             e.preventDefault();

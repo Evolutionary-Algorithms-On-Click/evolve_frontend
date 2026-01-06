@@ -23,16 +23,16 @@ export default function ConfigureAlgoParams({
             */}
             <h4 className="text-lg font-bold mb-4">{title}</h4>
 
-            <div className="grid grid-cols-2 gap-4">
-                <div>
-                    <h5 className="flex items-center text-lg font-bold mb-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-6">
+                <div className="flex flex-col">
+                    <h5 className="flex items-center text-lg font-bold mb-2">
                         Population Size
                         <TheoryTooltip id="populationSize" />
                     </h5>
                     <input
                         type="number"
                         value={populationSize}
-                        className="border border-gray-300 p-2 rounded-lg"
+                        className="border border-gray-300 p-2 rounded-lg w-full"
                         placeholder="Enter a number"
                         onChange={(e) => {
                             if (isNaN(e.target.value)) {
@@ -48,15 +48,15 @@ export default function ConfigureAlgoParams({
                         }}
                     />
                 </div>
-                <div>
-                    <h5 className="flex items-center text-lg font-bold mb-4">
+                <div className="flex flex-col">
+                    <h5 className="flex items-center text-lg font-bold mb-2">
                         Generations
                         <TheoryTooltip id="generations" />
                     </h5>
                     <input
                         type="number"
                         value={generations}
-                        className="border border-gray-300 p-2 rounded-lg"
+                        className="border border-gray-300 p-2 rounded-lg w-full"
                         placeholder="Enter a number"
                         onChange={(e) => {
                             if (isNaN(e.target.value)) {
@@ -73,15 +73,15 @@ export default function ConfigureAlgoParams({
                         }}
                     />
                 </div>
-                <div>
-                    <h5 className="flex items-center text-lg font-bold mb-4">
+                <div className="flex flex-col">
+                    <h5 className="flex items-center text-lg font-bold mb-2">
                         Crossover Probability
                         <TheoryTooltip id="cxpb" />
                     </h5>
                     <input
                         type="number"
                         value={cxpb}
-                        className="border border-gray-300 p-2 rounded-lg"
+                        className="border border-gray-300 p-2 rounded-lg w-full"
                         placeholder="Enter a number"
                         onChange={(e) => {
                             if (isNaN(e.target.value)) {
@@ -107,15 +107,15 @@ export default function ConfigureAlgoParams({
                         }}
                     />
                 </div>
-                <div>
-                    <h5 className="flex items-center text-lg font-bold mb-4">
+                <div className="flex flex-col">
+                    <h5 className="flex items-center text-lg font-bold mb-2">
                         Mutation Probability
                         <TheoryTooltip id="mutpb" />
                     </h5>
                     <input
                         type="number"
                         value={mutpb}
-                        className="border border-gray-300 p-2 rounded-lg"
+                        className="border border-gray-300 p-2 rounded-lg w-full"
                         placeholder="Enter a number"
                         onChange={(e) => {
                             if (isNaN(e.target.value)) {
@@ -141,15 +141,15 @@ export default function ConfigureAlgoParams({
                         }}
                     />
                 </div>
-                <div>
-                    <h5 className="flex items-center text-lg font-bold mb-4">
+                <div className="flex flex-col">
+                    <h5 className="flex items-center text-lg font-bold mb-2">
                         Hall of Fame Size
                         <TheoryTooltip id="hof" />
                     </h5>
                     <input
                         type="number"
                         value={hof}
-                        className="border border-gray-300 p-2 rounded-lg"
+                        className="border border-gray-300 p-2 rounded-lg w-full"
                         placeholder="Enter a number"
                         onChange={(e) => {
                             if (isNaN(e.target.value)) {

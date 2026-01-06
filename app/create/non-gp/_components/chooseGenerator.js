@@ -17,7 +17,7 @@ export default function ChooseGenerator({
                 Step 3: Choose an individual generator function.
             </h4>
             {/* grid: each element has a name and description */}
-            <div className="grid grid-cols-2 gap-4 align-top">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 align-top">
                 {individualData.map((ind, index) => (
                     <button
                         onClick={(e) => {
@@ -41,20 +41,20 @@ export default function ChooseGenerator({
                         }}
                         key={index}
                         className={
-                            "border border-gray-300 p-4 rounded-lg max-w-xl text-left items-start min-w-2/3 bg-opacity-30" +
+                            "border p-4 rounded-lg max-w-xl text-left items-start min-w-2/3 bg-opacity-30 " +
                             (indGen && indGen === ind.name
                                 ? " border-blue-500 bg-blue-100 text-blue-900"
                                 : " border-gray-300 hover:bg-gray-100 hover:text-foreground")
                         }
                     >
-                        <h5 className="text-lg font-bold">{ind.name}</h5>
-                        <p>{ind.description}</p>
+                        <h5 className="text-lg font-bold break-words">{ind.name}</h5>
+                        <p className="text-sm mt-2">{ind.description}</p>
                     </button>
                 ))}
             </div>
             {indGen && ["floatingPoint", "integer"].includes(indGen) && (
-                <div className="mt-4">
-                    <h5 className="text-lg font-bold">
+                <div className="mt-8">
+                    <h5 className="text-lg font-bold mb-4">
                         Step 3.1: Random Range
                     </h5>
                     {randomRangeStart &&
@@ -63,16 +63,16 @@ export default function ChooseGenerator({
                             isNaN(randomRangeStart) ||
                             parseInt(randomRangeStart) >
                                 parseInt(randomRangeEnd)) && (
-                            <p className="text-blue-500 mb-3">
+                            <p className="text-red-500 font-bold mb-3">
                                 Selected range is invalid. Please make sure the
                                 start is less than the end and both are numbers.
                             </p>
                         )}
-                    <div className="flex gap-4">
+                    <div className="flex flex-col sm:flex-row gap-4">
                         <input
                             type="number"
-                            className="border border-gray-300 p-2 rounded-lg"
-                            placeholder="Start"
+                            className="border border-gray-300 p-2 rounded-lg w-full"
+                            placeholder="Start Value"
                             value={randomRangeStart.toString()}
                             onChange={(e) => {
                                 setRandomRangeStart(e.target.value);
@@ -97,8 +97,8 @@ export default function ChooseGenerator({
                         />
                         <input
                             type="number"
-                            className="border border-gray-300 p-2 rounded-lg"
-                            placeholder="End"
+                            className="border border-gray-300 p-2 rounded-lg w-full"
+                            placeholder="End Value"
                             value={randomRangeEnd.toString()}
                             onChange={(e) => {
                                 setRandomRangeEnd(e.target.value);
