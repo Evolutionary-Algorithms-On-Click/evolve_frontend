@@ -28,6 +28,8 @@ export default function NotebookEditor({ notebookId, problemId }) {
         session,
         setSession,
         startSessionRef,
+        fixCell,
+        modifyCell,
     } = useNotebook(notebookId, problemId);
 
     if (loading) return <Loader message="Loading notebook..." />;
@@ -125,6 +127,15 @@ export default function NotebookEditor({ notebookId, problemId }) {
                                     onRemove={() => removeCell(cell.id)}
                                     onMoveUp={() => moveCellUp(cell.id)}
                                     onMoveDown={() => moveCellDown(cell.id)}
+                                    onFix={(cell) => {
+                                        const output = cell.outputs.find(o => o.output_type === "error");
+                                        if (output) {
+                                            fixCell(cell, output.traceback)
+                                        } else {
+                                            alert("No error found to fix.")
+                                        }
+                                    }}
+                                    onModify={modifyCell}
                                 />
                             ) : (
                                 <MarkdownCell
