@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState } from "react";
@@ -11,10 +10,13 @@ export default function ChatWindow({ onModify }) {
 
     async function handleModify() {
         if (instruction.trim() !== "") {
-            const newHistory = [...history, { type: "user", message: instruction }];
+            setInstruction("");
+            const newHistory = [
+                ...history,
+                { type: "user", message: instruction },
+            ];
             setHistory(newHistory);
             await onModify(null, instruction);
-            setInstruction("");
         }
     }
 
@@ -29,11 +31,16 @@ export default function ChatWindow({ onModify }) {
             {isOpen && (
                 <div className="bg-white w-96 h-96 rounded-lg shadow-lg mt-2 flex flex-col">
                     <div className="p-4 border-b border-gray-200">
-                        <h3 className="font-semibold text-lg">Modify Notebook</h3>
+                        <h3 className="font-semibold text-lg">
+                            Modify Notebook
+                        </h3>
                     </div>
                     <div className="flex-1 p-4 overflow-y-auto">
                         {history.map((item, index) => (
-                            <div key={index} className={`chat ${item.type === 'user' ? 'chat-end' : 'chat-start'}`}>
+                            <div
+                                key={index}
+                                className={`chat ${item.type === "user" ? "chat-end" : "chat-start"}`}
+                            >
                                 <div className="chat-bubble">
                                     {item.message}
                                 </div>
@@ -41,13 +48,18 @@ export default function ChatWindow({ onModify }) {
                         ))}
                     </div>
                     <div className="p-4 border-t border-gray-200 flex items-center">
-                        <input
-                            type="text"
+                        <textarea
                             value={instruction}
                             onChange={(e) => setInstruction(e.target.value)}
                             placeholder="Enter instruction..."
                             className="w-full p-2 border rounded-md"
-                            onKeyPress={(e) => e.key === 'Enter' && handleModify()}
+                            onKeyDown={(e) => {
+                                if (e.key === "Enter" && !e.shiftKey) {
+                                    e.preventDefault();
+                                    e.target.value = "";
+                                    handleModify();
+                                }
+                            }}
                         />
                         <button
                             onClick={handleModify}
@@ -61,4 +73,3 @@ export default function ChatWindow({ onModify }) {
         </div>
     );
 }
-
