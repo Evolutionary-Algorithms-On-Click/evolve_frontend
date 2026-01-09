@@ -5,6 +5,7 @@ import useNotebookFetch from "./hooks/useNotebookFetch";
 import useNotebookPersistence from "./hooks/useNotebookPersistence";
 import useNotebookCells from "./hooks/useNotebookCells";
 import useNotebookExecution from "./hooks/useNotebookExecution";
+import useNotebookLLM from "./hooks/useNotebookLLM";
 
 export default function useNotebook(notebookId, problemId) {
     const [session, setSession] = useState(null);
@@ -53,8 +54,24 @@ export default function useNotebook(notebookId, problemId) {
         updateCellRef,
     );
 
+    const { fixNotebook, modifyNotebook } = useNotebookLLM(notebookId);
+
     const runCell = async (cell) => execRunCell(cell, startSessionRef);
     const runAll = async () => execRunAll(cells, startSessionRef);
+
+    async function fixCell(cell, traceback) {
+        const updatedNotebook = await fixNotebook({ cells }, traceback);
+        if (updatedNotebook) {
+            setCells(updatedNotebook.cells);
+        }
+    }
+
+    async function modifyCell(cell, instruction) {
+        const updatedNotebook = await modifyNotebook({ cells }, instruction);
+        if (updatedNotebook) {
+            setCells(updatedNotebook.cells);
+        }
+    }
 
     function handleSave() {
         if (!cells) {
@@ -81,5 +98,7 @@ export default function useNotebook(notebookId, problemId) {
         session,
         setSession,
         startSessionRef,
+        fixCell,
+        modifyCell,
     };
 }
