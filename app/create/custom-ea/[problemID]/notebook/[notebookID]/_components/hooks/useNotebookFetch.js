@@ -131,9 +131,9 @@ export default function useNotebookFetch(notebookId, problemId, session) {
 
                     payload = {
                         ...(cleanedProblem || {}),
-                        session_id: String(notebookId),
                         notebook_id,
-                        user_id,
+                        // TODO: Later fetch user ID from session/auth context
+                        user_id: "UserID should be taken from session",
                     };
 
                     const llmRes = await fetch(`${base}/api/v1/llm/generate`, {
