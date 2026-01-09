@@ -35,7 +35,7 @@ export default function useNotebookLLM(notebookId) {
         }
     }
 
-    async function modifyNotebook(notebook, instruction) {
+    async function modifyNotebook(notebook, instruction, cellName = null) {
         setLoading(true);
         setError(null);
         try {
@@ -47,6 +47,7 @@ export default function useNotebookLLM(notebookId) {
                 body: JSON.stringify({
                     notebook,
                     instruction,
+                    cell_name: cellName,
                     user_id: "user_id_placeholder",
                     notebook_id: notebookId,
                 }),
