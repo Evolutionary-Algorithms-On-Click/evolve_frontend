@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
+import { FixIcon, ModifyIcon } from "./Icons";
 
 export default function CodeCellControls({
     cell,
@@ -8,14 +9,33 @@ export default function CodeCellControls({
     onMoveUp,
     onMoveDown,
     onRemove,
+    onFix,
+    onModify,
 }) {
     const execCount = useMemo(
         () => cell.execution_count || " ",
         [cell.execution_count],
     );
 
+    const [isModifying, setIsModifying] = useState(false);
+    const [modifyInstruction, setModifyInstruction] = useState("");
+
     async function handleRun() {
         if (onRun) await onRun({ ...cell });
+    }
+
+    async function handleFix() {
+        if (onFix) await onFix({ ...cell });
+    }
+
+    async function handleModify() {
+        if (isModifying && modifyInstruction.trim() !== "") {
+            if (onModify) await onModify({ ...cell }, modifyInstruction);
+            setIsModifying(false);
+            setModifyInstruction("");
+        } else {
+            setIsModifying(true);
+        }
     }
 
     return (
@@ -54,10 +74,34 @@ export default function CodeCellControls({
             </div>
 
             <div className="flex-1 text-sm text-gray-700">
-                {cell.metadata?.title || "Code cell"}
+                {isModifying ? (
+                    <input
+                        type="text"
+                        value={modifyInstruction}
+                        onChange={(e) => setModifyInstruction(e.target.value)}
+                        placeholder="Enter modification instruction"
+                        className="w-full p-2 border rounded"
+                    />
+                ) : (
+                    cell.metadata?.title || "Code cell"
+                )}
             </div>
 
             <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                <button
+                    onClick={handleModify}
+                    title="Modify code"
+                    className="p-1.5 bg-gray-50 hover:bg-gray-100 rounded text-slate-600 border border-gray-100"
+                >
+                    <ModifyIcon />
+                </button>
+                <button
+                    onClick={handleFix}
+                    title="Fix code"
+                    className="p-1.5 bg-gray-50 hover:bg-gray-100 rounded text-slate-600 border border-gray-100"
+                >
+                    <FixIcon />
+                </button>
                 <button
                     onClick={onMoveUp}
                     title="Move cell up"
