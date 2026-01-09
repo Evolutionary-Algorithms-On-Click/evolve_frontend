@@ -72,6 +72,8 @@ export default function NotebookEditor({ notebookId, problemId }) {
         requirements,
     } = useNotebook(notebookId, problemId);
 
+    useNotebookKeybindings();
+
     const { exportToIpynb, exportToHtml, printToPdf } = useNotebookExport(
         cells,
         notebookId,
