@@ -12,6 +12,8 @@ export default function CodeCell({
     onRemove,
     onMoveUp,
     onMoveDown,
+    onFix,
+    onModify,
     readOnly = false,
 }) {
     const [value, setValue] = useState(cell.content || "");
@@ -49,6 +51,8 @@ export default function CodeCell({
                     onMoveUp={onMoveUp}
                     onMoveDown={onMoveDown}
                     onRemove={onRemove}
+                    onFix={onFix}
+                    onModify={onModify}
                 />
 
                 <CodeCellEditor
