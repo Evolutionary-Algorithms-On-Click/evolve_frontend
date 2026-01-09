@@ -10,6 +10,7 @@ import MarkdownCell from "./MarkdownCell";
 import Loader from "@/app/_components/Loader";
 import useNotebook from "./useNotebook";
 import ChatWindow from "./ChatWindow";
+import useNotebookKeybindings from "./hooks/useNotebookKeybindings";
 
 // Main component
 export default function NotebookEditor({ notebookId, problemId }) {
@@ -32,6 +33,8 @@ export default function NotebookEditor({ notebookId, problemId }) {
         fixCell,
         modifyCell,
     } = useNotebook(notebookId, problemId);
+
+    useNotebookKeybindings();
 
     if (loading) return <Loader message="Loading notebook..." />;
 
@@ -119,7 +122,7 @@ export default function NotebookEditor({ notebookId, problemId }) {
 
                 <div>
                     {(cells || []).map((cell) => (
-                        <div key={`${cell.id}-${cell.idx}`} className="mb-6">
+                        <div key={`${cell.id}-${cell.idx}`} className="mb-6" data-cell-id={cell.id} tabIndex={-1}>
                             {cell.type === "code" ? (
                                 <CodeCell
                                     cell={cell}
