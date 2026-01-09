@@ -19,7 +19,7 @@ export default function ChooseMatingFunction({
                 <TheoryTooltip id="matingFunction" />
             </h4>
             {/* grid: each element has a name and description */}
-            <div className="grid grid-cols-2 gap-4 align-top">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 align-top">
                 {mateData.map((mate, index) => (
                     <button
                         onClick={(e) => {
@@ -43,21 +43,21 @@ export default function ChooseMatingFunction({
                         }}
                         key={index}
                         className={
-                            "border p-4 rounded-lg max-w-xl text-left items-start min-w-2/3 bg-opacity-30" +
+                            "border p-4 rounded-lg max-w-xl text-left items-start min-w-2/3 bg-opacity-30 " +
                             (mateFunc && mateFunc === mate.name
                                 ? " border-blue-500 bg-blue-100 text-blue-900"
                                 : " border-gray-300 hover:bg-gray-100 hover:text-foreground")
                         }
                     >
-                        <h5 className="text-lg font-bold">{mate.name}</h5>
-                        <p>{mate.description}</p>
+                        <h5 className="text-lg font-bold break-words">{mate.name}</h5>
+                        <p className="text-sm mt-2">{mate.description}</p>
                     </button>
                 ))}
             </div>
 
             {mateFunc === "cxOnePointLeafBiased" && (
                 <div className="mt-8">
-                    <h4 className="text-lg font-bold mb-4">
+                    <h4 className="flex items-center text-lg font-bold mb-4">
                         {`Step ${nextStep - 1}.1: Set the terminal probability for
                         cxOnePointLeafBiased.`}
                     </h4>
@@ -72,7 +72,7 @@ export default function ChooseMatingFunction({
 
                             setTerminalProb(e.target.value);
                         }}
-                        className="border border-gray-300 p-2 rounded-lg max-w-xl text-left items-start min-w-2/3"
+                        className="border border-gray-300 p-2 rounded-lg w-full max-w-xs"
                     />
                 </div>
             )}

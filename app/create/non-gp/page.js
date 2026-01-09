@@ -281,27 +281,29 @@ export default function ConfigureNonGP() {
                 </Link>
             </div>
 
-            <div className="flex flex-wrap mt-16 gap-4 border border-gray-400 rounded-2xl bg-gray-100 bg-opacity-70">
-                <Preview
-                    algo={chosenAlgo}
-                    parameters={parameters}
-                    indGen={indGen}
-                    indSize={indSize}
-                    popFunc={popFunc}
-                    mateFunc={matingFunc}
-                    mutateFunc={mutateFunc}
-                    selectFunc={selectFunc}
-                    evalFunc={evalFunc}
-                    tempTourSize={tempTourSize}
-                    currentStep={currentStep}
-                    populationSize={populationSize}
-                    generations={generations}
-                    cxpb={cxpb}
-                    mutpb={mutpb}
-                    hofSize={hof}
-                />
+            <div className="flex flex-col md:flex-row mt-24 gap-4 border border-gray-400 rounded-2xl bg-gray-100 bg-opacity-70 p-4">
+                <div className="w-full md:w-80 shrink-0">
+                    <Preview
+                        algo={chosenAlgo}
+                        parameters={parameters}
+                        indGen={indGen}
+                        indSize={indSize}
+                        popFunc={popFunc}
+                        mateFunc={matingFunc}
+                        mutateFunc={mutateFunc}
+                        selectFunc={selectFunc}
+                        evalFunc={evalFunc}
+                        tempTourSize={tempTourSize}
+                        currentStep={currentStep}
+                        populationSize={populationSize}
+                        generations={generations}
+                        cxpb={cxpb}
+                        mutpb={mutpb}
+                        hofSize={hof}
+                    />
+                </div>
 
-                <div className="border border-gray-400 rounded-2xl p-4 bg-white">
+                <div className="flex-1 min-w-[300px] border border-gray-400 rounded-2xl p-4 bg-white self-start">
                     <form
                         onSubmit={(e) => {
                             e.preventDefault();
@@ -483,7 +485,6 @@ export default function ConfigureNonGP() {
                         )}
 
                         {currentStep >= 10 && evalFunc && (
-                            // TODO: Disable button if any of the fields are absent.
                             <div className="mt-4">
                                 <button
                                     className="bg-foreground text-background p-2 rounded-lg w-full"
@@ -514,6 +515,7 @@ export default function ConfigureNonGP() {
                     </form>
                 </div>
             </div>
+
         </main>
     );
 }

@@ -18,7 +18,7 @@ export default function ChooseSelectionFunction({
                 {title}
                 <TheoryTooltip id="selectionFunction" />
             </h4>
-            <div className="grid grid-cols-2 gap-4 align-top">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 align-top">
                 {selData.map((sel, index) => (
                     <button
                         onClick={(e) => {
@@ -35,20 +35,20 @@ export default function ChooseSelectionFunction({
                         }}
                         key={index}
                         className={
-                            "border p-4 rounded-lg max-w-xl text-left items-start min-w-2/3 bg-opacity-30" +
+                            "border p-4 rounded-lg max-w-xl text-left items-start min-w-2/3 bg-opacity-30 " +
                             (selectFunc && selectFunc === sel.name
                                 ? " border-blue-500 bg-blue-100 text-blue-900"
                                 : " border-gray-300 hover:bg-gray-100 hover:text-foreground")
                         }
                     >
-                        <h5 className="text-lg font-bold">{sel.name}</h5>
-                        <p>{sel.description}</p>
+                        <h5 className="text-lg font-bold break-words">{sel.name}</h5>
+                        <p className="text-sm mt-2">{sel.description}</p>
                     </button>
                 ))}
             </div>
 
             {selectFunc === "selTournament" && (
-                <div className="mt-4">
+                <div className="mt-8">
                     <h5 className="flex items-center text-lg font-bold mb-4">
                         Tournament Size
                         <TheoryTooltip id="tournamentSize" />
@@ -56,7 +56,7 @@ export default function ChooseSelectionFunction({
                     <input
                         type="number"
                         value={tempTourSize}
-                        className="border border-gray-300 p-2 rounded-lg"
+                        className="border border-gray-300 p-2 rounded-lg w-full max-w-xs"
                         placeholder="Enter a number"
                         onChange={(e) => {
                             if (isNaN(e.target.value)) {
