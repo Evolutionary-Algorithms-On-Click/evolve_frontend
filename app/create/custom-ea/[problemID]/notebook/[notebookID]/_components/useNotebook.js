@@ -67,7 +67,8 @@ export default function useNotebook(notebookId, problemId) {
     }
 
     async function modifyCell(cell, instruction) {
-        const updatedNotebook = await modifyNotebook({ cells }, instruction);
+        const cellName = cell ? cell.id : null;
+        const updatedNotebook = await modifyNotebook({ cells }, instruction, cellName);
         if (updatedNotebook) {
             setCells(updatedNotebook.cells);
         }

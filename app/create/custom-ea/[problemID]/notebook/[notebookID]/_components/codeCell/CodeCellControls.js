@@ -30,7 +30,7 @@ export default function CodeCellControls({
 
     async function handleModify() {
         if (isModifying && modifyInstruction.trim() !== "") {
-            if (onModify) await onModify({ ...cell }, modifyInstruction);
+            if (onModify) await onModify(cell, modifyInstruction);
             setIsModifying(false);
             setModifyInstruction("");
         } else {
