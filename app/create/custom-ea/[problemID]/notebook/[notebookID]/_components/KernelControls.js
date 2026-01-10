@@ -90,7 +90,7 @@ export default function KernelControls({
 
             {session ? (
                 <button
-                    className="px-3 py-2 bg-red-600 text-white rounded-lg text-sm"
+                    className="px-3 py-2 bg-teal-900 text-white rounded-lg text-sm"
                     onClick={stopSession}
                     disabled={loading}
                     title={loading ? "Stopping..." : "Stop session"}
@@ -99,7 +99,7 @@ export default function KernelControls({
                 </button>
             ) : (
                 <button
-                    className="px-3 py-2 bg-blue-600 text-white rounded-lg text-sm"
+                    className="px-3 py-2 bg-teal-600 text-white rounded-lg text-sm hover:bg-teal-700"
                     onClick={startSession}
                     disabled={loading}
                     title={loading ? "Starting..." : "Start a session"}
