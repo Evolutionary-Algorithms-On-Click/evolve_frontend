@@ -3,20 +3,16 @@
 import React, { useState } from "react";
 import { ChatIcon, CloseIcon, SendIcon } from "./ChatIcons";
 
-export default function ChatWindow({ onModify }) {
+export default function ChatWindow({ onModify, messages, addMessage }) {
     const [instruction, setInstruction] = useState("");
     const [isOpen, setIsOpen] = useState(false);
-    const [history, setHistory] = useState([]);
 
     async function handleModify() {
         if (instruction.trim() !== "") {
+            const newInstruction = instruction;
             setInstruction("");
-            const newHistory = [
-                ...history,
-                { type: "user", message: instruction },
-            ];
-            setHistory(newHistory);
-            await onModify(null, instruction);
+            addMessage({ type: "user", message: newInstruction });
+            await onModify(null, newInstruction);
         }
     }
 
@@ -36,13 +32,20 @@ export default function ChatWindow({ onModify }) {
                         </h3>
                     </div>
                     <div className="flex-1 p-4 overflow-y-auto">
-                        {history.map((item, index) => (
+                        {messages.map((item, index) => (
                             <div
                                 key={index}
                                 className={`chat ${item.type === "user" ? "chat-end" : "chat-start"}`}
                             >
                                 <div className="chat-bubble">
                                     {item.message}
+                                    {item.changes && (
+                                        <ul className="list-disc list-inside">
+                                            {item.changes.map((change, i) => (
+                                                <li key={i}>{change}</li>
+                                            ))}
+                                        </ul>
+                                    )}
                                 </div>
                             </div>
                         ))}
@@ -56,7 +59,6 @@ export default function ChatWindow({ onModify }) {
                             onKeyDown={(e) => {
                                 if (e.key === "Enter" && !e.shiftKey) {
                                     e.preventDefault();
-                                    e.target.value = "";
                                     handleModify();
                                 }
                             }}
