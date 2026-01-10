@@ -62,7 +62,7 @@ export default function CodeCellControls({
                         "w-9 h-9 flex items-center justify-center rounded-full text-white shadow-sm " +
                         (cell._isRunning
                             ? "bg-gray-400 cursor-not-allowed"
-                            : "bg-green-600 hover:bg-green-700")
+                            : "bg-teal-600 hover:bg-teal-700")
                     }
                 >
                     <Play size={16} className="text-white" />
@@ -88,7 +88,7 @@ export default function CodeCellControls({
                         <button
                             onClick={handleSendModify}
                             title="Send modification"
-                            className="p-1.5 bg-blue-500 hover:bg-blue-600 rounded text-white border border-blue-500"
+                            className="p-1.5 bg-teal-500 hover:bg-teal-600 rounded-full text-white border border-teal-600"
                         >
                             <Send size={16} />
                         </button>
@@ -102,21 +102,21 @@ export default function CodeCellControls({
                 <button
                     onClick={handleModify}
                     title="Modify code"
-                    className="p-1.5 bg-gray-50 hover:bg-gray-100 rounded text-slate-600 border border-gray-100"
+                    className="p-1.5 bg-gray-50 hover:bg-gray-100 rounded-full text-slate-600 border border-gray-300"
                 >
                     <Pencil size={16} />
                 </button>
                 <button
                     onClick={handleFix}
                     title="Fix code"
-                    className="p-1.5 bg-gray-50 hover:bg-gray-100 rounded text-slate-600 border border-gray-100"
+                    className="p-1.5 bg-gray-50 hover:bg-gray-100 rounded-full text-slate-600 border border-gray-300"
                 >
                     <Wand2 size={16} />
                 </button>
                 <button
                     onClick={onMoveUp}
                     title="Move cell up"
-                    className="p-1.5 bg-gray-50 hover:bg-gray-100 rounded text-slate-600 border border-gray-100"
+                    className="p-1.5 bg-gray-50 hover:bg-gray-100 rounded-full text-slate-600 border border-gray-300"
                 >
                     <ChevronUp size={14} />
                 </button>
@@ -124,14 +124,14 @@ export default function CodeCellControls({
                 <button
                     onClick={onMoveDown}
                     title="Move cell down"
-                    className="p-1.5 bg-gray-50 hover:bg-gray-100 rounded text-slate-600 border border-gray-100"
+                    className="p-1.5 bg-gray-50 hover:bg-gray-100 rounded-full text-slate-600 border border-gray-300"
                 >
                     <ChevronDown size={14} />
                 </button>
 
                 <button
                     onClick={onRemove}
-                    className="p-1.5 bg-gray-50 hover:bg-red-50 rounded text-gray-600 hover:text-red-600 border border-gray-100"
+                    className="p-1.5 bg-gray-50 hover:bg-red-50 rounded-full text-gray-600 hover:text-red-600 border border-gray-300"
                     aria-label="Remove cell"
                 >
                     <X size={16} />
