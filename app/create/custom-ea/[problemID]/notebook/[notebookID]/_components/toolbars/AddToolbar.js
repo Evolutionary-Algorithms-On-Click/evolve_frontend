@@ -8,7 +8,7 @@ export default function AddToolbar({ onAddCode, onAddMarkdown }) {
             <button
                 onClick={onAddCode}
                 title="Add code cell"
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-indigo-600 to-blue-500 text-white shadow-md hover:opacity-95 active:scale-[0.995] transition-transform duration-150 font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-teal-600 to-teal-800 text-white shadow-sm hover:shadow-md hover:shadow-gray-400 active:scale-[0.995] transition-transform duration-150 font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-white"
             >
                 <svg
                     xmlns="http://www.w3.org/2000/svg"

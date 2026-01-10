@@ -44,7 +44,7 @@ export default function ChatWindow({ onModify, messages, addMessage }) {
                                 <div
                                     className={`p-3 rounded-lg max-w-xs ${
                                         item.type === "user"
-                                            ? "bg-blue-500 text-white"
+                                            ? "bg-teal-500 text-white"
                                             : "bg-gray-200 text-gray-800"
                                     }`}
                                 >
@@ -74,7 +74,7 @@ export default function ChatWindow({ onModify, messages, addMessage }) {
                         />
                         <button
                             onClick={handleModify}
-                            className="ml-2 p-2 bg-blue-600 text-white rounded-md"
+                            className="ml-2 p-2 bg-teal-600 text-white rounded-md"
                         >
                             <SendIcon />
                         </button>

@@ -4,7 +4,7 @@ import React from "react";
 
 export default function NotebookLayout({ children }) {
     return (
-        <div className="w-full bg-slate-50 min-h-screen">
+        <div className="w-full bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen font-[family-name:var(--font-geist-mono)]">
             <div className="w-full py-4 px-4 border-b border-slate-200 bg-white/40 backdrop-blur-sm">
                 <div className="max-w-full mx-auto flex items-center justify-between gap-4">
                     <div>
