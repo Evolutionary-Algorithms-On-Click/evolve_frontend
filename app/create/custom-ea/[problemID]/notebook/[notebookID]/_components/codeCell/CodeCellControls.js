@@ -45,6 +45,7 @@ export default function CodeCellControls({
         if (onRun) await onRun({ ...cell });
     }
 
+
     async function handleFix() {
         const errorOutput = cell.outputs?.find(o => o.type === "error" && o.traceback);
         if (onFix && errorOutput) {
@@ -88,6 +89,19 @@ export default function CodeCellControls({
             setModifyInstruction("");
         }
         setIsModifying(!isModifying);
+    }
+
+    function handleDeleteClick() {
+        setShowConfirmDelete(true);
+    }
+
+    function handleConfirmDelete() {
+        onRemove();
+        setShowConfirmDelete(false);
+    }
+
+    function handleCancelDelete() {
+        setShowConfirmDelete(false);
     }
 
     return (
