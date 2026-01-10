@@ -143,6 +143,8 @@ export default function NotebookEditor({ notebookId, problemId }) {
                                     }}
                                     onModify={modifyCell}
                                     onClear={() => clearOutput(cell.id)}
+                                    addCodeCell={addCodeCell}
+                                    addMarkdownCell={addMarkdownCell}
                                 />
                             ) : (
                                 <MarkdownCell
@@ -151,6 +153,8 @@ export default function NotebookEditor({ notebookId, problemId }) {
                                     onRemove={() => removeCell(cell.id)}
                                     onMoveUp={() => moveCellUp(cell.id)}
                                     onMoveDown={() => moveCellDown(cell.id)}
+                                    addCodeCell={addCodeCell}
+                                    addMarkdownCell={addMarkdownCell}
                                 />
                             )}
                         </div>
