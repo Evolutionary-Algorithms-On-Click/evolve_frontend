@@ -67,7 +67,7 @@ export default function CodeCellControls({
     }
 
     return (
-        <div className="flex items-start gap-4 p-3 border-b border-gray-100 bg-gray-50 relative">
+        <div className="flex items-start gap-4 p-3 border-b border-gray-100 bg-teal-50 relative">
             {showConfirmDelete && (
                 <div
                     className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white p-3 rounded-lg shadow-lg border border-gray-200 z-50 flex flex-col items-center`}
