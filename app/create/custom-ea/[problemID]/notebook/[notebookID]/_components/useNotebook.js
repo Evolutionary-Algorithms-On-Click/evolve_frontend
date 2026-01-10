@@ -60,7 +60,14 @@ export default function useNotebook(notebookId, problemId) {
     const runAll = async () => execRunAll(cells, startSessionRef);
 
     async function fixCell(cell, traceback) {
-        const updatedNotebook = await fixNotebook({ cells }, traceback);
+        const transformedNotebook = {
+            cells: cells.map(c => ({
+                ...c,
+                cell_type: c.cell_type,
+                execution_count: c.execution_count || 0,
+            }))
+        };
+        const updatedNotebook = await fixNotebook(transformedNotebook, traceback);
         if (updatedNotebook) {
             setCells(updatedNotebook.cells);
         }
@@ -68,7 +75,14 @@ export default function useNotebook(notebookId, problemId) {
 
     async function modifyCell(cell, instruction) {
         const cellName = cell ? cell.id : null;
-        const updatedNotebook = await modifyNotebook({ cells }, instruction, cellName);
+        const transformedNotebook = {
+            cells: cells.map(c => ({
+                ...c,
+                cell_type: c.cell_type,
+                execution_count: c.execution_count || 0,
+            }))
+        };
+        const updatedNotebook = await modifyNotebook(transformedNotebook, instruction, cellName);
         if (updatedNotebook) {
             setCells(updatedNotebook.cells);
         }

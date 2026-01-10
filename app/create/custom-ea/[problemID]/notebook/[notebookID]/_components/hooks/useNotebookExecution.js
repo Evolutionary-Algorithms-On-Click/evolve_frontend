@@ -46,7 +46,7 @@ export default function useNotebookExecution(session, updateCellRef) {
                 });
             };
 
-            const result = await sendExecute(cell.content, handleOutputUpdate);
+            const result = await sendExecute(cell.source, handleOutputUpdate);
             updateCellRef.current?.({ ...cell, ...result, _isRunning: false });
         } catch (e) {
             console.error("WS execute failed", e);
@@ -68,7 +68,7 @@ export default function useNotebookExecution(session, updateCellRef) {
     async function runAll(cells, startSessionRef) {
         const snapshot = [...(cells || [])];
         for (const c of snapshot) {
-            if (c.type === "code") {
+            if (c.cell_type === "code") {
                 // eslint-disable-next-line no-await-in-loop
                 await runCell(c, startSessionRef);
             }

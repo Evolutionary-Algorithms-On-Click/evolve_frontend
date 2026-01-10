@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from "react";
@@ -11,7 +10,9 @@ export default function useNotebookLLM(notebookId) {
         setLoading(true);
         setError(null);
         try {
-            const response = await fetch("/api/v1/llm/fix", {
+            const base =
+                process.env.NEXT_PUBLIC_BACKEND_BASE_URL ?? "http://localhost:8080";
+            const response = await fetch(`${base}/api/v1/llm/fix`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -19,7 +20,7 @@ export default function useNotebookLLM(notebookId) {
                 body: JSON.stringify({
                     notebook,
                     traceback,
-                    user_id: "user_id_placeholder", 
+                    user_id: "user_id_placeholder",
                     notebook_id: notebookId,
                 }),
             });
@@ -39,7 +40,9 @@ export default function useNotebookLLM(notebookId) {
         setLoading(true);
         setError(null);
         try {
-            const response = await fetch("/api/v1/llm/modify", {
+            const base =
+                process.env.NEXT_PUBLIC_BACKEND_BASE_URL ?? "http://localhost:8080";
+            const response = await fetch(`${base}/api/v1/llm/modify`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
