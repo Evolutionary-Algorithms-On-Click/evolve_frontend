@@ -84,6 +84,9 @@ export default function CodeCellControls({
     }
 
     function handleModify() {
+        if (isModifying) {
+            setModifyInstruction("");
+        }
         setIsModifying(!isModifying);
     }
 
