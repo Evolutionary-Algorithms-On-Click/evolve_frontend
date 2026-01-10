@@ -153,11 +153,12 @@ export default function useNotebookFetch(notebookId, problemId, session) {
                         llmNotebook?.notebook?.cells.map((c, i) => ({
                             id: uid(c.cell_type || "cell"),
                             idx: i,
-                            type: c.cell_type || c.cellType || "code",
-                            content: Array.isArray(c.source)
+                            cell_type: c.cell_type || "code",
+                            source: Array.isArray(c.source)
                                 ? c.source.join("")
                                 : c.source || "",
                             outputs: [],
+                            execution_count: c.execution_count || 0,
                         })) ?? [];
 
                     if (newCells.length > 0) setInitialCells(newCells);
@@ -165,16 +166,19 @@ export default function useNotebookFetch(notebookId, problemId, session) {
                         setInitialCells([
                             {
                                 id: uid("md"),
-                                type: "markdown",
-                                content: "# New Notebook",
+                                cell_type: "markdown",
+                                source: "# New Notebook",
                             },
                         ]);
                 } else {
                     setInitialCells(
                         currentCells.map((c, i) => ({
                             ...c,
-                            id: uid(c.type || "cell"),
+                            id: uid(c.cell_type || "cell"),
                             idx: i,
+                            cell_type: c.cell_type || "code",
+                            source: c.source || "",
+                            execution_count: c.execution_count || 0,
                         })),
                     );
                 }

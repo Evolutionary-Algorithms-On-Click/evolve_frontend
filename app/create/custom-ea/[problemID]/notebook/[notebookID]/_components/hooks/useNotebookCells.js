@@ -17,9 +17,11 @@ export default function useNotebookCells(initial = null) {
             const arr = [...(s || [])];
             arr.push({
                 id: uid("code"),
-                type: "code",
-                content: "",
+                cell_name: "new_code_cell",
+                cell_type: "code",
+                source: "",
                 outputs: [],
+                execution_count: 0,
             });
             return arr.map((c, i) => ({ ...c, idx: i }));
         });
@@ -30,8 +32,9 @@ export default function useNotebookCells(initial = null) {
             const arr = [...(s || [])];
             arr.push({
                 id: uid("md"),
-                type: "markdown",
-                content: "New paragraph",
+                cell_name: "new_markdown_cell",
+                cell_type: "markdown",
+                source: "New paragraph",
             });
             return arr.map((c, i) => ({ ...c, idx: i }));
         });

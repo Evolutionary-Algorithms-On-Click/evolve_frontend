@@ -58,18 +58,18 @@ export default function NotebookEditor({ notebookId, problemId }) {
                                     className="text-2xl font-extrabold text-gray-900 truncate max-w-[60vw]"
                                     title={
                                         cells &&
-                                        cells[0]?.type === "markdown" &&
-                                        cells[0].content
-                                            ? cells[0].content
+                                        cells[0]?.cell_type === "markdown" &&
+                                        cells[0].source
+                                            ? cells[0].source
                                                   .split("\n")[0]
                                                   .replace(/^#+\s*/, "")
                                             : `Notebook ${notebookId || ""}`
                                     }
                                 >
                                     {cells &&
-                                    cells[0]?.type === "markdown" &&
-                                    cells[0].content
-                                        ? cells[0].content
+                                    cells[0]?.cell_type === "markdown" &&
+                                    cells[0].source
+                                        ? cells[0].source
                                               .split("\n")[0]
                                               .replace(/^#+\s*/, "")
                                         : `Notebook ${notebookId || ""}`}
@@ -123,7 +123,7 @@ export default function NotebookEditor({ notebookId, problemId }) {
                 <div>
                     {(cells || []).map((cell) => (
                         <div key={`${cell.id}-${cell.idx}`} className="mb-6" data-cell-id={cell.id} tabIndex={-1}>
-                            {cell.type === "code" ? (
+                            {cell.cell_type === "code" ? (
                                 <CodeCell
                                     cell={cell}
                                     onChange={updateCell}
