@@ -40,20 +40,20 @@ export default function MarkdownCell({
     onMoveDown,
 }) {
     const [editing, setEditing] = React.useState(false);
-    const [value, setValue] = React.useState(cell.content || "");
+    const [value, setValue] = React.useState(cell.source || "");
 
     React.useEffect(() => {
-        setValue(cell.content || "");
-    }, [cell.content]);
+        setValue(cell.source || "");
+    }, [cell.source]);
 
     function save() {
         setEditing(false);
-        onChange && onChange({ ...cell, content: value });
+        onChange && onChange({ ...cell, source: value });
     }
 
     function cancel() {
         setEditing(false);
-        setValue(cell.content || "");
+        setValue(cell.source || "");
     }
 
     return (
@@ -98,7 +98,7 @@ export default function MarkdownCell({
                 <div
                     className="border border-gray-100 rounded-lg p-4 prose max-w-none"
                     dangerouslySetInnerHTML={{
-                        __html: simpleMarkdownToHtml(cell.content),
+                        __html: simpleMarkdownToHtml(cell.source),
                     }}
                 />
             ) : (

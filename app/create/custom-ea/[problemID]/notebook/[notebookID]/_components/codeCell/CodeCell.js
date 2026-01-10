@@ -16,18 +16,18 @@ export default function CodeCell({
     onModify,
     readOnly = false,
 }) {
-    const [value, setValue] = useState(cell.content || "");
+    const [value, setValue] = useState(cell.source || "");
     const [editorHeight, setEditorHeight] = useState(cell._editorHeight || 200);
 
     function handleChange(v) {
         setValue(v);
-        onChange && onChange({ ...cell, content: v });
+        onChange && onChange({ ...cell, source: v });
     }
 
     async function handleRun(cellOverride) {
         const payload = cellOverride
-            ? { ...cellOverride, content: value }
-            : { ...cell, content: value };
+            ? { ...cellOverride, source: value }
+            : { ...cell, source: value };
         if (onRun) await onRun(payload);
     }
 
