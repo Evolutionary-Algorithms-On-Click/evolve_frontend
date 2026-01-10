@@ -140,6 +140,16 @@ export default function useNotebook(notebookId, problemId) {
         alert("Notebook saved!");
     }
 
+    function clearOutput(cellId) {
+        const newCells = cells.map((c) => {
+            if (c.id === cellId) {
+                return { ...c, outputs: [] };
+            }
+            return c;
+        });
+        setCells(newCells);
+    }
+
     return {
         cells,
         loading,
@@ -160,5 +170,6 @@ export default function useNotebook(notebookId, problemId) {
         modifyCell,
         messages,
         addMessage,
+        clearOutput,
     };
 }

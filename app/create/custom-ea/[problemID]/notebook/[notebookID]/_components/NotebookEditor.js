@@ -69,6 +69,7 @@ export default function NotebookEditor({ notebookId, problemId }) {
         isSaving,
         lastSaveTime,
         requirements,
+
     } = useNotebook(notebookId, problemId);
 
     useNotebookKeybindings();

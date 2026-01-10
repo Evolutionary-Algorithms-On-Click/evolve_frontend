@@ -74,8 +74,8 @@ export default function OutputArea({ outputs = [], onClear }) {
                                     className={
                                         "whitespace-pre-wrap p-2 rounded text-sm font-mono bg-white" +
                                         (isErr
-                                            ? " text-red-300"
-                                            : " text-gray-100")
+                                            ? " text-red-600"
+                                            : " text-gray-800")
                                     }
                                 >
                                     {text}
