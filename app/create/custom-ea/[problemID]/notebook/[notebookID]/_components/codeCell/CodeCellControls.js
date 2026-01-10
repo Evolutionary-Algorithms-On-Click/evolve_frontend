@@ -83,6 +83,10 @@ export default function CodeCellControls({
         setShowConfirmDelete(false);
     }
 
+    function handleModify() {
+        setIsModifying(!isModifying);
+    }
+
     return (
         <div className="flex items-start gap-4 p-3 border-b border-gray-100 bg-gray-50 relative">
             {showConfirmDelete && (
@@ -171,7 +175,7 @@ export default function CodeCellControls({
                 <div className="w-px h-6 bg-gray-300 mx-2"></div>
 
                 <button
-                    onClick={() => setIsModifying(true)}
+                    onClick={handleModify}
                     title="Modify code"
                     className={
                         "p-1.5 bg-gray-50 hover:bg-gray-100 rounded-full text-slate-600 border border-gray-300"

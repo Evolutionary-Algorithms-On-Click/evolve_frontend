@@ -59,7 +59,6 @@ export default function NotebookEditor({ notebookId, problemId }) {
         session,
         setSession,
         startSessionRef,
-        fixCell,
         modifyCell,
         messages,
         addMessage,
