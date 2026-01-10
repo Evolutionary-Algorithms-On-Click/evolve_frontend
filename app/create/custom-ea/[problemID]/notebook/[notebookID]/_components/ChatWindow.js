@@ -31,20 +31,29 @@ export default function ChatWindow({ onModify, messages, addMessage }) {
                             Modify Notebook
                         </h3>
                     </div>
-                    <div className="flex-1 p-4 overflow-y-auto">
+                    <div className="flex-1 p-4 overflow-y-auto space-y-4">
                         {messages.map((item, index) => (
                             <div
                                 key={index}
-                                className={`chat ${item.type === "user" ? "chat-end" : "chat-start"}`}
+                                className={`flex ${
+                                    item.type === "user"
+                                        ? "justify-end"
+                                        : "justify-start"
+                                }`}
                             >
-                                <div className="chat-bubble">
-                                    {item.message}
+                                <div
+                                    className={`p-3 rounded-lg max-w-xs ${
+                                        item.type === "user"
+                                            ? "bg-blue-500 text-white"
+                                            : "bg-gray-200 text-gray-800"
+                                    }`}
+                                >
+                                    <p>{item.message}</p>
                                     {item.changes && (
-                                        <ul className="list-disc list-inside">
-                                            {item.changes.map((change, i) => (
-                                                <li key={i}>{change}</li>
-                                            ))}
-                                        </ul>
+                                        <div className="mt-2 text-sm">
+                                            <p className="font-semibold">Changes:</p>
+                                            <p>{item.changes.join("\n")}</p>
+                                        </div>
                                     )}
                                 </div>
                             </div>

@@ -18,7 +18,6 @@ export default function CodeCell({
 }) {
     const [value, setValue] = useState(cell.source || "");
     const [editorHeight, setEditorHeight] = useState(cell._editorHeight || 200);
-    const [message, setMessage] = useState(null);
 
     useEffect(() => {
         setValue(cell.source || "");
@@ -26,9 +25,7 @@ export default function CodeCell({
 
     useEffect(() => {
         if (cell.message) {
-            setMessage(cell.message);
             const timer = setTimeout(() => {
-                setMessage(null);
                 onChange({ ...cell, message: null });
             }, 5000);
             return () => clearTimeout(timer);
@@ -49,9 +46,9 @@ export default function CodeCell({
 
     return (
         <div className="mb-4 group relative">
-            {message && (
+            {cell.message && (
                 <div className="absolute top-0 left-0 w-full bg-blue-100 text-blue-800 p-2 text-sm z-20">
-                    {message}
+                    {cell.message}
                 </div>
             )}
             <div className="rounded-lg border border-gray-100 overflow-hidden relative bg-white">
