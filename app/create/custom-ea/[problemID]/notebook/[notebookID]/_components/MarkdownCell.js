@@ -81,7 +81,7 @@ export default function MarkdownCell({
                 )}
             </div>
             <div className="relative rounded-xl border border-gray-200 overflow-hidden bg-white shadow-md hover:shadow-lg transition-shadow duration-300">
-                <div className="flex items-start justify-between p-3 border-b border-gray-100 bg-gray-50">
+                <div className="flex items-start justify-between p-3 border-b border-gray-100 bg-gray-100">
                     <div className="text-sm text-slate-600">Markdown</div>
                     <div className="flex items-center gap-2">
                         <button
