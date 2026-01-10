@@ -74,12 +74,15 @@ export default function useNotebook(notebookId, problemId) {
         };
         const response = await fixNotebook(transformedNotebook, traceback);
         if (response && response.notebook) {
-            const newCells = response.notebook.cells.map((newCell, i) => {
-                if (response.cells_modified && response.cells_modified.includes(i)) {
-                    return { ...newCell, message: response.changes_made.join("\n") };
-                }
-                return newCell;
-            });
+            let newCells = response.notebook.cells;
+            if (response.cells_modified && response.cells_modified.length === 1) {
+                newCells = newCells.map((newCell, i) => {
+                    if (response.cells_modified.includes(i)) {
+                        return { ...newCell, message: response.changes_made.join("\n") };
+                    }
+                    return newCell;
+                });
+            }
             setCells(newCells);
             addMessage({
                 type: "bot",
@@ -107,12 +110,15 @@ export default function useNotebook(notebookId, problemId) {
             cellName,
         );
         if (response && response.notebook) {
-            const newCells = response.notebook.cells.map((newCell, i) => {
-                if (response.cells_modified && response.cells_modified.includes(i)) {
-                    return { ...newCell, message: response.changes_made.join("\n") };
-                }
-                return newCell;
-            });
+            let newCells = response.notebook.cells;
+            if (response.cells_modified && response.cells_modified.length === 1) {
+                newCells = newCells.map((newCell, i) => {
+                    if (response.cells_modified.includes(i)) {
+                        return { ...newCell, message: response.changes_made.join("\n") };
+                    }
+                    return newCell;
+                });
+            }
             setCells(newCells);
             addMessage({
                 type: "bot",
