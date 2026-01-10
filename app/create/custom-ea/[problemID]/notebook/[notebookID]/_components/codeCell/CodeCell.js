@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import OutputArea from "./OutputArea";
 import CodeCellEditor from "./CodeCellEditor";
 import CodeCellControls from "./CodeCellControls";
@@ -18,6 +18,22 @@ export default function CodeCell({
 }) {
     const [value, setValue] = useState(cell.source || "");
     const [editorHeight, setEditorHeight] = useState(cell._editorHeight || 200);
+    const [message, setMessage] = useState(null);
+
+    useEffect(() => {
+        setValue(cell.source || "");
+    }, [cell.source]);
+
+    useEffect(() => {
+        if (cell.message) {
+            setMessage(cell.message);
+            const timer = setTimeout(() => {
+                setMessage(null);
+                onChange({ ...cell, message: null });
+            }, 5000);
+            return () => clearTimeout(timer);
+        }
+    }, [cell.message]);
 
     function handleChange(v) {
         setValue(v);
@@ -33,6 +49,11 @@ export default function CodeCell({
 
     return (
         <div className="mb-4 group relative">
+            {message && (
+                <div className="absolute top-0 left-0 w-full bg-blue-100 text-blue-800 p-2 text-sm z-20">
+                    {message}
+                </div>
+            )}
             <div className="rounded-lg border border-gray-100 overflow-hidden relative bg-white">
                 {cell._isRunning && (
                     <div className="absolute inset-0 bg-white/60 flex items-center justify-center z-10">

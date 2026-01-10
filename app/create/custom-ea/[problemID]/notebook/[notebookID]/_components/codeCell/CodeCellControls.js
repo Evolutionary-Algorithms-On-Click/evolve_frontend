@@ -36,14 +36,16 @@ export default function CodeCellControls({
         if (onFix) await onFix({ ...cell });
     }
 
-    async function handleModify() {
-        if (isModifying && modifyInstruction.trim() !== "") {
+    async function handleSendModify() {
+        if (modifyInstruction.trim() !== "") {
             if (onModify) await onModify(cell, modifyInstruction);
             setIsModifying(false);
             setModifyInstruction("");
-        } else {
-            setIsModifying(true);
         }
+    }
+
+    function handleModify() {
+        setIsModifying(!isModifying);
     }
 
     return (
@@ -81,7 +83,7 @@ export default function CodeCellControls({
                             className="w-full p-2 border rounded"
                         />
                         <button
-                            onClick={handleModify}
+                            onClick={handleSendModify}
                             title="Send modification"
                             className="p-1.5 bg-blue-500 hover:bg-blue-600 rounded text-white border border-blue-500"
                         >
@@ -95,7 +97,7 @@ export default function CodeCellControls({
 
             <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                 <button
-                    onClick={() => setIsModifying(true)}
+                    onClick={handleModify}
                     title="Modify code"
                     className="p-1.5 bg-gray-50 hover:bg-gray-100 rounded text-slate-600 border border-gray-100"
                 >

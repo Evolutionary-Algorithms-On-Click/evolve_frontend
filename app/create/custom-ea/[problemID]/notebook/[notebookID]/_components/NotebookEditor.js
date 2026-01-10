@@ -30,8 +30,9 @@ export default function NotebookEditor({ notebookId, problemId }) {
         session,
         setSession,
         startSessionRef,
-        fixCell,
         modifyCell,
+        messages,
+        addMessage,
     } = useNotebook(notebookId, problemId);
 
     useNotebookKeybindings();
@@ -153,7 +154,11 @@ export default function NotebookEditor({ notebookId, problemId }) {
                         </div>
                     ))}
                 </div>
-                <ChatWindow onModify={modifyCell} />
+                <ChatWindow
+                    onModify={modifyCell}
+                    messages={messages}
+                    addMessage={addMessage}
+                />
             </NotebookLayout>
         </NotebookProvider>
     );
