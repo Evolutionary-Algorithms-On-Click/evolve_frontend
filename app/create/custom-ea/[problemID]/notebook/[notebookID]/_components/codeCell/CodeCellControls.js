@@ -1,7 +1,15 @@
 "use client";
 
 import React, { useMemo, useState } from "react";
-import { FixIcon, ModifyIcon } from "./Icons";
+import {
+    ChevronDown,
+    ChevronUp,
+    Pencil,
+    Play,
+    Send,
+    Wand2,
+    X,
+} from "lucide-react";
 
 export default function CodeCellControls({
     cell,
@@ -52,20 +60,7 @@ export default function CodeCellControls({
                             : "bg-green-600 hover:bg-green-700")
                     }
                 >
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="text-white"
-                    >
-                        <polygon points="5 3 19 12 5 21 5 3" />
-                    </svg>
+                    <Play size={16} className="text-white" />
                 </button>
 
                 <div className="text-xs text-gray-700 font-semibold px-2 py-1 bg-gray-100 rounded">
@@ -73,15 +68,26 @@ export default function CodeCellControls({
                 </div>
             </div>
 
-            <div className="flex-1 text-sm text-gray-700">
+            <div className="flex-1 text-sm text-gray-700 flex items-center gap-2">
                 {isModifying ? (
-                    <input
-                        type="text"
-                        value={modifyInstruction}
-                        onChange={(e) => setModifyInstruction(e.target.value)}
-                        placeholder="Enter modification instruction"
-                        className="w-full p-2 border rounded"
-                    />
+                    <>
+                        <input
+                            type="text"
+                            value={modifyInstruction}
+                            onChange={(e) =>
+                                setModifyInstruction(e.target.value)
+                            }
+                            placeholder="Enter modification instruction"
+                            className="w-full p-2 border rounded"
+                        />
+                        <button
+                            onClick={handleModify}
+                            title="Send modification"
+                            className="p-1.5 bg-blue-500 hover:bg-blue-600 rounded text-white border border-blue-500"
+                        >
+                            <Send size={16} />
+                        </button>
+                    </>
                 ) : (
                     cell.metadata?.title || "Code cell"
                 )}
@@ -89,38 +95,25 @@ export default function CodeCellControls({
 
             <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                 <button
-                    onClick={handleModify}
+                    onClick={() => setIsModifying(true)}
                     title="Modify code"
                     className="p-1.5 bg-gray-50 hover:bg-gray-100 rounded text-slate-600 border border-gray-100"
                 >
-                    <ModifyIcon />
+                    <Pencil size={16} />
                 </button>
                 <button
                     onClick={handleFix}
                     title="Fix code"
                     className="p-1.5 bg-gray-50 hover:bg-gray-100 rounded text-slate-600 border border-gray-100"
                 >
-                    <FixIcon />
+                    <Wand2 size={16} />
                 </button>
                 <button
                     onClick={onMoveUp}
                     title="Move cell up"
                     className="p-1.5 bg-gray-50 hover:bg-gray-100 rounded text-slate-600 border border-gray-100"
                 >
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="14"
-                        height="14"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                    >
-                        <path d="M12 19V6" />
-                        <path d="M5 12l7-7 7 7" />
-                    </svg>
+                    <ChevronUp size={14} />
                 </button>
 
                 <button
@@ -128,20 +121,7 @@ export default function CodeCellControls({
                     title="Move cell down"
                     className="p-1.5 bg-gray-50 hover:bg-gray-100 rounded text-slate-600 border border-gray-100"
                 >
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="14"
-                        height="14"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                    >
-                        <path d="M12 5v13" />
-                        <path d="M19 12l-7 7-7-7" />
-                    </svg>
+                    <ChevronDown size={14} />
                 </button>
 
                 <button
@@ -149,20 +129,7 @@ export default function CodeCellControls({
                     className="p-1.5 bg-gray-50 hover:bg-red-50 rounded text-gray-600 hover:text-red-600 border border-gray-100"
                     aria-label="Remove cell"
                 >
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                    >
-                        <path d="M18 6 6 18" />
-                        <path d="m6 6 12 12" />
-                    </svg>
+                    <X size={16} />
                 </button>
             </div>
         </div>
