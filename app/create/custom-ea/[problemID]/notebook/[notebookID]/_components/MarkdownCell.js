@@ -1,38 +1,9 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
-import { Remarkable } from "remarkable";
-import * as linkifyImport from "remarkable/linkify";
+import React, { useState } from "react";
+import ReactMarkdown from "react-markdown";
 import { Plus, ChevronUp, ChevronDown, Pencil, X } from "lucide-react";
 import AddCellMenu from "./toolbars/AddCellMenu";
-
-// Using a proper markdown parser and the linkify plugin.
-// The linkify module can export different shapes depending on bundler;
-// support default and named exports gracefully.
-const md = new Remarkable({
-    html: false,
-    xhtmlOut: false,
-    breaks: true,
-});
-
-try {
-    const linkify = linkifyImport && (linkifyImport.default || linkifyImport);
-    if (typeof linkify === "function") {
-        md.use(linkify);
-    }
-} catch (e) {
-    // If plugin doesn't load, continue without linkify (fallback)
-    // Linkifying will still work for many cases or can be added later.
-}
-
-function simpleMarkdownToHtml(s) {
-    if (!s) return "";
-    try {
-        return md.render(String(s));
-    } catch (e) {
-        return String(s);
-    }
-}
 
 export default function MarkdownCell({
     cell,
@@ -81,7 +52,7 @@ export default function MarkdownCell({
                 )}
             </div>
             <div className="relative rounded-xl border border-gray-200 overflow-hidden bg-white shadow-md hover:shadow-lg transition-shadow duration-300">
-                <div className="flex items-start justify-between p-3 border-b border-gray-100 bg-gray-100">
+                <div className="flex items-start justify-between p-3 border-b border-gray-100 bg-gray-50">
                     <div className="text-sm text-slate-600">Markdown</div>
                     <div className="flex items-center gap-2">
                         <button
@@ -119,12 +90,9 @@ export default function MarkdownCell({
                 </div>
 
                 {!editing ? (
-                    <div
-                        className="p-4 prose max-w-none"
-                        dangerouslySetInnerHTML={{
-                            __html: simpleMarkdownToHtml(cell.source),
-                        }}
-                    />
+                    <div className="p-4 prose max-w-none">
+                        <ReactMarkdown>{cell.source}</ReactMarkdown>
+                    </div>
                 ) : (
                     <div className="p-3">
                         <textarea
