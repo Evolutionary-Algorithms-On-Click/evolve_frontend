@@ -171,7 +171,7 @@ export default function CodeCellControls({
                 <div className="w-px h-6 bg-gray-300 mx-2"></div>
 
                 <button
-                    onClick={handleModify}
+                    onClick={() => setIsModifying(true)}
                     title="Modify code"
                     className={
                         "p-1.5 bg-gray-50 hover:bg-gray-100 rounded-full text-slate-600 border border-gray-300"
