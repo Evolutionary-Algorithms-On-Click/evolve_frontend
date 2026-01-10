@@ -10,6 +10,7 @@ import useNotebookLLM from "./hooks/useNotebookLLM";
 export default function useNotebook(notebookId, problemId) {
     const [session, setSession] = useState(null);
     const startSessionRef = useRef(null);
+    const [messages, setMessages] = useState([]);
 
     // fetch/generate initial cells
     const { loading, error, initialCells, setInitialCells } = useNotebookFetch(
@@ -59,32 +60,68 @@ export default function useNotebook(notebookId, problemId) {
     const runCell = async (cell) => execRunCell(cell, startSessionRef);
     const runAll = async () => execRunAll(cells, startSessionRef);
 
+    function addMessage(message) {
+        setMessages((prev) => [...prev, message]);
+    }
+
     async function fixCell(cell, traceback) {
         const transformedNotebook = {
-            cells: cells.map(c => ({
+            cells: cells.map((c) => ({
                 ...c,
                 cell_type: c.cell_type,
                 execution_count: c.execution_count || 0,
-            }))
+            })),
         };
-        const updatedNotebook = await fixNotebook(transformedNotebook, traceback);
-        if (updatedNotebook) {
-            setCells(updatedNotebook.cells);
+        const response = await fixNotebook(transformedNotebook, traceback);
+        if (response && response.notebook) {
+            const newCells = response.notebook.cells.map((newCell, i) => {
+                if (response.cells_modified && response.cells_modified.includes(i)) {
+                    return { ...newCell, message: response.changes_made.join("\n") };
+                }
+                return newCell;
+            });
+            setCells(newCells);
+            addMessage({
+                type: "bot",
+                message:
+                    typeof response.message === "string"
+                        ? response.message
+                        : "Notebook fixed successfully.",
+                changes: response.changes_made,
+            });
         }
     }
 
     async function modifyCell(cell, instruction) {
         const cellName = cell ? cell.id : null;
         const transformedNotebook = {
-            cells: cells.map(c => ({
+            cells: cells.map((c) => ({
                 ...c,
                 cell_type: c.cell_type,
                 execution_count: c.execution_count || 0,
-            }))
+            })),
         };
-        const updatedNotebook = await modifyNotebook(transformedNotebook, instruction, cellName);
-        if (updatedNotebook) {
-            setCells(updatedNotebook.cells);
+        const response = await modifyNotebook(
+            transformedNotebook,
+            instruction,
+            cellName,
+        );
+        if (response && response.notebook) {
+            const newCells = response.notebook.cells.map((newCell, i) => {
+                if (response.cells_modified && response.cells_modified.includes(i)) {
+                    return { ...newCell, message: response.changes_made.join("\n") };
+                }
+                return newCell;
+            });
+            setCells(newCells);
+            addMessage({
+                type: "bot",
+                message:
+                    typeof response.message === "string"
+                        ? response.message
+                        : "Notebook modified successfully.",
+                changes: response.changes_made,
+            });
         }
     }
 
@@ -115,5 +152,7 @@ export default function useNotebook(notebookId, problemId) {
         startSessionRef,
         fixCell,
         modifyCell,
+        messages,
+        addMessage,
     };
 }
