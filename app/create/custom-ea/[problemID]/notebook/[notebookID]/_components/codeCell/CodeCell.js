@@ -14,6 +14,7 @@ export default function CodeCell({
     onMoveDown,
     onFix,
     onModify,
+    onClear,
     readOnly = false,
 }) {
     const [value, setValue] = useState(cell.source || "");
@@ -82,7 +83,7 @@ export default function CodeCell({
                 />
             </div>
 
-            <OutputArea outputs={cell.outputs || []} />
+            <OutputArea outputs={cell.outputs || []} onClear={onClear} />
         </div>
     );
 }

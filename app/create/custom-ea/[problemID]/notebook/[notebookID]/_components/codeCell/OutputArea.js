@@ -1,12 +1,40 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
+import { X } from "lucide-react";
 
 function stripAnsi(str = "") {
     return str.replace(/\x1b\[[0-9;]*m/g, "");
 }
 
-export default function OutputArea({ outputs = [] }) {
+function ErrorOutput({ out }) {
+    const [showTraceback, setShowTraceback] = useState(false);
+    const raw = Array.isArray(out.traceback)
+        ? out.traceback.join("\n")
+        : `${out.ename || "Error"}: ${out.evalue || ""}`;
+    const tb = stripAnsi(raw);
+
+    return (
+        <div className="bg-red-50 p-2 rounded border border-red-200">
+            <div className="text-red-700 font-semibold">
+                {out.ename || "Error"}: {out.evalue || ""}
+            </div>
+            <button
+                onClick={() => setShowTraceback(!showTraceback)}
+                className="text-red-600 hover:underline text-sm mt-1"
+            >
+                {showTraceback ? "Hide Traceback" : "Show Traceback"}
+            </button>
+            {showTraceback && (
+                <pre className="whitespace-pre-wrap mt-2 text-red-700 text-xs">
+                    {tb}
+                </pre>
+            )}
+        </div>
+    );
+}
+
+export default function OutputArea({ outputs = [], onClear }) {
     if (!outputs || outputs.length === 0) return null;
 
     const execCount = (() => {
@@ -18,9 +46,18 @@ export default function OutputArea({ outputs = [] }) {
     })();
 
     return (
-        <div className="mt-3 bg-gray-900 text-gray-100 rounded-lg p-3 text-sm font-mono border border-gray-800">
+        <div className="mt-3 bg-teal-100 text-gray-800 rounded-lg p-3 text-sm font-mono border border-teal-500 relative">
+            {onClear && (
+                <button
+                    onClick={onClear}
+                    className="absolute top-2 right-2 p-1 rounded-full hover:bg-teal-100"
+                    title="Clear output"
+                >
+                    <X size={16} className="text-teal-700" />
+                </button>
+            )}
             {execCount !== null && (
-                <div className="text-xs text-gray-400 mb-2">
+                <div className="text-xs text-teal-700 mb-2 font-semibold">
                     Out [{execCount}]:
                 </div>
             )}
@@ -35,10 +72,10 @@ export default function OutputArea({ outputs = [] }) {
                                 <pre
                                     key={idx}
                                     className={
-                                        "whitespace-pre-wrap p-2 rounded text-sm font-mono bg-gray-800" +
+                                        "whitespace-pre-wrap p-2 rounded text-sm font-mono bg-white" +
                                         (isErr
-                                            ? " text-red-300"
-                                            : " text-gray-100")
+                                            ? " text-red-600"
+                                            : " text-gray-800")
                                     }
                                 >
                                     {text}
@@ -56,7 +93,7 @@ export default function OutputArea({ outputs = [] }) {
                                         key={idx}
                                         src={`data:image/png;base64,${data["image/png"]}`}
                                         alt="png output"
-                                        className="my-2 max-w-full rounded border border-gray-700"
+                                        className="my-2 max-w-full rounded border border-gray-200"
                                     />
                                 );
                             if (data["image/jpeg"])
@@ -72,7 +109,7 @@ export default function OutputArea({ outputs = [] }) {
                                 return (
                                     <div
                                         key={idx}
-                                        className="my-2"
+                                        className="my-2 bg-white p-2 rounded"
                                         dangerouslySetInnerHTML={{
                                             __html: data["image/svg+xml"],
                                         }}
@@ -82,7 +119,7 @@ export default function OutputArea({ outputs = [] }) {
                                 return (
                                     <div
                                         key={idx}
-                                        className="my-2"
+                                        className="my-2 bg-white p-2 rounded"
                                         dangerouslySetInnerHTML={{
                                             __html: data["text/html"],
                                         }}
@@ -91,7 +128,7 @@ export default function OutputArea({ outputs = [] }) {
                             return (
                                 <pre
                                     key={idx}
-                                    className="whitespace-pre-wrap p-2 rounded bg-gray-800 text-gray-100"
+                                    className="whitespace-pre-wrap p-2 rounded bg-white text-gray-800"
                                 >
                                     {data["text/plain"] ||
                                         JSON.stringify(data, null, 2)}
@@ -99,28 +136,10 @@ export default function OutputArea({ outputs = [] }) {
                             );
                         }
                         if (out.type === "error") {
-                            const raw = Array.isArray(out.traceback)
-                                ? out.traceback.join("\n")
-                                : `${out.ename || "Error"}: ${out.evalue || ""}`;
-                            const tb = stripAnsi(raw);
-                            return (
-                                <pre
-                                    key={idx}
-                                    className="whitespace-pre-wrap p-2 rounded bg-red-900 text-red-300"
-                                >
-                                    {tb}
-                                </pre>
-                            );
+                            return <ErrorOutput key={idx} out={out} />;
                         }
                         if (out.type === "execute_input") {
-                            return (
-                                <pre
-                                    key={idx}
-                                    className="whitespace-pre-wrap px-2 py-1 rounded text-blue-300 bg-transparent"
-                                >
-                                    In [{out.execution_count}]: {out.code}
-                                </pre>
-                            );
+                            return null;
                         }
                         if (
                             out.type === "status" ||
@@ -131,7 +150,7 @@ export default function OutputArea({ outputs = [] }) {
                         return (
                             <pre
                                 key={idx}
-                                className="text-yellow-300"
+                                className="text-yellow-500"
                             >{`[${out.type}] ${JSON.stringify(out, null, 2)}`}</pre>
                         );
                     })}
