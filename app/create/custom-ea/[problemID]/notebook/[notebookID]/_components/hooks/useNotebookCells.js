@@ -12,30 +12,40 @@ export default function useNotebookCells(initial = null) {
     const setInitial = (initialCells) =>
         setCells((initialCells || []).map((c, i) => ({ ...c, idx: i })));
 
-    function addCodeCell() {
+    function addCodeCell(index) {
         setCells((s) => {
             const arr = [...(s || [])];
-            arr.push({
+            const newCell = {
                 id: uid("code"),
                 cell_name: "new_code_cell",
                 cell_type: "code",
                 source: "",
                 outputs: [],
                 execution_count: 0,
-            });
+            };
+            if (index !== undefined) {
+                arr.splice(index, 0, newCell);
+            } else {
+                arr.push(newCell);
+            }
             return arr.map((c, i) => ({ ...c, idx: i }));
         });
     }
 
-    function addMarkdownCell() {
+    function addMarkdownCell(index) {
         setCells((s) => {
             const arr = [...(s || [])];
-            arr.push({
+            const newCell = {
                 id: uid("md"),
                 cell_name: "new_markdown_cell",
                 cell_type: "markdown",
                 source: "New paragraph",
-            });
+            };
+            if (index !== undefined) {
+                arr.splice(index, 0, newCell);
+            } else {
+                arr.push(newCell);
+            }
             return arr.map((c, i) => ({ ...c, idx: i }));
         });
     }

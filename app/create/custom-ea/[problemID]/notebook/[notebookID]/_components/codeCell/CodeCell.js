@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import OutputArea from "./OutputArea";
 import CodeCellEditor from "./CodeCellEditor";
 import CodeCellControls from "./CodeCellControls";
+import { Plus } from "lucide-react";
 
 export default function CodeCell({
     cell,
@@ -15,6 +16,8 @@ export default function CodeCell({
     onFix,
     onModify,
     onClear,
+    addCodeCell,
+    addMarkdownCell,
     readOnly = false,
 }) {
     const [value, setValue] = useState(cell.source || "");
@@ -47,6 +50,22 @@ export default function CodeCell({
 
     return (
         <div className="mb-4 group relative">
+            <div className="absolute -top-4 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10 flex gap-2">
+                <button
+                    onClick={() => addCodeCell(cell.idx)}
+                    className="p-1 rounded-full bg-gray-100 border border-gray-300 text-gray-600 hover:bg-teal-100 hover:text-teal-600"
+                    title="Add Code Cell Above"
+                >
+                    <Plus size={16} />
+                </button>
+                <button
+                    onClick={() => addMarkdownCell(cell.idx)}
+                    className="p-1 rounded-full bg-gray-100 border border-gray-300 text-gray-600 hover:bg-teal-100 hover:text-teal-600"
+                    title="Add Markdown Cell Above"
+                >
+                    <Plus size={16} />
+                </button>
+            </div>
             {cell.message && (
                 <div className="absolute top-0 left-0 w-full bg-teal-100 text-teal-800 p-2 text-sm z-20">
                     {cell.message}
@@ -67,9 +86,9 @@ export default function CodeCell({
                 <CodeCellControls
                     cell={cell}
                     onRun={handleRun}
+                    onRemove={onRemove}
                     onMoveUp={onMoveUp}
                     onMoveDown={onMoveDown}
-                    onRemove={onRemove}
                     onFix={onFix}
                     onModify={onModify}
                 />
@@ -84,6 +103,22 @@ export default function CodeCell({
             </div>
 
             <OutputArea outputs={cell.outputs || []} onClear={onClear} />
+            <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10 flex gap-2">
+                <button
+                    onClick={() => addCodeCell(cell.idx + 1)}
+                    className="p-1 rounded-full bg-gray-100 border border-gray-300 text-gray-600 hover:bg-teal-100 hover:text-teal-600"
+                    title="Add Code Cell Below"
+                >
+                    <Plus size={16} />
+                </button>
+                <button
+                    onClick={() => addMarkdownCell(cell.idx + 1)}
+                    className="p-1 rounded-full bg-gray-100 border border-gray-300 text-gray-600 hover:bg-teal-100 hover:text-teal-600"
+                    title="Add Markdown Cell Below"
+                >
+                    <Plus size={16} />
+                </button>
+            </div>
         </div>
     );
 }
