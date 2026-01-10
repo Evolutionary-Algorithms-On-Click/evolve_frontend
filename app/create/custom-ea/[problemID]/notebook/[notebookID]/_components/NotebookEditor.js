@@ -33,6 +33,7 @@ export default function NotebookEditor({ notebookId, problemId }) {
         modifyCell,
         messages,
         addMessage,
+        clearOutput,
     } = useNotebook(notebookId, problemId);
 
     useNotebookKeybindings();
@@ -141,6 +142,7 @@ export default function NotebookEditor({ notebookId, problemId }) {
                                         }
                                     }}
                                     onModify={modifyCell}
+                                    onClear={() => clearOutput(cell.id)}
                                 />
                             ) : (
                                 <MarkdownCell
