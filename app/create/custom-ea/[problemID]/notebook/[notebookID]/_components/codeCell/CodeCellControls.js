@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import {
     ChevronDown,
     ChevronUp,
@@ -27,10 +27,12 @@ export default function CodeCellControls({
 
     const [isModifying, setIsModifying] = useState(false);
     const [modifyInstruction, setModifyInstruction] = useState("");
+    const [showConfirmDelete, setShowConfirmDelete] = useState(false);
 
     async function handleRun() {
         if (onRun) await onRun({ ...cell });
     }
+
 
     async function handleFix() {
         if (onFix) await onFix({ ...cell });
@@ -51,8 +53,44 @@ export default function CodeCellControls({
         setIsModifying(!isModifying);
     }
 
+    function handleDeleteClick() {
+        setShowConfirmDelete(true);
+    }
+
+    function handleConfirmDelete() {
+        onRemove();
+        setShowConfirmDelete(false);
+    }
+
+    function handleCancelDelete() {
+        setShowConfirmDelete(false);
+    }
+
     return (
-        <div className="flex items-start gap-4 p-3 border-b border-gray-100 bg-gray-50">
+        <div className="flex items-start gap-4 p-3 border-b border-gray-100 bg-gray-50 relative">
+            {showConfirmDelete && (
+                <div
+                    className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white p-3 rounded-lg shadow-lg border border-gray-200 z-50 flex flex-col items-center`}
+                >
+                    <p className="mb-2 text-xs text-gray-700">
+                        Delete this cell?
+                    </p>
+                    <div className="flex gap-2">
+                        <button
+                            onClick={handleConfirmDelete}
+                            className="px-3 py-1 bg-red-500 text-white rounded-md text-xs hover:bg-red-600"
+                        >
+                            Yes
+                        </button>
+                        <button
+                            onClick={handleCancelDelete}
+                            className="px-3 py-1 bg-gray-300 text-gray-800 rounded-md text-xs hover:bg-gray-400"
+                        >
+                            No
+                        </button>
+                    </div>
+                </div>
+            )}
             <div className="flex items-center gap-2">
                 <button
                     onClick={handleRun}
@@ -88,30 +126,48 @@ export default function CodeCellControls({
                         <button
                             onClick={handleSendModify}
                             title="Send modification"
-                            className="p-1.5 bg-teal-500 hover:bg-teal-600 rounded-full text-white border border-teal-600"
+                            className="p-1.5 left bg-teal-500 hover:bg-teal-600 rounded-full text-white border border-teal-600"
                         >
-                            <Send size={16} />
+                            <Send className="-left-4" size={16} />
                         </button>
                     </>
                 ) : (
-                    cell.metadata?.title || "Code cell"
+                    <div className="pt-2">
+                        {cell.metadata?.title || "Code cell"}
+                    </div>
                 )}
             </div>
 
-            <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+            <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity pt-1">
+                <div className="w-px h-6 bg-gray-300 mx-2"></div>
+
                 <button
                     onClick={handleModify}
                     title="Modify code"
-                    className="p-1.5 bg-gray-50 hover:bg-gray-100 rounded-full text-slate-600 border border-gray-300"
+                    className={
+                        isModifying
+                            ? "p-1.5 bg-gray-50 hover:bg-gray-100 rounded-full text-white border border-teal-500"
+                            : "p-1.5 bg-gray-50 hover:bg-gray-100 rounded-full text-slate-600 border border-gray-300"
+                    }
                 >
-                    <Pencil size={16} />
+                    <Pencil
+                        className={isModifying ? "text-teal-500" : ""}
+                        size={16}
+                    />
                 </button>
                 <button
                     onClick={handleFix}
                     title="Fix code"
-                    className="p-1.5 bg-gray-50 hover:bg-gray-100 rounded-full text-slate-600 border border-gray-300"
+                    className={
+                        isModifying
+                            ? "p-1.5 bg-gray-50 hover:bg-gray-100 rounded-full text-white border border-teal-500"
+                            : "p-1.5 bg-gray-50 hover:bg-gray-100 rounded-full text-slate-600 border border-gray-300"
+                    }
                 >
-                    <Wand2 size={16} />
+                    <Wand2
+                        className={isModifying ? "text-teal-500" : ""}
+                        size={16}
+                    />
                 </button>
                 <button
                     onClick={onMoveUp}
@@ -130,7 +186,8 @@ export default function CodeCellControls({
                 </button>
 
                 <button
-                    onClick={onRemove}
+                    onClick={handleDeleteClick}
+                    title="Remove cell"
                     className="p-1.5 bg-gray-50 hover:bg-red-50 rounded-full text-gray-600 hover:text-red-600 border border-gray-300"
                     aria-label="Remove cell"
                 >
