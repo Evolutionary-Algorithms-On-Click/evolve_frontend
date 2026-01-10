@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Remarkable } from "remarkable";
 import * as linkifyImport from "remarkable/linkify";
 import { Plus, ChevronUp, ChevronDown, Pencil, X } from "lucide-react";
+import AddCellMenu from "./toolbars/AddCellMenu";
 
 // Using a proper markdown parser and the linkify plugin.
 // The linkify module can export different shapes depending on bundler;
@@ -44,6 +45,7 @@ export default function MarkdownCell({
 }) {
     const [editing, setEditing] = React.useState(false);
     const [value, setValue] = React.useState(cell.source || "");
+    const [showAddMenu, setShowAddMenu] = useState(null); // null, 'top', or 'bottom'
 
     React.useEffect(() => {
         setValue(cell.source || "");
@@ -61,21 +63,22 @@ export default function MarkdownCell({
 
     return (
         <div className="mb-4 group relative">
-            <div className="absolute -top-4 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10 flex gap-2">
-                <button
-                    onClick={() => addCodeCell(cell.idx)}
-                    className="p-1 rounded-full bg-gray-100 border border-gray-300 text-gray-600 hover:bg-teal-100 hover:text-teal-600"
-                    title="Add Code Cell Above"
-                >
-                    <Plus size={16} />
-                </button>
-                <button
-                    onClick={() => addMarkdownCell(cell.idx)}
-                    className="p-1 rounded-full bg-gray-100 border border-gray-300 text-gray-600 hover:bg-teal-100 hover:text-teal-600"
-                    title="Add Markdown Cell Above"
-                >
-                    <Plus size={16} />
-                </button>
+            <div className="absolute -top-4 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10">
+                {showAddMenu === 'top' ? (
+                    <AddCellMenu
+                        onAddCode={() => { addCodeCell(cell.idx); setShowAddMenu(null); }}
+                        onAddMarkdown={() => { addMarkdownCell(cell.idx); setShowAddMenu(null); }}
+                        onClose={() => setShowAddMenu(null)}
+                    />
+                ) : (
+                    <button
+                        onClick={() => setShowAddMenu('top')}
+                        className="p-1 rounded-full bg-gray-100 border border-gray-300 text-gray-600 hover:bg-teal-100 hover:text-teal-600"
+                        title="Add Cell Above"
+                    >
+                        <Plus size={16} />
+                    </button>
+                )}
             </div>
             <div className="relative rounded-xl border border-gray-200 overflow-hidden bg-white shadow-md hover:shadow-lg transition-shadow duration-300">
                 <div className="flex items-start justify-between p-3 border-b border-gray-100 bg-gray-50">
@@ -146,21 +149,22 @@ export default function MarkdownCell({
                     </div>
                 )}
             </div>
-            <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10 flex gap-2">
-                <button
-                    onClick={() => addCodeCell(cell.idx + 1)}
-                    className="p-1 rounded-full bg-gray-100 border border-gray-300 text-gray-600 hover:bg-teal-100 hover:text-teal-600"
-                    title="Add Code Cell Below"
-                >
-                    <Plus size={16} />
-                </button>
-                <button
-                    onClick={() => addMarkdownCell(cell.idx + 1)}
-                    className="p-1 rounded-full bg-gray-100 border border-gray-300 text-gray-600 hover:bg-teal-100 hover:hover:text-teal-600"
-                    title="Add Markdown Cell Below"
-                >
-                    <Plus size={16} />
-                </button>
+            <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10">
+                {showAddMenu === 'bottom' ? (
+                    <AddCellMenu
+                        onAddCode={() => { addCodeCell(cell.idx + 1); setShowAddMenu(null); }}
+                        onAddMarkdown={() => { addMarkdownCell(cell.idx + 1); setShowAddMenu(null); }}
+                        onClose={() => setShowAddMenu(null)}
+                    />
+                ) : (
+                    <button
+                        onClick={() => setShowAddMenu('bottom')}
+                        className="p-1 rounded-full bg-gray-100 border border-gray-300 text-gray-600 hover:bg-teal-100 hover:text-teal-600"
+                        title="Add Cell Below"
+                    >
+                        <Plus size={16} />
+                    </button>
+                )}
             </div>
         </div>
     );
