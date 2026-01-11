@@ -1,7 +1,6 @@
 import { BookUp2, Pickaxe } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import ThemeToggle from "./components/ThemeToggle";
 
 export default function Home() {
     return (

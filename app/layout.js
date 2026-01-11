@@ -56,10 +56,9 @@ export default function RootLayout({ children }) {
                 className={`${geistSans.variable} ${geistMono.variable} antialiased`}
             >
                 <VideoAcademy />
-                <ClientLayout>
-                    {children}
-                    <HelpDocsButton />
-                </ClientLayout>
+                {children}
+                <HelpDocsButton />
+                <ClientLayout />
             </body>
         </html>
     );
