@@ -27,21 +27,21 @@ export default function ChatWindow({ onModify, messages, addMessage, llmLoading,
         <div className="fixed bottom-4 right-4 z-50">
             <button
                 onClick={handleToggleChat}
-                className="bg-white p-4 rounded-full shadow-lg border border-gray-200 hover:shadow-xl transition-shadow relative"
+                className="bg-white p-2 rounded-full shadow-lg border border-gray-200 hover:shadow-xl transition-shadow relative"
             >
                 {isOpen ? <CloseIcon /> : <ChatIcon />}
                 {hasUnreadMessages && !isOpen && (
-                    <span className="absolute top-2 right-2 w-3 h-3 bg-red-500 rounded-full animate-pulse" />
+                    <span className="absolute top-1 right-1 w-2.5 h-2.5 bg-red-500 rounded-full animate-pulse" />
                 )}
             </button>
             {isOpen && (
                 <div className="bg-white w-96 h-96 rounded-lg shadow-lg mt-2 flex flex-col">
-                    <div className="p-4 border-b border-gray-200">
-                        <h3 className="font-semibold text-lg">
+                    <div className="p-3 border-b border-gray-200">
+                        <h3 className="font-semibold text-base">
                             Modify Notebook
                         </h3>
                     </div>
-                    <div className="flex-1 p-4 overflow-y-auto space-y-4">
+                    <div className="flex-1 p-3 overflow-y-auto space-y-3">
                         {messages.map((item, index) => (
                             <div
                                 key={index}
@@ -52,15 +52,15 @@ export default function ChatWindow({ onModify, messages, addMessage, llmLoading,
                                 }`}
                             >
                                 <div
-                                    className={`p-3 rounded-lg max-w-xs ${
+                                    className={`p-2 rounded-lg max-w-xs ${
                                         item.type === "user"
                                             ? "bg-teal-500 text-white"
                                             : "bg-gray-200 text-gray-800"
                                     }`}
                                 >
-                                    <p>{item.message}</p>
+                                    <p className="text-sm">{item.message}</p>
                                     {item.changes && (
-                                        <div className="mt-2 text-sm">
+                                        <div className="mt-1 text-xs">
                                             <p className="font-semibold">Changes:</p>
                                             <p>{item.changes.join("\n")}</p>
                                         </div>
@@ -70,18 +70,18 @@ export default function ChatWindow({ onModify, messages, addMessage, llmLoading,
                         ))}
                         {llmLoading && (
                             <div className="flex justify-start">
-                                <div className="p-3 rounded-lg max-w-xs bg-gray-200 text-gray-800">
-                                    <div className="w-6 h-6 border-2 border-t-transparent border-teal-600 rounded-full animate-spin" />
+                                <div className="p-2 rounded-lg max-w-xs bg-gray-200 text-gray-800">
+                                    <div className="w-5 h-5 border-2 border-t-transparent border-teal-600 rounded-full animate-spin" />
                                 </div>
                             </div>
                         )}
                     </div>
-                    <div className="p-4 border-t border-gray-200 flex items-center">
+                    <div className="p-3 border-t border-gray-200 flex items-center">
                         <textarea
                             value={instruction}
                             onChange={(e) => setInstruction(e.target.value)}
                             placeholder={llmLoading ? "Processing..." : "Enter instruction..."}
-                            className="w-full p-2 border rounded-md"
+                            className="w-full p-1.5 border rounded-md text-sm"
                             onKeyDown={(e) => {
                                 if (e.key === "Enter" && !e.shiftKey) {
                                     e.preventDefault();
@@ -92,12 +92,12 @@ export default function ChatWindow({ onModify, messages, addMessage, llmLoading,
                         />
                         <button
                             onClick={handleModify}
-                            className={`ml-2 p-2 bg-teal-600 text-white rounded-md ${
+                            className={`ml-2 p-1.5 bg-teal-600 text-white rounded-md ${
                                 llmLoading ? "cursor-not-allowed bg-opacity-50" : ""
                             }`}
                             disabled={llmLoading}
                         >
-                            <SendIcon />
+                            <SendIcon size={16} />
                         </button>
                     </div>
                 </div>
