@@ -7,7 +7,7 @@ import { NotebookProvider } from "./notebookContext";
 import KernelControls from "./KernelControls";
 import CodeCell from "./codeCell/CodeCell";
 import MarkdownCell from "./MarkdownCell";
-import Loader from "@/app/_components/Loader";
+import NotebookLoadingScreen from "./NotebookLoadingScreen";
 import useNotebook from "./useNotebook";
 import ChatWindow from "./ChatWindow";
 import useNotebookKeybindings from "./hooks/useNotebookKeybindings";
@@ -34,11 +34,12 @@ export default function NotebookEditor({ notebookId, problemId }) {
         messages,
         addMessage,
         clearOutput,
+        llmLoading,
     } = useNotebook(notebookId, problemId);
 
     useNotebookKeybindings();
 
-    if (loading) return <Loader message="Loading notebook..." />;
+    if (loading) return <NotebookLoadingScreen />;
 
     if (error) {
         return (
@@ -145,6 +146,7 @@ export default function NotebookEditor({ notebookId, problemId }) {
                                     onClear={() => clearOutput(cell.id)}
                                     addCodeCell={addCodeCell}
                                     addMarkdownCell={addMarkdownCell}
+                                    llmLoading={llmLoading}
                                 />
                             ) : (
                                 <MarkdownCell
@@ -164,6 +166,7 @@ export default function NotebookEditor({ notebookId, problemId }) {
                     onModify={modifyCell}
                     messages={messages}
                     addMessage={addMessage}
+                    llmLoading={llmLoading}
                 />
             </NotebookLayout>
         </NotebookProvider>
