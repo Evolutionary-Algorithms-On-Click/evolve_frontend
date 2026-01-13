@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import OutputArea from "./OutputArea";
 import CodeCellEditor from "./CodeCellEditor";
 import CodeCellControls from "./CodeCellControls";
-import { Plus } from "lucide-react";
+import { Plus, X } from "lucide-react";
 import AddCellMenu from "../toolbars/AddCellMenu";
 
 export default function CodeCell({
@@ -19,6 +19,7 @@ export default function CodeCell({
     onClear,
     addCodeCell,
     addMarkdownCell,
+    llmLoading,
     readOnly = false,
 }) {
     const [value, setValue] = useState(cell.source || "");
@@ -28,15 +29,6 @@ export default function CodeCell({
     useEffect(() => {
         setValue(cell.source || "");
     }, [cell.source]);
-
-    useEffect(() => {
-        if (cell.message) {
-            const timer = setTimeout(() => {
-                onChange({ ...cell, message: null });
-            }, 5000);
-            return () => clearTimeout(timer);
-        }
-    }, [cell.message]);
 
     function handleChange(v) {
         setValue(v);
@@ -70,8 +62,11 @@ export default function CodeCell({
                 )}
             </div>
             {cell.message && (
-                <div className="absolute top-0 left-0 w-full bg-teal-100 text-teal-800 p-2 text-sm z-20">
-                    {cell.message}
+                <div className="absolute top-1 rounded-lg left-[12.5%] w-[75%] bg-teal-100 text-teal-800 p-2 text-sm z-20 flex justify-between items-center">
+                    <span>{cell.message}</span>
+                    <button onClick={() => onChange({ ...cell, message: null })} className="p-1 hover:bg-teal-200 rounded-full">
+                        <X size={16} />
+                    </button>
                 </div>
             )}
             <div className="rounded-xl border border-gray-200 overflow-hidden relative bg-white shadow-md hover:shadow-lg transition-shadow duration-300">
@@ -94,6 +89,7 @@ export default function CodeCell({
                     onMoveDown={onMoveDown}
                     onFix={onFix}
                     onModify={onModify}
+                    llmLoading={llmLoading}
                 />
 
                 <CodeCellEditor

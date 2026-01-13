@@ -153,6 +153,7 @@ export default function useNotebookFetch(notebookId, problemId, session) {
                         llmNotebook?.notebook?.cells.map((c, i) => ({
                             id: uid(c.cell_type || "cell"),
                             idx: i,
+                            cell_name: c.cell_name,
                             cell_type: c.cell_type || "code",
                             source: Array.isArray(c.source)
                                 ? c.source.join("")
@@ -176,6 +177,7 @@ export default function useNotebookFetch(notebookId, problemId, session) {
                             ...c,
                             id: uid(c.cell_type || "cell"),
                             idx: i,
+                            cell_name: c.cell_name,
                             cell_type: c.cell_type || "code",
                             source: c.source || "",
                             execution_count: c.execution_count || 0,
