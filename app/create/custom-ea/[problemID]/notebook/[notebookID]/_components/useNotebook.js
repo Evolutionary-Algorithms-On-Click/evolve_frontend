@@ -6,6 +6,7 @@ import useNotebookPersistence from "./hooks/useNotebookPersistence";
 import useNotebookCells from "./hooks/useNotebookCells";
 import useNotebookExecution from "./hooks/useNotebookExecution";
 import useNotebookLLM from "./hooks/useNotebookLLM";
+import { mapToApiFormat } from "./utils/notebook-mapper";
 
 export default function useNotebook(notebookId, problemId) {
     const [session, setSession] = useState(null);
@@ -69,14 +70,8 @@ export default function useNotebook(notebookId, problemId) {
     }
 
     async function fixCell(cell, traceback) {
-        const transformedNotebook = {
-            cells: cells.map((c) => ({
-                ...c,
-                cell_type: c.cell_type,
-                execution_count: c.execution_count || 0,
-            })),
-        };
-        const response = await fixNotebook(transformedNotebook, traceback);
+        const apiNotebook = mapToApiFormat({ cells });
+        const response = await fixNotebook(apiNotebook, traceback);
         if (response && response.notebook) {
             let newCells = response.notebook.cells;
             if (response.cells_modified && response.cells_modified.length === 1) {
@@ -100,16 +95,10 @@ export default function useNotebook(notebookId, problemId) {
     }
 
     async function modifyCell(cell, instruction) {
-        const cellName = cell ? cell.id : null;
-        const transformedNotebook = {
-            cells: cells.map((c) => ({
-                ...c,
-                cell_type: c.cell_type,
-                execution_count: c.execution_count || 0,
-            })),
-        };
+        const cellName = cell ? cell.cell_name : null;
+        const apiNotebook = mapToApiFormat({ cells });
         const response = await modifyNotebook(
-            transformedNotebook,
+            apiNotebook,
             instruction,
             cellName,
         );
