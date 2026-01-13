@@ -10,6 +10,7 @@ import {
     Wand2,
     X,
 } from "lucide-react";
+import { stripAnsi } from "./OutputArea";
 
 export default function CodeCellControls({
     cell,
@@ -29,13 +30,29 @@ export default function CodeCellControls({
     const [isModifying, setIsModifying] = useState(false);
     const [modifyInstruction, setModifyInstruction] = useState("");
     const [showConfirmDelete, setShowConfirmDelete] = useState(false);
+    const [showNoTracebackPopup, setShowNoTracebackPopup] = useState(false);
+
+    useEffect(() => {
+        if (showNoTracebackPopup) {
+            const timer = setTimeout(() => {
+                setShowNoTracebackPopup(false);
+            }, 3000); // Popup disappears after 3 seconds
+            return () => clearTimeout(timer);
+        }
+    }, [showNoTracebackPopup]);
 
     async function handleRun() {
         if (onRun) await onRun({ ...cell });
     }
 
     async function handleFix() {
-        if (onFix) await onFix({ ...cell });
+        const errorOutput = cell.outputs?.find(o => o.type === "error" && o.traceback);
+        if (onFix && errorOutput) {
+            const fullTraceback = stripAnsi(errorOutput.traceback.join("\n"));
+            await onFix(cell, fullTraceback);
+        } else {
+            setShowNoTracebackPopup(true);
+        }
     }
 
     async function handleSendModify() {
@@ -166,19 +183,26 @@ export default function CodeCellControls({
                         size={16}
                     />
                 </button>
-                <button
-                    onClick={handleFix}
-                    title="Fix code"
-                    className={
-                        "p-1.5 bg-gray-50 hover:bg-gray-100 rounded-full text-slate-600 border border-gray-300"
-                    }
-                    disabled={llmLoading}
-                >
-                    <Wand2
-                        className={isModifying ? "text-teal-500" : ""}
-                        size={16}
-                    />
-                </button>
+                <div className="relative overflow-visible">
+                    <button
+                        onClick={handleFix}
+                        title="Fix code"
+                        className={
+                            "p-1.5 bg-gray-50 hover:bg-gray-100 rounded-full text-slate-600 border border-gray-300"
+                        }
+                        disabled={llmLoading}
+                    >
+                        <Wand2
+                            className={isModifying ? "text-teal-500" : ""}
+                            size={16}
+                        />
+                    </button>
+                    {showNoTracebackPopup && (
+                        <div className="absolute top-full mb-2 left-1/2 -translate-x-1/2 w-max bg-gray-800 text-white text-[8px] rounded py-1 px-2 shadow-lg">
+                            No error traceback found to fix.
+                        </div>
+                    )}
+                </div>
                 <button
                     onClick={onMoveUp}
                     title="Move cell up"
