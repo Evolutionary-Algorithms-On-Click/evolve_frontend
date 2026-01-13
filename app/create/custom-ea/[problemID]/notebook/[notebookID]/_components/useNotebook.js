@@ -55,7 +55,11 @@ export default function useNotebook(notebookId, problemId) {
         updateCellRef,
     );
 
-    const { fixNotebook, modifyNotebook } = useNotebookLLM(notebookId);
+    const {
+        fixNotebook,
+        modifyNotebook,
+        loading: llmLoading,
+    } = useNotebookLLM(notebookId);
 
     const runCell = async (cell) => execRunCell(cell, startSessionRef);
     const runAll = async () => execRunAll(cells, startSessionRef);
@@ -171,5 +175,6 @@ export default function useNotebook(notebookId, problemId) {
         messages,
         addMessage,
         clearOutput,
+        llmLoading,
     };
 }

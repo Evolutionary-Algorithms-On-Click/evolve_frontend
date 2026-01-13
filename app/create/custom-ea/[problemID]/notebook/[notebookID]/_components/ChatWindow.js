@@ -3,12 +3,12 @@
 import React, { useState } from "react";
 import { ChatIcon, CloseIcon, SendIcon } from "./ChatIcons";
 
-export default function ChatWindow({ onModify, messages, addMessage }) {
+export default function ChatWindow({ onModify, messages, addMessage, llmLoading }) {
     const [instruction, setInstruction] = useState("");
     const [isOpen, setIsOpen] = useState(false);
 
     async function handleModify() {
-        if (instruction.trim() !== "") {
+        if (instruction.trim() !== "" && !llmLoading) {
             const newInstruction = instruction;
             setInstruction("");
             addMessage({ type: "user", message: newInstruction });
@@ -58,12 +58,19 @@ export default function ChatWindow({ onModify, messages, addMessage }) {
                                 </div>
                             </div>
                         ))}
+                        {llmLoading && (
+                            <div className="flex justify-start">
+                                <div className="p-3 rounded-lg max-w-xs bg-gray-200 text-gray-800">
+                                    <div className="w-6 h-6 border-2 border-t-transparent border-teal-600 rounded-full animate-spin" />
+                                </div>
+                            </div>
+                        )}
                     </div>
                     <div className="p-4 border-t border-gray-200 flex items-center">
                         <textarea
                             value={instruction}
                             onChange={(e) => setInstruction(e.target.value)}
-                            placeholder="Enter instruction..."
+                            placeholder={llmLoading ? "Processing..." : "Enter instruction..."}
                             className="w-full p-2 border rounded-md"
                             onKeyDown={(e) => {
                                 if (e.key === "Enter" && !e.shiftKey) {
@@ -71,10 +78,14 @@ export default function ChatWindow({ onModify, messages, addMessage }) {
                                     handleModify();
                                 }
                             }}
+                            disabled={llmLoading}
                         />
                         <button
                             onClick={handleModify}
-                            className="ml-2 p-2 bg-teal-600 text-white rounded-md"
+                            className={`ml-2 p-2 bg-teal-600 text-white rounded-md ${
+                                llmLoading ? "cursor-not-allowed bg-opacity-50" : ""
+                            }`}
+                            disabled={llmLoading}
                         >
                             <SendIcon />
                         </button>
