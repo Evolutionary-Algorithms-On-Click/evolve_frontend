@@ -19,6 +19,7 @@ export default function CodeCellControls({
     onRemove,
     onFix,
     onModify,
+    llmLoading,
 }) {
     const execCount = useMemo(
         () => cell.execution_count || " ",
@@ -33,13 +34,12 @@ export default function CodeCellControls({
         if (onRun) await onRun({ ...cell });
     }
 
-
     async function handleFix() {
         if (onFix) await onFix({ ...cell });
     }
 
     async function handleSendModify() {
-        if (modifyInstruction.trim() !== "") {
+        if (modifyInstruction.trim() !== "" && !llmLoading) {
             if (onModify) await onModify(cell, modifyInstruction);
             setIsModifying(false);
             setModifyInstruction("");
@@ -67,10 +67,10 @@ export default function CodeCellControls({
     }
 
     return (
-        <div className="flex items-start gap-4 p-3 border-b border-gray-100 bg-teal-50 relative">
+        <div className="flex items-start gap-4 p-3 border-b border-gray-100 bg-gray-50 relative">
             {showConfirmDelete && (
                 <div
-                    className={`absolute top-1/2 left-1/2 bg-white p-3 rounded-lg shadow-lg border border-gray-200 z-50 flex flex-col items-center`}
+                    className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white p-3 rounded-lg shadow-lg border border-gray-200 z-50 flex flex-col items-center`}
                 >
                     <p className="mb-2 text-xs text-gray-700">
                         Delete this cell?
@@ -94,16 +94,20 @@ export default function CodeCellControls({
             <div className="flex items-center gap-2">
                 <button
                     onClick={handleRun}
-                    disabled={!!cell._isRunning}
+                    disabled={!!cell._isRunning || llmLoading}
                     aria-label={cell._isRunning ? "Running" : "Run cell"}
                     className={
                         "w-9 h-9 flex items-center justify-center rounded-full text-white shadow-sm " +
-                        (cell._isRunning
+                        (cell._isRunning || llmLoading
                             ? "bg-gray-400 cursor-not-allowed"
                             : "bg-teal-600 hover:bg-teal-700")
                     }
                 >
-                    <Play size={16} className="text-white" />
+                    {llmLoading ? (
+                        <div className="w-4 h-4 border-2 border-t-transparent border-white rounded-full animate-spin" />
+                    ) : (
+                        <Play size={16} className="text-white" />
+                    )}
                 </button>
 
                 <div className="text-xs text-gray-700 font-semibold px-2 py-1 bg-gray-100 rounded">
@@ -120,13 +124,17 @@ export default function CodeCellControls({
                             onChange={(e) =>
                                 setModifyInstruction(e.target.value)
                             }
-                            placeholder="Enter modification instruction"
+                            placeholder={llmLoading ? "Processing..." : "Enter modification instruction"}
                             className="w-full p-2 border rounded"
+                            disabled={llmLoading}
                         />
                         <button
                             onClick={handleSendModify}
                             title="Send modification"
-                            className="p-1.5 left bg-teal-500 hover:bg-teal-600 rounded-full text-white border border-teal-600"
+                            className={`p-1.5 left bg-teal-500 hover:bg-teal-600 rounded-full text-white border border-teal-600 ${
+                                llmLoading ? "cursor-not-allowed bg-opacity-50" : ""
+                            }`}
+                            disabled={llmLoading}
                         >
                             <Send className="-left-4" size={16} />
                         </button>
@@ -145,10 +153,9 @@ export default function CodeCellControls({
                     onClick={handleModify}
                     title="Modify code"
                     className={
-                        isModifying
-                            ? "p-1.5 bg-gray-50 hover:bg-gray-100 rounded-full text-white border border-teal-500"
-                            : "p-1.5 bg-gray-50 hover:bg-gray-100 rounded-full text-slate-600 border border-gray-300"
+                        "p-1.5 bg-gray-50 hover:bg-gray-100 rounded-full text-slate-600 border border-gray-300"
                     }
+                    disabled={llmLoading}
                 >
                     <Pencil
                         className={isModifying ? "text-teal-500" : ""}
@@ -159,10 +166,9 @@ export default function CodeCellControls({
                     onClick={handleFix}
                     title="Fix code"
                     className={
-                        isModifying
-                            ? "p-1.5 bg-gray-50 hover:bg-gray-100 rounded-full text-white border border-teal-500"
-                            : "p-1.5 bg-gray-50 hover:bg-gray-100 rounded-full text-slate-600 border border-gray-300"
+                        "p-1.5 bg-gray-50 hover:bg-gray-100 rounded-full text-slate-600 border border-gray-300"
                     }
+                    disabled={llmLoading}
                 >
                     <Wand2
                         className={isModifying ? "text-teal-500" : ""}
@@ -173,6 +179,7 @@ export default function CodeCellControls({
                     onClick={onMoveUp}
                     title="Move cell up"
                     className="p-1.5 bg-gray-50 hover:bg-gray-100 rounded-full text-slate-600 border border-gray-300"
+                    disabled={llmLoading}
                 >
                     <ChevronUp size={14} />
                 </button>
@@ -181,6 +188,7 @@ export default function CodeCellControls({
                     onClick={onMoveDown}
                     title="Move cell down"
                     className="p-1.5 bg-gray-50 hover:bg-gray-100 rounded-full text-slate-600 border border-gray-300"
+                    disabled={llmLoading}
                 >
                     <ChevronDown size={14} />
                 </button>
@@ -190,6 +198,7 @@ export default function CodeCellControls({
                     title="Remove cell"
                     className="p-1.5 bg-gray-50 hover:bg-red-50 rounded-full text-gray-600 hover:text-red-600 border border-gray-300"
                     aria-label="Remove cell"
+                    disabled={llmLoading}
                 >
                     <X size={16} />
                 </button>
