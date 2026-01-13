@@ -136,7 +136,11 @@ export default function CodeCellControls({
                             }`}
                             disabled={llmLoading}
                         >
-                            <Send className="-left-4" size={16} />
+                            {llmLoading ? (
+                                <div className="w-4 h-4 border-2 border-t-transparent border-white rounded-full animate-spin" />
+                            ) : (
+                                <Send className="-left-4" size={16} />
+                            )}
                         </button>
                     </>
                 ) : (
