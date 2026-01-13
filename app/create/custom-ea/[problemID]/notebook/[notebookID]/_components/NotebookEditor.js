@@ -11,6 +11,9 @@ import NotebookLoadingScreen from "./NotebookLoadingScreen";
 import useNotebook from "./useNotebook";
 import ChatWindow from "./ChatWindow";
 import useNotebookKeybindings from "./hooks/useNotebookKeybindings";
+import LLMInfoPopup from "./LLMInfoPopup";
+import { Info } from "lucide-react";
+import { useState } from "react";
 
 // Main component
 export default function NotebookEditor({ notebookId, problemId }) {
@@ -39,6 +42,8 @@ export default function NotebookEditor({ notebookId, problemId }) {
         hasUnreadMessages,
         setHasUnreadMessages,
     } = useNotebook(notebookId, problemId);
+
+    const [showLLMInfo, setShowLLMInfo] = useState(false);
 
     useNotebookKeybindings();
 
@@ -165,6 +170,18 @@ export default function NotebookEditor({ notebookId, problemId }) {
                     llmLoading={llmLoading}
                     hasUnreadMessages={hasUnreadMessages}
                     setHasUnreadMessages={setHasUnreadMessages}
+                />
+                <button
+                    onClick={() => setShowLLMInfo(true)}
+                    className="fixed bottom-4 left-4 bg-white p-3 rounded-full shadow-lg border border-gray-200 hover:shadow-xl transition-shadow z-50"
+                    title="LLM Usage Information"
+                >
+                    <Info size={24} className="text-gray-600" />
+                </button>
+
+                <LLMInfoPopup
+                    isOpen={showLLMInfo}
+                    onClose={() => setShowLLMInfo(false)}
                 />
             </NotebookLayout>
         </NotebookProvider>
