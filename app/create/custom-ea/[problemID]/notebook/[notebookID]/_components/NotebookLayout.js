@@ -23,7 +23,7 @@ export default function NotebookLayout({ children }) {
 
             <div className="w-full">
                 <div className="w-full mx-auto">
-                    <div className="w-full px-4 py-6 space-y-6">{children}</div>
+                    <div className="w-full px-6 py-6 space-y-6">{children}</div>
                 </div>
             </div>
         </div>
