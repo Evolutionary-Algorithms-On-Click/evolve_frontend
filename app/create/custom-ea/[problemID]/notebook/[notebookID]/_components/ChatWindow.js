@@ -3,9 +3,16 @@
 import React, { useState } from "react";
 import { ChatIcon, CloseIcon, SendIcon } from "./ChatIcons";
 
-export default function ChatWindow({ onModify, messages, addMessage, llmLoading }) {
+export default function ChatWindow({ onModify, messages, addMessage, llmLoading, hasUnreadMessages, setHasUnreadMessages }) {
     const [instruction, setInstruction] = useState("");
     const [isOpen, setIsOpen] = useState(false);
+
+    function handleToggleChat() {
+        setIsOpen(!isOpen);
+        if (!isOpen) { // If opening the chat window
+            setHasUnreadMessages(false);
+        }
+    }
 
     async function handleModify() {
         if (instruction.trim() !== "" && !llmLoading) {
@@ -17,12 +24,15 @@ export default function ChatWindow({ onModify, messages, addMessage, llmLoading 
     }
 
     return (
-        <div className="fixed bottom-4 right-4">
+        <div className="fixed bottom-4 right-4 z-50">
             <button
-                onClick={() => setIsOpen(!isOpen)}
-                className="bg-white p-4 rounded-full shadow-lg border border-gray-200 hover:shadow-xl transition-shadow"
+                onClick={handleToggleChat}
+                className="bg-white p-4 rounded-full shadow-lg border border-gray-200 hover:shadow-xl transition-shadow relative"
             >
                 {isOpen ? <CloseIcon /> : <ChatIcon />}
+                {hasUnreadMessages && !isOpen && (
+                    <span className="absolute top-2 right-2 w-3 h-3 bg-red-500 rounded-full animate-pulse" />
+                )}
             </button>
             {isOpen && (
                 <div className="bg-white w-96 h-96 rounded-lg shadow-lg mt-2 flex flex-col">

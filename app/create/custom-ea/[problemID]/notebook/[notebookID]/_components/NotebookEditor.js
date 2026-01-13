@@ -35,6 +35,8 @@ export default function NotebookEditor({ notebookId, problemId }) {
         addMessage,
         clearOutput,
         llmLoading,
+        hasUnreadMessages,
+        setHasUnreadMessages,
     } = useNotebook(notebookId, problemId);
 
     useNotebookKeybindings();
@@ -167,6 +169,8 @@ export default function NotebookEditor({ notebookId, problemId }) {
                     messages={messages}
                     addMessage={addMessage}
                     llmLoading={llmLoading}
+                    hasUnreadMessages={hasUnreadMessages}
+                    setHasUnreadMessages={setHasUnreadMessages}
                 />
             </NotebookLayout>
         </NotebookProvider>
