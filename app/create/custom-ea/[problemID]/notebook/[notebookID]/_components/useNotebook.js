@@ -8,6 +8,9 @@ import useNotebookExecution from "./hooks/useNotebookExecution";
 import useNotebookLLM from "./hooks/useNotebookLLM";
 import { mapToApiFormat } from "./utils/notebook-mapper";
 
+const uid = (prefix = "id") =>
+    `${prefix}_${Math.random().toString(36).slice(2, 9)}`;
+
 export default function useNotebook(notebookId, problemId) {
     const [session, setSession] = useState(null);
     const startSessionRef = useRef(null);
@@ -73,11 +76,20 @@ export default function useNotebook(notebookId, problemId) {
         }
     }
 
+    const mapApiResponseToCells = (apiCells) => {
+        return apiCells.map((c, i) => ({
+            ...c,
+            id: uid(c.cell_type || "cell"),
+            idx: i,
+            source: Array.isArray(c.source) ? c.source.join("") : c.source || "",
+        }));
+    };
+
     async function fixCell(cell, traceback) {
         const apiNotebook = mapToApiFormat({ cells });
         const response = await fixNotebook(apiNotebook, traceback);
         if (response && response.notebook) {
-            const newCells = response.notebook.cells;
+            const newCells = mapApiResponseToCells(response.notebook.cells);
             setCells(newCells);
             addMessage({
                 type: "bot",
@@ -99,7 +111,7 @@ export default function useNotebook(notebookId, problemId) {
             cellName,
         );
         if (response && response.notebook) {
-            const newCells = response.notebook.cells;
+            const newCells = mapApiResponseToCells(response.notebook.cells);
             setCells(newCells);
             addMessage({
                 type: "bot",
