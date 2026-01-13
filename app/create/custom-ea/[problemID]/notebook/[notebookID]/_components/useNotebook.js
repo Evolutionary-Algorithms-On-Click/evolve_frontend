@@ -12,6 +12,7 @@ export default function useNotebook(notebookId, problemId) {
     const [session, setSession] = useState(null);
     const startSessionRef = useRef(null);
     const [messages, setMessages] = useState([]);
+    const [hasUnreadMessages, setHasUnreadMessages] = useState(false);
 
     // fetch/generate initial cells
     const { loading, error, initialCells, setInitialCells } = useNotebookFetch(
@@ -67,21 +68,16 @@ export default function useNotebook(notebookId, problemId) {
 
     function addMessage(message) {
         setMessages((prev) => [...prev, message]);
+        if (message.type === 'bot') {
+            setHasUnreadMessages(true);
+        }
     }
 
     async function fixCell(cell, traceback) {
         const apiNotebook = mapToApiFormat({ cells });
         const response = await fixNotebook(apiNotebook, traceback);
         if (response && response.notebook) {
-            let newCells = response.notebook.cells;
-            if (response.cells_modified && response.cells_modified.length === 1) {
-                newCells = newCells.map((newCell, i) => {
-                    if (response.cells_modified.includes(i)) {
-                        return { ...newCell, message: response.changes_made.join("\n") };
-                    }
-                    return newCell;
-                });
-            }
+            const newCells = response.notebook.cells;
             setCells(newCells);
             addMessage({
                 type: "bot",
@@ -103,15 +99,7 @@ export default function useNotebook(notebookId, problemId) {
             cellName,
         );
         if (response && response.notebook) {
-            let newCells = response.notebook.cells;
-            if (response.cells_modified && response.cells_modified.length === 1) {
-                newCells = newCells.map((newCell, i) => {
-                    if (response.cells_modified.includes(i)) {
-                        return { ...newCell, message: response.changes_made.join("\n") };
-                    }
-                    return newCell;
-                });
-            }
+            const newCells = response.notebook.cells;
             setCells(newCells);
             addMessage({
                 type: "bot",
@@ -165,5 +153,7 @@ export default function useNotebook(notebookId, problemId) {
         addMessage,
         clearOutput,
         llmLoading,
+        hasUnreadMessages,
+        setHasUnreadMessages,
     };
 }

@@ -61,14 +61,6 @@ export default function CodeCell({
                     </button>
                 )}
             </div>
-            {cell.message && (
-                <div className="absolute top-1 rounded-lg left-[12.5%] w-[75%] bg-teal-100 text-teal-800 p-2 text-sm z-20 flex justify-between items-center">
-                    <span>{cell.message}</span>
-                    <button onClick={() => onChange({ ...cell, message: null })} className="p-1 hover:bg-teal-200 rounded-full">
-                        <X size={16} />
-                    </button>
-                </div>
-            )}
             <div className="rounded-xl border border-gray-200 overflow-hidden relative bg-white shadow-md hover:shadow-lg transition-shadow duration-300">
                 {cell._isRunning && (
                     <div className="absolute inset-0 bg-white/60 flex items-center justify-center z-10">
