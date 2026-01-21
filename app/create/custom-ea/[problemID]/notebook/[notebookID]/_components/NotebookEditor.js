@@ -236,4 +236,3 @@ export default function NotebookEditor({ notebookId, problemId }) {
         </NotebookProvider>
     );
 }
-
