@@ -1,6 +1,6 @@
 "use client";
 
-import useKernelSocket from "../useKernelSocket";
+import useKernelSocket from "./useKernelSocket";
 
 export default function useNotebookExecution(session, updateCellRef) {
     const { connected, sendExecute } = useKernelSocket(session);

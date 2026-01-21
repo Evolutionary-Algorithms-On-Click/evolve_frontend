@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import NotebookLayout from "./NotebookLayout";
 import Toolbar from "./toolbars/Toolbar";
 import { NotebookProvider } from "./notebookContext";
@@ -8,12 +7,31 @@ import KernelControls from "./KernelControls";
 import CodeCell from "./codeCell/CodeCell";
 import MarkdownCell from "./MarkdownCell";
 import NotebookLoadingScreen from "./NotebookLoadingScreen";
-import useNotebook from "./useNotebook";
+import useNotebook from "./hooks/useNotebook";
 import ChatWindow from "./ChatWindow";
 import useNotebookKeybindings from "./hooks/useNotebookKeybindings";
 import LLMInfoPopup from "./LLMInfoPopup";
-import { Info } from "lucide-react";
-import { useState } from "react";
+import { Info, Save } from "lucide-react";
+import React, { useState } from "react";
+
+const SaveStatus = ({ isSaving, lastSaveTime }) => {
+    if (isSaving) {
+        return (
+            <div className="flex items-center gap-2 text-sm text-gray-500 animate-pulse">
+                <Save size={16} />
+                <span>Saving...</span>
+            </div>
+        );
+    }
+    if (lastSaveTime) {
+        return (
+            <div className="text-sm text-gray-500">
+                Last saved: {lastSaveTime.toLocaleTimeString()}
+            </div>
+        );
+    }
+    return <div className="text-sm text-gray-500">All changes saved</div>;
+};
 
 // Main component
 export default function NotebookEditor({ notebookId, problemId }) {
@@ -41,6 +59,8 @@ export default function NotebookEditor({ notebookId, problemId }) {
         llmLoading,
         hasUnreadMessages,
         setHasUnreadMessages,
+        isSaving,
+        lastSaveTime,
     } = useNotebook(notebookId, problemId);
 
     const [showLLMInfo, setShowLLMInfo] = useState(false);
@@ -85,8 +105,11 @@ export default function NotebookEditor({ notebookId, problemId }) {
                                               .replace(/^#+\s*/, "")
                                         : `Notebook ${notebookId || ""}`}
                                 </div>
-                                <div className="text-sm text-gray-500 mt-1">
-                                    &nbsp;
+                                <div className="text-sm text-gray-500 mt-1 flex items-center gap-2">
+                                    <SaveStatus
+                                        isSaving={isSaving}
+                                        lastSaveTime={lastSaveTime}
+                                    />
                                 </div>
                             </div>
 
@@ -133,7 +156,12 @@ export default function NotebookEditor({ notebookId, problemId }) {
 
                 <div>
                     {(cells || []).map((cell) => (
-                        <div key={`${cell.id}-${cell.idx}`} className="mb-6" data-cell-id={cell.id} tabIndex={-1}>
+                        <div
+                            key={`${cell.id}-${cell.idx}`}
+                            className="mb-6"
+                            data-cell-id={cell.id}
+                            tabIndex={-1}
+                        >
                             {cell.cell_type === "code" ? (
                                 <CodeCell
                                     cell={cell}
@@ -187,4 +215,3 @@ export default function NotebookEditor({ notebookId, problemId }) {
         </NotebookProvider>
     );
 }
-
