@@ -21,6 +21,7 @@
         "@uiw/react-codemirror": "^4.25.3",
         "ai": "^4.2.8",
         "eslint-config-next": "^15.2.0",
+        "lodash.isequal": "^4.5.0",
         "lucide-react": "^0.476.0",
         "next": "^15.2.4",
         "next-runtime-env": "^3.3.0",
