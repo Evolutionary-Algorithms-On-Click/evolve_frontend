@@ -1,12 +1,13 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import useNotebookFetch from "./hooks/useNotebookFetch";
-import useNotebookPersistence from "./hooks/useNotebookPersistence";
-import useNotebookCells from "./hooks/useNotebookCells";
-import useNotebookExecution from "./hooks/useNotebookExecution";
-import useNotebookLLM from "./hooks/useNotebookLLM";
-import { mapToApiFormat } from "./utils/notebook-mapper";
+import useNotebookFetch from "./useNotebookFetch";
+import useNotebookPersistence from "./useNotebookPersistence";
+import useNotebookCells from "./useNotebookCells";
+import useNotebookExecution from "./useNotebookExecution";
+import useNotebookLLM from "./useNotebookLLM";
+import { mapToApiFormat } from "../utils/notebook-mapper";
+import useAutosave from "./useAutosave";
 
 const uid = (prefix = "id") =>
     `${prefix}_${Math.random().toString(36).slice(2, 9)}`;
@@ -36,6 +37,8 @@ export default function useNotebook(notebookId, problemId) {
         moveCellUp,
         moveCellDown,
         setCells,
+        deletedCellIds,
+        clearDeletedCellIds,
     } = cellsHook;
 
     // when fetch completes populate cell state
@@ -45,8 +48,16 @@ export default function useNotebook(notebookId, problemId) {
         }
     }, [initialCells]);
 
-    // persistence
+    // persistence - OLD
     const { saveNotebook } = useNotebookPersistence();
+
+    // persistence - NEW AUTOSAVE
+    const { isSaving, lastSaveTime, triggerSave } = useAutosave(
+        notebookId,
+        cells,
+        deletedCellIds,
+        clearDeletedCellIds,
+    );
 
     // execution: provide a ref so execution hook can call back into updateCell
     const updateCellRef = useRef(null);
@@ -71,7 +82,7 @@ export default function useNotebook(notebookId, problemId) {
 
     function addMessage(message) {
         setMessages((prev) => [...prev, message]);
-        if (message.type === 'bot') {
+        if (message.type === "bot") {
             setHasUnreadMessages(true);
         }
     }
@@ -81,7 +92,9 @@ export default function useNotebook(notebookId, problemId) {
             ...c,
             id: uid(c.cell_type || "cell"),
             idx: i,
-            source: Array.isArray(c.source) ? c.source.join("") : c.source || "",
+            source: Array.isArray(c.source)
+                ? c.source.join("")
+                : c.source || "",
         }));
     };
 
@@ -125,12 +138,7 @@ export default function useNotebook(notebookId, problemId) {
     }
 
     function handleSave() {
-        if (!cells) {
-            alert("No notebook content to save.");
-            return;
-        }
-        saveNotebook(notebookId, cells);
-        alert("Notebook saved!");
+        triggerSave();
     }
 
     function clearOutput(cellId) {
@@ -167,5 +175,7 @@ export default function useNotebook(notebookId, problemId) {
         llmLoading,
         hasUnreadMessages,
         setHasUnreadMessages,
+        isSaving,
+        lastSaveTime,
     };
 }
