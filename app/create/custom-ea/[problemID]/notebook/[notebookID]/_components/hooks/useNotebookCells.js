@@ -8,6 +8,7 @@ function uid(prefix = "id") {
 
 export default function useNotebookCells(initial = null) {
     const [cells, setCells] = useState(initial || []);
+    const [deletedCellIds, setDeletedCellIds] = useState(new Set());
 
     const setInitial = (initialCells) =>
         setCells((initialCells || []).map((c, i) => ({ ...c, idx: i })));
@@ -61,6 +62,10 @@ export default function useNotebookCells(initial = null) {
 
     function removeCell(id) {
         setCells((s) => {
+            const cellToRemove = s.find(c => c.id === id);
+            if (cellToRemove) {
+                setDeletedCellIds(prev => new Set(prev).add(id));
+            }
             const arr = (s || []).filter((c) => c.id !== id);
             return arr.map((c, i) => ({ ...c, idx: i }));
         });
@@ -90,6 +95,10 @@ export default function useNotebookCells(initial = null) {
         });
     }
 
+    function clearDeletedCellIds() {
+        setDeletedCellIds(new Set());
+    }
+
     return {
         cells,
         setInitial,
@@ -100,5 +109,7 @@ export default function useNotebookCells(initial = null) {
         moveCellUp,
         moveCellDown,
         setCells,
+        deletedCellIds,
+        clearDeletedCellIds,
     };
 }
