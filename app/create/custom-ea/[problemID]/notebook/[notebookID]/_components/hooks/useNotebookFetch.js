@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { env } from "next-runtime-env";
+import useNotebookLLM from "./useNotebookLLM";
 
 // Lightweight decoder copied from previous implementation
 const tryDecodePayload = (p) => {
@@ -59,10 +60,11 @@ const removeEmpty = (obj) => {
     return obj;
 };
 
-export default function useNotebookFetch(notebookId, problemId, session) {
+export default function useNotebookFetch(notebookId, problemId) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [initialCells, setInitialCells] = useState(null);
+    const { generateNotebook, loading: llmLoading } = useNotebookLLM(notebookId);
 
     useEffect(() => {
         let mounted = true;
@@ -70,153 +72,120 @@ export default function useNotebookFetch(notebookId, problemId, session) {
 
         const uid = () => {
             if (typeof crypto !== "undefined" && crypto.randomUUID) {
-                return `${crypto.randomUUID()}`;
+                return crypto.randomUUID();
             }
-
-            // Fallback (RFC4122 v4–compatible)
-            return `${"xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
-                /[xy]/g,
-                (c) => {
-                    const r = (Math.random() * 16) | 0;
-                    const v = c === "x" ? r : (r & 0x3) | 0x8;
-                    return v.toString(16);
-                },
-            )}`;
+            // Fallback
+            return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
+                const r = (Math.random() * 16) | 0;
+                const v = c === "x" ? r : (r & 0x3) | 0x8;
+                return v.toString(16);
+            });
         };
 
-        const fetchNotebook = async () => {
+        // Helper to correctly parse cell_name from the GET /notebooks/{id} response
+        const getCellNameAsString = (cellName) => {
+            if (cellName && typeof cellName === 'object' && cellName.Valid) {
+                return cellName.String;
+            }
+            // In case it's already a string (from generate response or future API changes)
+            if (typeof cellName === 'string') {
+                return cellName;
+            }
+            return null;
+        };
+        
+        const fetchAndPrepareNotebook = async () => {
             if (!notebookId) return;
+
             setLoading(true);
             setError(null);
+
             try {
-                const base =
-                    env("NEXT_PUBLIC_BACKEND_BASE_URL") ??
-                    "http://localhost:8080";
-                const res = await fetch(
-                    `${base}/api/v1/notebooks/${notebookId}`,
-                    {
-                        method: "GET",
-                        credentials: "include",
-                        signal: controller.signal,
-                    },
-                );
+                const base = env("NEXT_PUBLIC_BACKEND_BASE_URL") ?? "http://localhost:8080";
+                const res = await fetch(`${base}/api/v1/notebooks/${notebookId}`, {
+                    method: "GET",
+                    credentials: "include",
+                    signal: controller.signal,
+                });
+
                 if (res.status === 401) {
                     window.location.href = "/auth";
                     return;
                 }
-                if (!res.ok)
-                    throw new Error(
-                        `Failed to fetch notebook: ${res.statusText}`,
-                    );
 
-                const notebookData = await res.json();
-                const currentCells = notebookData?.data?.cells ?? [];
+                // Scenario A: Notebook exists
+                if (res.ok) {
+                    const notebookData = await res.json();
+                    const currentCells = notebookData?.cells ?? [];
 
-                if (currentCells.length === 0) {
-                    // generate via LLM
-                    if (!problemId) {
-                        setError(
-                            "Cannot generate notebook: Missing Problem ID.",
-                        );
-                        setLoading(false);
-                        return;
-                    }
-                    // fetch problem and generate
-                    const problemRes = await fetch(
-                        `${base}/api/v1/problems/${problemId}`,
-                        { credentials: "include", signal: controller.signal },
-                    );
-                    if (!problemRes.ok)
-                        throw new Error("Failed to fetch problem.");
-                    const problemData = await problemRes.json();
-                    const problemDetails = problemData?.data ?? problemData;
-
-                    let payload =
-                        problemDetails &&
-                        (problemDetails.description_json || problemDetails);
-                    const decoded = tryDecodePayload(payload);
-                    const cleanedProblem = removeEmpty(decoded);
-
-                    const user_id = session?.user_id
-                        ? String(session.user_id)
-                        : "";
-                    const notebook_id = notebookId ? String(notebookId) : "";
-
-                    payload = {
-                        ...(cleanedProblem || {}),
-                        notebook_id,
-                        // TODO: Later fetch user ID from session/auth context
-                        user_id: "UserID should be taken from session",
-                    };
-
-                    const llmRes = await fetch(`${base}/api/v1/llm/generate`, {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        credentials: "include",
-                        body: JSON.stringify(payload),
-                        signal: controller.signal,
-                    });
-                    if (!llmRes.ok)
-                        throw new Error(
-                            "Failed to generate notebook from LLM.",
-                        );
-                    const llmNotebook = await llmRes.json();
-
-                    const newCells =
-                        llmNotebook?.notebook?.cells.map((c, i) => ({
-                            id: uid(),
-                            idx: i,
-                            cell_name: c.cell_name,
-                            cell_type: c.cell_type || "code",
-                            source: Array.isArray(c.source)
-                                ? c.source.join("")
-                                : c.source || "",
-                            outputs: [],
-                            execution_count: c.execution_count || 0,
-                        })) ?? [];
-
-                    if (newCells.length > 0) setInitialCells(newCells);
-                    else
-                        setInitialCells([
-                            {
-                                id: uid(),
-                                cell_type: "markdown",
-                                source: "# New Notebook",
-                            },
-                        ]);
-                } else {
-                    setInitialCells(
-                        currentCells.map((c, i) => ({
+                    if (currentCells.length > 0) {
+                        console.log("Notebook found with cells, loading content.");
+                        const mappedCells = currentCells.map((c, i) => ({
                             ...c,
-                            id: uid(),
+                            id: uid(), // Use frontend ID
                             idx: i,
-                            cell_name: c.cell_name,
-                            cell_type: c.cell_type || "code",
+                            cell_name: getCellNameAsString(c.cell_name), // Correctly parse cell_name
                             source: c.source || "",
                             execution_count: c.execution_count || 0,
-                        })),
-                    );
+                        }));
+                        setInitialCells(mappedCells);
+                        return; // Done
+                    }
+                    // If notebook exists but is empty, fall through to generation
+                    console.log("Notebook found, but it is empty. Generating content.");
+                } else if (res.status !== 404) {
+                    // Handle errors other than "Not Found"
+                    const errorText = await res.text();
+                    throw new Error(`Failed to fetch notebook: ${res.status} ${errorText}`);
+                } else {
+                    console.log("Notebook not found. Creating and generating a new one.");
+                    // This is a new notebook, we need to create the DB entry first
+                    // The backend should handle creating the notebook entry on generate
                 }
+                
+                // Scenario B: Notebook is new or empty, so we generate it.
+                if (!problemId) {
+                    throw new Error("Cannot generate notebook: Missing Problem ID.");
+                }
+
+                const llmResult = await generateNotebook(problemId);
+
+                if (!llmResult || !llmResult.notebook || !llmResult.notebook.cells) {
+                    throw new Error("Failed to generate notebook content from LLM.");
+                }
+                
+                const generatedCells = llmResult.notebook.cells.map((c, i) => ({
+                    ...c,
+                    id: uid(), // Create frontend UUID for new cells
+                    idx: i,
+                    cell_name: c.cell_name, // Is already a string from generate endpoint
+                    source: Array.isArray(c.source) ? c.source.join("") : c.source || "",
+                    outputs: [],
+                    execution_count: c.execution_count || 0,
+                }));
+                
+                setInitialCells(generatedCells);
+
             } catch (err) {
                 if (controller.signal.aborted) return;
-                console.error(err);
-                setError(err.message || "An error occurred.");
+                console.error("Error during notebook fetch/generation:", err);
+                setError(err.message || "An unknown error occurred.");
                 setInitialCells([]);
             } finally {
                 if (mounted) setLoading(false);
             }
         };
 
-        fetchNotebook();
+        fetchAndPrepareNotebook();
 
         return () => {
             mounted = false;
             controller.abort();
         };
-        // Intentionally exclude `session` from dependencies so starting/setting a kernel
-        // session does not re-trigger a full notebook fetch/generation which caused
-        // the UI to refresh repeatedly when starting a session.
     }, [notebookId, problemId]);
 
-    return { loading, error, initialCells, setInitialCells };
+    // Expose a combined loading state
+    const isProcessing = loading || llmLoading;
+
+    return { loading: isProcessing, error, initialCells, setInitialCells };
 }
