@@ -17,6 +17,9 @@ export default function NotebookDashboard() {
     const [creating, setCreating] = useState(false);
     const [showCreateModal, setShowCreateModal] = useState(false);
     const [newNotebookName, setNewNotebookName] = useState("");
+    const [notebookToDelete, setNotebookToDelete] = useState(null);
+    const [notebookToRename, setNotebookToRename] = useState(null);
+    const [updatedName, setUpdatedName] = useState("");
     const router = useRouter();
 
     // route params (client) - preferred source for problem id
@@ -26,33 +29,6 @@ export default function NotebookDashboard() {
     const [problemStatement, setProblemStatement] = useState(null);
     const [loadingProblem, setLoadingProblem] = useState(false);
     const [problemError, setProblemError] = useState(null);
-
-    const previousRuns = [
-        {
-            id: 0,
-            title: "Q3 Sales Analysis Run",
-            date: "Nov 10, 2025",
-            metadata: "5 cells executed",
-        },
-        {
-            id: 1,
-            title: "Data Cleaning Pipeline",
-            date: "Nov 8, 2025",
-            metadata: "23 cells executed",
-        },
-        {
-            id: 2,
-            title: "ML Model Training",
-            date: "Nov 5, 2025",
-            metadata: "18 cells executed",
-        },
-        {
-            id: 3,
-            title: "Statistical Analysis",
-            date: "Nov 2, 2025",
-            metadata: "15 cells executed",
-        },
-    ];
 
     // notebooksState will be populated from the backend; fallback to empty array
     const notebooks = notebooksState ?? [];
@@ -230,6 +206,68 @@ export default function NotebookDashboard() {
         }
     };
 
+    const handleRenameNotebook = async (notebook, newName) => {
+        const notebookId = notebook.id ?? notebook._id;
+        if (!notebookId) {
+            alert("Cannot rename: notebook ID not found.");
+            return;
+        }
+
+        try {
+            const base = env("NEXT_PUBLIC_BACKEND_BASE_URL") ?? "http://localhost:8080";
+            const res = await fetch(`${base}/api/v1/notebooks/${notebookId}`, {
+                method: "PUT",
+                credentials: "include",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ title: newName }),
+            });
+
+            if (!res.ok) {
+                const errorBody = await res.text();
+                throw new Error(errorBody || `Failed with status ${res.status}`);
+            }
+            
+            // update state
+            setNotebooksState(prev => 
+                prev.map(nb => 
+                    (nb.id ?? nb._id) === notebookId ? { ...nb, title: newName } : nb
+                )
+            );
+        } catch (err) {
+            console.error("Failed to rename notebook:", err);
+            alert(`Failed to rename notebook: ${err.message}`);
+        }
+    };
+
+    const handleDeleteNotebook = async (notebook) => {
+        const notebookId = notebook.id ?? notebook._id;
+        if (!notebookId) {
+            alert("Cannot delete: notebook ID not found.");
+            return;
+        }
+
+        try {
+            const base = env("NEXT_PUBLIC_BACKEND_BASE_URL") ?? "http://localhost:8080";
+            const res = await fetch(`${base}/api/v1/notebooks/${notebookId}`, {
+                method: "DELETE",
+                credentials: "include",
+            });
+
+            if (!res.ok) {
+                const errorBody = await res.text();
+                throw new Error(errorBody || `Failed with status ${res.status}`);
+            }
+
+            // update state
+            setNotebooksState(prev => 
+                prev.filter(nb => (nb.id ?? nb._id) !== notebookId)
+            );
+        } catch (err) {
+            console.error("Failed to delete notebook:", err);
+            alert(`Failed to delete notebook: ${err.message}`);
+        }
+    };
+
     return (
         <main className="flex flex-col justify-center items-center min-h-screen font-[family-name:var(--font-geist-mono)] p-8">
             <div className="text-center">
@@ -276,7 +314,7 @@ export default function NotebookDashboard() {
                         </div>
                     )}
 
-                    <div className="grid grid-cols-2 gap-8">
+                    <div className="grid grid-cols-1 gap-8">
                         {/* Notebooks Section */}
                         <div>
                             <h2 className="text-3xl font-bold text-gray-800 mb-6">
@@ -305,9 +343,14 @@ export default function NotebookDashboard() {
                                 ) : (
                                     notebooks.map((notebook) => (
                                         <Card
-                                            key={`nb-${notebook.id ?? notebook._id ?? notebook._id}`}
+                                            key={`nb-${notebook.id ?? notebook._id}`}
                                             item={notebook}
                                             type="notebook"
+                                            onRename={(notebook) => {
+                                                setNotebookToRename(notebook);
+                                                setUpdatedName(notebook.title || notebook.name || "");
+                                            }}
+                                            onDelete={(notebook) => setNotebookToDelete(notebook)}
                                             onClick={() => {
                                                 const nbId =
                                                     notebook.id ??
@@ -382,22 +425,82 @@ export default function NotebookDashboard() {
                                     </div>
                                 </div>
                             )}
-                        </div>
 
-                        {/* Previous Runs Section */}
-                        <div>
-                            <h2 className="text-3xl font-bold text-gray-800 mb-6">
-                                Previous Runs
-                            </h2>
-                            <div className="grid grid-cols-2 gap-6">
-                                {previousRuns.map((run) => (
-                                    <Card
-                                        key={`run-${run.id}`}
-                                        item={run}
-                                        type="run"
-                                    />
-                                ))}
-                            </div>
+                            {/* Delete Confirmation Modal */}
+                            {notebookToDelete && (
+                                <div className="fixed inset-0 z-50 grid place-items-center bg-black/40">
+                                    <div className="bg-white rounded-lg p-6 w-full max-w-md shadow-xl">
+                                        <h3 className="text-lg font-semibold mb-2">
+                                            Delete Notebook
+                                        </h3>
+                                        <p className="text-gray-600 mb-4">
+                                            Are you sure you want to delete{" "}
+                                            <span className="font-bold">
+                                                {notebookToDelete.title || notebookToDelete.name}
+                                            </span>
+                                            ? This action cannot be undone.
+                                        </p>
+                                        <div className="flex justify-end gap-2">
+                                            <button
+                                                onClick={() => setNotebookToDelete(null)}
+                                                className="px-4 py-2 rounded bg-gray-200 text-gray-800 hover:bg-gray-300"
+                                            >
+                                                Cancel
+                                            </button>
+                                            <button
+                                                onClick={() => {
+                                                    handleDeleteNotebook(notebookToDelete);
+                                                    setNotebookToDelete(null);
+                                                }}
+                                                className="px-4 py-2 rounded bg-red-600 text-white hover:bg-red-700"
+                                            >
+                                                Delete
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Rename Notebook Modal */}
+                            {notebookToRename && (
+                                <div className="fixed inset-0 z-50 grid place-items-center bg-black/40">
+                                    <div className="bg-white rounded-lg p-6 w-full max-w-md shadow-xl">
+                                        <h3 className="text-lg font-semibold mb-3">
+                                            Rename Notebook
+                                        </h3>
+                                        <label className="text-sm text-gray-600">
+                                            New Name
+                                        </label>
+                                        <input
+                                            value={updatedName}
+                                            onChange={(e) => setUpdatedName(e.target.value)}
+                                            className="w-full border rounded px-3 py-2 mt-1 mb-4"
+                                            placeholder="Enter new notebook name"
+                                        />
+                                        <div className="flex justify-end gap-2">
+                                            <button
+                                                onClick={() => {
+                                                    setNotebookToRename(null);
+                                                    setUpdatedName("");
+                                                }}
+                                                className="px-4 py-2 rounded bg-gray-200 text-gray-800 hover:bg-gray-300"
+                                            >
+                                                Cancel
+                                            </button>
+                                            <button
+                                                onClick={() => {
+                                                    handleRenameNotebook(notebookToRename, updatedName);
+                                                    setNotebookToRename(null);
+                                                    setUpdatedName("");
+                                                }}
+                                                className="px-4 py-2 rounded bg-sky-600 text-white hover:bg-sky-700"
+                                            >
+                                                Save
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
