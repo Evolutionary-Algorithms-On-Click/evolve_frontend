@@ -68,8 +68,21 @@ export default function useNotebookFetch(notebookId, problemId, session) {
         let mounted = true;
         const controller = new AbortController();
 
-        const uid = (prefix = "id") =>
-            `${prefix}_${Math.random().toString(36).slice(2, 9)}`;
+        const uid = () => {
+            if (typeof crypto !== "undefined" && crypto.randomUUID) {
+                return `${crypto.randomUUID()}`;
+            }
+
+            // Fallback (RFC4122 v4–compatible)
+            return `${"xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
+                /[xy]/g,
+                (c) => {
+                    const r = (Math.random() * 16) | 0;
+                    const v = c === "x" ? r : (r & 0x3) | 0x8;
+                    return v.toString(16);
+                },
+            )}`;
+        };
 
         const fetchNotebook = async () => {
             if (!notebookId) return;
@@ -151,7 +164,7 @@ export default function useNotebookFetch(notebookId, problemId, session) {
 
                     const newCells =
                         llmNotebook?.notebook?.cells.map((c, i) => ({
-                            id: uid(c.cell_type || "cell"),
+                            id: uid(),
                             idx: i,
                             cell_name: c.cell_name,
                             cell_type: c.cell_type || "code",
@@ -166,7 +179,7 @@ export default function useNotebookFetch(notebookId, problemId, session) {
                     else
                         setInitialCells([
                             {
-                                id: uid("md"),
+                                id: uid(),
                                 cell_type: "markdown",
                                 source: "# New Notebook",
                             },
@@ -175,7 +188,7 @@ export default function useNotebookFetch(notebookId, problemId, session) {
                     setInitialCells(
                         currentCells.map((c, i) => ({
                             ...c,
-                            id: uid(c.cell_type || "cell"),
+                            id: uid(),
                             idx: i,
                             cell_name: c.cell_name,
                             cell_type: c.cell_type || "code",
