@@ -102,6 +102,7 @@ export default function useNotebook(notebookId, problemId) {
             ...c,
             id: uid(),
             idx: i,
+            cell_name: (c.cell_name && typeof c.cell_name === 'object' && c.cell_name.Valid) ? c.cell_name.String : c.cell_name,
             source: Array.isArray(c.source)
                 ? c.source.join("")
                 : c.source || "",
