@@ -9,8 +9,18 @@ import useNotebookLLM from "./useNotebookLLM";
 import { mapToApiFormat } from "../utils/notebook-mapper";
 import useAutosave from "./useAutosave";
 
-const uid = (prefix = "id") =>
-    `${prefix}_${Math.random().toString(36).slice(2, 9)}`;
+const uid = () => {
+    if (typeof crypto !== "undefined" && crypto.randomUUID) {
+        return `${crypto.randomUUID()}`;
+    }
+
+    // Fallback (RFC4122 v4–compatible)
+    return `${"xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
+        const r = (Math.random() * 16) | 0;
+        const v = c === "x" ? r : (r & 0x3) | 0x8;
+        return v.toString(16);
+    })}`;
+};
 
 export default function useNotebook(notebookId, problemId) {
     const [session, setSession] = useState(null);
@@ -90,7 +100,7 @@ export default function useNotebook(notebookId, problemId) {
     const mapApiResponseToCells = (apiCells) => {
         return apiCells.map((c, i) => ({
             ...c,
-            id: uid(c.cell_type || "cell"),
+            id: uid(),
             idx: i,
             source: Array.isArray(c.source)
                 ? c.source.join("")

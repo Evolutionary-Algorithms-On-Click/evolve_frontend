@@ -2,8 +2,17 @@
 
 import { useState } from "react";
 
-function uid(prefix = "id") {
-    return `${prefix}_${Math.random().toString(36).slice(2, 9)}`;
+function uid() {
+    if (typeof crypto !== "undefined" && crypto.randomUUID) {
+        return `${crypto.randomUUID()}`;
+    }
+
+    // Fallback (RFC4122 v4–compatible)
+    return `${"xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
+        const r = (Math.random() * 16) | 0;
+        const v = c === "x" ? r : (r & 0x3) | 0x8;
+        return v.toString(16);
+    })}`;
 }
 
 export default function useNotebookCells(initial = null) {
@@ -17,7 +26,7 @@ export default function useNotebookCells(initial = null) {
         setCells((s) => {
             const arr = [...(s || [])];
             const newCell = {
-                id: uid("code"),
+                id: uid(),
                 cell_name: "new_code_cell",
                 cell_type: "code",
                 source: "",
@@ -37,7 +46,7 @@ export default function useNotebookCells(initial = null) {
         setCells((s) => {
             const arr = [...(s || [])];
             const newCell = {
-                id: uid("md"),
+                id: uid(),
                 cell_name: "new_markdown_cell",
                 cell_type: "markdown",
                 source: "New paragraph",
@@ -62,9 +71,9 @@ export default function useNotebookCells(initial = null) {
 
     function removeCell(id) {
         setCells((s) => {
-            const cellToRemove = s.find(c => c.id === id);
+            const cellToRemove = s.find((c) => c.id === id);
             if (cellToRemove) {
-                setDeletedCellIds(prev => new Set(prev).add(id));
+                setDeletedCellIds((prev) => new Set(prev).add(id));
             }
             const arr = (s || []).filter((c) => c.id !== id);
             return arr.map((c, i) => ({ ...c, idx: i }));
