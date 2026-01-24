@@ -26,9 +26,9 @@ export default function CodeCell({
     const [editorHeight, setEditorHeight] = useState(cell._editorHeight || 200);
     const [showAddMenu, setShowAddMenu] = useState(null); // null, 'top', or 'bottom'
 
-    useEffect(() => {
-        setValue(cell.source || "");
-    }, [cell.source]);
+    // useEffect(() => {
+    //     setValue(cell.source || "");
+    // }, [cell.source]);
 
     function handleChange(v) {
         setValue(v);

@@ -34,7 +34,7 @@ export default function CodeCellEditor({
                             editor.updateOptions({
                                 minimap: { enabled: false },
                                 scrollBeyondLastLine: false,
-                                wordWrap: "off",
+                                wordWrap: "on",
                             });
 
                             const updateHeight = () => {
@@ -53,15 +53,6 @@ export default function CodeCellEditor({
                                     );
                                     try {
                                         setEditorHeight(h);
-                                    } catch (e) {}
-                                    try {
-                                        const layoutInfo =
-                                            editor.getLayoutInfo &&
-                                            editor.getLayoutInfo();
-                                        const width = layoutInfo
-                                            ? layoutInfo.width
-                                            : dom.clientWidth || 800;
-                                        editor.layout({ width, height: h });
                                     } catch (e) {}
                                 } catch (e) {}
                             };
