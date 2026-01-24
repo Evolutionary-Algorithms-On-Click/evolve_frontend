@@ -8,6 +8,7 @@ import CodeCell from "./codeCell/CodeCell";
 import MarkdownCell from "./MarkdownCell";
 import NotebookLoadingScreen from "./NotebookLoadingScreen";
 import useNotebook from "./hooks/useNotebook";
+import useNotebookExport from "./hooks/useNotebookExport";
 import ChatWindow from "./ChatWindow";
 import useNotebookKeybindings from "./hooks/useNotebookKeybindings";
 import LLMInfoPopup from "./LLMInfoPopup";
@@ -62,6 +63,11 @@ export default function NotebookEditor({ notebookId, problemId }) {
         isSaving,
         lastSaveTime,
     } = useNotebook(notebookId, problemId);
+
+    const { exportToIpynb, exportToHtml, printToPdf } = useNotebookExport(
+        cells,
+        notebookId,
+    );
 
     const [showLLMInfo, setShowLLMInfo] = useState(false);
 
@@ -148,17 +154,20 @@ export default function NotebookEditor({ notebookId, problemId }) {
                                     mode="actions"
                                     onRunAll={runAll}
                                     onSave={handleSave}
+                                    onExportIpynb={exportToIpynb}
+                                    onExportHtml={exportToHtml}
+                                    onPrintPdf={printToPdf}
                                 />
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div>
+                <div className="printable-area">
                     {(cells || []).map((cell) => (
                         <div
                             key={`${cell.id}-${cell.idx}`}
-                            className="mb-6"
+                            className="mb-6 cell"
                             data-cell-id={cell.id}
                             tabIndex={-1}
                         >

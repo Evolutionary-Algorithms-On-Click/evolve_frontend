@@ -1,0 +1,31 @@
+@media print {
+    /* Hide all non-essential UI elements */
+    body * {
+        visibility: hidden;
+    }
+
+    /* Show the printable area and its content */
+    .printable-area, .printable-area * {
+        visibility: visible;
+    }
+
+    /* Position the printable area at the top of the page */
+    .printable-area {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+    }
+
+    /* Remove box shadows and borders from cells */
+    .cell {
+        border: 1px solid #ccc !important;
+        box-shadow: none !important;
+        page-break-inside: avoid;
+    }
+
+    /* Ensure no margins on the body in print mode */
+    body {
+        margin: 0;
+    }
+}

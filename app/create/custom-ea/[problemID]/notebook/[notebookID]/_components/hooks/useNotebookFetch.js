@@ -122,7 +122,7 @@ export default function useNotebookFetch(notebookId, problemId) {
                         console.log("Notebook found with cells, loading content.");
                         const mappedCells = currentCells.map((c, i) => ({
                             ...c,
-                            id: uid(), // Use frontend ID
+                            id: c.id, // Use frontend ID
                             idx: i,
                             cell_name: getCellNameAsString(c.cell_name), // Correctly parse cell_name
                             source: c.source || "",
