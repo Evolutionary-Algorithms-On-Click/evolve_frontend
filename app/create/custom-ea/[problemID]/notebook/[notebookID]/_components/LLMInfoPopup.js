@@ -18,7 +18,7 @@ const cellStructure = [
     { name: "Visualization/Results", description: "Code for visualizing results, plotting, or outputting final solutions" },
 ];
 
-export default function LLMInfoPopup({ isOpen, onClose }) {
+export default function LLMInfoPopup({ isOpen, onClose, requirements }) {
     if (!isOpen) return null;
 
     return (
@@ -35,6 +35,14 @@ export default function LLMInfoPopup({ isOpen, onClose }) {
                 <p className="text-gray-700 mb-4 text-sm leading-relaxed">
                     For optimal performance and highly fluid updates, the LLM features are specifically designed to work best with notebooks structured into <strong>12 distinct cells</strong>. This adherence to a consistent structure significantly enhances the AI's ability to understand your evolutionary algorithm setup and make precise, context-aware modifications.
                 </p>
+
+                {requirements && (
+                    <div className="bg-blue-50 border-l-4 border-blue-400 text-blue-800 p-3 mb-4 text-sm" role="alert">
+                        <p className="font-bold">Required Libraries/Packages:</p>
+                        <p className="whitespace-pre-wrap">{requirements}</p>
+                    </div>
+                )}
+                
                 <p className="text-base font-bold text-teal-700 mb-3">
                     Expected 12-Cell Structure for DEAP Notebooks:
                 </p>

@@ -27,9 +27,10 @@ export default function useNotebook(notebookId, problemId) {
     const startSessionRef = useRef(null);
     const [messages, setMessages] = useState([]);
     const [hasUnreadMessages, setHasUnreadMessages] = useState(false);
+    const [requirements, setRequirements] = useState('');
 
     // fetch/generate initial cells
-    const { loading, error, initialCells, setInitialCells } = useNotebookFetch(
+    const { loading, error, initialCells, setInitialCells, initialRequirements } = useNotebookFetch(
         notebookId,
         problemId,
         session,
@@ -56,7 +57,10 @@ export default function useNotebook(notebookId, problemId) {
         if (initialCells !== null) {
             setInitial(initialCells);
         }
-    }, [initialCells]);
+        if (initialRequirements !== null && initialRequirements !== undefined) {
+            setRequirements(initialRequirements);
+        }
+    }, [initialCells, initialRequirements]);
 
     // persistence - OLD
     const { saveNotebook } = useNotebookPersistence();
@@ -110,11 +114,14 @@ export default function useNotebook(notebookId, problemId) {
     };
 
     async function fixCell(cell, traceback) {
-        const apiNotebook = mapToApiFormat({ cells });
+        const apiNotebook = mapToApiFormat({ cells, requirements });
         const response = await fixNotebook(apiNotebook, traceback);
         if (response && response.notebook) {
             const newCells = mapApiResponseToCells(response.notebook.cells);
             setCells(newCells);
+            if (response.requirements) {
+                setRequirements(response.requirements);
+            }
             addMessage({
                 type: "bot",
                 message:
@@ -188,5 +195,6 @@ export default function useNotebook(notebookId, problemId) {
         setHasUnreadMessages,
         isSaving,
         lastSaveTime,
+        requirements,
     };
 }
