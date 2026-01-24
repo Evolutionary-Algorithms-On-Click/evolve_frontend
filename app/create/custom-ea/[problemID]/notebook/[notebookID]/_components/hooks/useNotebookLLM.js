@@ -56,15 +56,12 @@ export default function useNotebookLLM(notebookId) {
                     notebook_id: notebookId,
                 }),
             });
-            if (!response.ok) {
-                throw new Error("Failed to fix notebook");
-            }
-            const data = await response.json();
             return {
                 notebook: data.notebook,
                 message: data.message,
                 changes_made: data.changes_made,
                 cells_modified: data.cells_modified,
+                requirements: data.notebook.requirements,
             };
         } catch (error) {
             setError(error.message);
@@ -101,6 +98,7 @@ export default function useNotebookLLM(notebookId) {
                 message: data.message,
                 changes_made: data.changes_made,
                 cells_modified: data.cells_modified,
+                requirements: data.notebook.requirements,
             };
         } catch (error) {
             setError(error.message);

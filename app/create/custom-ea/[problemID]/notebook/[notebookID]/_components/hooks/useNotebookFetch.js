@@ -64,6 +64,7 @@ export default function useNotebookFetch(notebookId, problemId) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [initialCells, setInitialCells] = useState(null);
+    const [initialRequirements, setInitialRequirements] = useState('');
     const { generateNotebook, loading: llmLoading } = useNotebookLLM(notebookId);
 
     useEffect(() => {
@@ -116,6 +117,11 @@ export default function useNotebookFetch(notebookId, problemId) {
                 // Scenario A: Notebook exists
                 if (res.ok) {
                     const notebookData = await res.json();
+                    if (notebookData.notebook && notebookData.notebook.requirements) {
+                        setInitialRequirements(notebookData.notebook.requirements);
+                    } else if (notebookData.requirements) {
+                        setInitialRequirements(notebookData.requirements);
+                    }
                     const currentCells = notebookData?.cells ?? [];
 
                     if (currentCells.length > 0) {
@@ -154,6 +160,12 @@ export default function useNotebookFetch(notebookId, problemId) {
                     throw new Error("Failed to generate notebook content from LLM.");
                 }
                 
+                if (llmResult.notebook && llmResult.notebook.requirements) {
+                    setInitialRequirements(llmResult.notebook.requirements);
+                } else if (llmResult.requirements) {
+                    setInitialRequirements(llmResult.requirements);
+                }
+                
                 const generatedCells = llmResult.notebook.cells.map((c, i) => ({
                     ...c,
                     id: uid(), // Create frontend UUID for new cells
@@ -187,5 +199,5 @@ export default function useNotebookFetch(notebookId, problemId) {
     // Expose a combined loading state
     const isProcessing = loading || llmLoading;
 
-    return { loading: isProcessing, error, initialCells, setInitialCells };
+    return { loading: isProcessing, error, initialCells, setInitialCells, initialRequirements };
 }

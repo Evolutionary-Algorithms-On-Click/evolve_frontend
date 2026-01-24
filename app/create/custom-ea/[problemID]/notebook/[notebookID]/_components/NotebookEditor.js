@@ -62,6 +62,7 @@ export default function NotebookEditor({ notebookId, problemId }) {
         setHasUnreadMessages,
         isSaving,
         lastSaveTime,
+        requirements,
     } = useNotebook(notebookId, problemId);
 
     const { exportToIpynb, exportToHtml, printToPdf } = useNotebookExport(
@@ -219,6 +220,7 @@ export default function NotebookEditor({ notebookId, problemId }) {
                 <LLMInfoPopup
                     isOpen={showLLMInfo}
                     onClose={() => setShowLLMInfo(false)}
+                    requirements={requirements}
                 />
             </NotebookLayout>
         </NotebookProvider>

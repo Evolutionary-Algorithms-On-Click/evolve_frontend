@@ -12,5 +12,10 @@ export function mapToApiFormat(notebook) {
         metadata: cell.metadata || {},
     }));
 
-    return { cells: mappedCells };
+    const apiNotebook = { cells: mappedCells };
+    if (notebook.requirements) {
+        apiNotebook.requirements = notebook.requirements;
+    }
+
+    return apiNotebook;
 }
