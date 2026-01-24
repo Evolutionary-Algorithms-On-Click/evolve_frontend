@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { mapToApiFormat } from '../utils/notebook-mapper';
 import isEqual from 'lodash.isequal'; // Using a library for deep equality check is more robust
 
-const AUTOSAVE_INTERVAL = 30 * 1000; // 5 minutes
+const AUTOSAVE_INTERVAL = 30 * 1000; // 30 seconds
 
 export default function useAutosave(notebookId, cells, deletedCellIds, clearDeletedCellIds) {
     const [isSaving, setIsSaving] = useState(false);
