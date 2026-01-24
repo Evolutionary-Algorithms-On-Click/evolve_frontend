@@ -6,7 +6,7 @@ import isEqual from 'lodash.isequal'; // Using a library for deep equality check
 
 const AUTOSAVE_INTERVAL = 30 * 1000; // 30 seconds
 
-export default function useAutosave(notebookId, cells, deletedCellIds, clearDeletedCellIds) {
+export default function useAutosave(notebookId, cells, deletedCellIds, clearDeletedCellIds, requirements) {
     const [isSaving, setIsSaving] = useState(false);
     const [lastSaveTime, setLastSaveTime] = useState(null);
     const [isDirty, setIsDirty] = useState(false);
@@ -91,6 +91,7 @@ export default function useAutosave(notebookId, cells, deletedCellIds, clearDele
             updated_order,
             cells_to_delete,
             cells_to_upsert: Object.keys(cells_to_upsert_map).length > 0 ? cells_to_upsert_map : undefined,
+            requirements: requirements || undefined, // Add requirements if present
         };
 
         // Only save if there's something to save
@@ -132,7 +133,7 @@ export default function useAutosave(notebookId, cells, deletedCellIds, clearDele
         } finally {
             setIsSaving(false);
         }
-    }, [isDirty, isSaving, cells, cleanCells, deletedCellIds, notebookId, clearDeletedCellIds]);
+    }, [isDirty, isSaving, cells, cleanCells, deletedCellIds, notebookId, clearDeletedCellIds, requirements]);
 
     // Timer effect
     useEffect(() => {

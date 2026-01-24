@@ -27,14 +27,16 @@ export default function useNotebook(notebookId, problemId) {
     const startSessionRef = useRef(null);
     const [messages, setMessages] = useState([]);
     const [hasUnreadMessages, setHasUnreadMessages] = useState(false);
-    const [requirements, setRequirements] = useState('');
+    const [requirements, setRequirements] = useState("");
 
     // fetch/generate initial cells
-    const { loading, error, initialCells, setInitialCells, initialRequirements } = useNotebookFetch(
-        notebookId,
-        problemId,
-        session,
-    );
+    const {
+        loading,
+        error,
+        initialCells,
+        setInitialCells,
+        initialRequirements,
+    } = useNotebookFetch(notebookId, problemId, session);
 
     // cells management
     const cellsHook = useNotebookCells(null);
@@ -71,6 +73,7 @@ export default function useNotebook(notebookId, problemId) {
         cells,
         deletedCellIds,
         clearDeletedCellIds,
+        requirements,
     );
 
     // execution: provide a ref so execution hook can call back into updateCell
@@ -106,7 +109,12 @@ export default function useNotebook(notebookId, problemId) {
             ...c,
             id: uid(),
             idx: i,
-            cell_name: (c.cell_name && typeof c.cell_name === 'object' && c.cell_name.Valid) ? c.cell_name.String : c.cell_name,
+            cell_name:
+                c.cell_name &&
+                typeof c.cell_name === "object" &&
+                c.cell_name.Valid
+                    ? c.cell_name.String
+                    : c.cell_name,
             source: Array.isArray(c.source)
                 ? c.source.join("")
                 : c.source || "",
@@ -119,8 +127,16 @@ export default function useNotebook(notebookId, problemId) {
         if (response && response.notebook) {
             const newCells = mapApiResponseToCells(response.notebook.cells);
             setCells(newCells);
-            if (response.requirements) {
-                setRequirements(response.requirements);
+            if (response.notebook.requirements) {
+                setRequirements(
+                    response.notebook.requirements &&
+                        typeof response.notebook.requirements === "object"
+                        ? response.notebook.requirements.String
+                        : response.notebook.requirements &&
+                            response.notebook.requirements.Valid
+                          ? response.notebook.requirements.String
+                          : "",
+                );
             }
             addMessage({
                 type: "bot",
@@ -135,7 +151,7 @@ export default function useNotebook(notebookId, problemId) {
 
     async function modifyCell(cell, instruction) {
         const cellName = cell ? cell.cell_name : null;
-        const apiNotebook = mapToApiFormat({ cells });
+        const apiNotebook = mapToApiFormat({ cells, requirements });
         const response = await modifyNotebook(
             apiNotebook,
             instruction,
@@ -144,6 +160,17 @@ export default function useNotebook(notebookId, problemId) {
         if (response && response.notebook) {
             const newCells = mapApiResponseToCells(response.notebook.cells);
             setCells(newCells);
+            if (response.notebook.requirements) {
+                setRequirements(
+                    response.notebook.requirements &&
+                        typeof response.notebook.requirements === "object"
+                        ? response.notebook.requirements.String
+                        : response.notebook.requirements &&
+                            response.notebook.requirements.Valid
+                          ? response.notebook.requirements.String
+                          : "",
+                );
+            }
             addMessage({
                 type: "bot",
                 message:

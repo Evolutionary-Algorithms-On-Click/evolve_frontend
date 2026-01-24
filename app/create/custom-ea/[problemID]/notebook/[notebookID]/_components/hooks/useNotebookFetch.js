@@ -94,6 +94,17 @@ export default function useNotebookFetch(notebookId, problemId) {
             }
             return null;
         };
+
+        const getRequirementsAsString = (requirements) => {
+            if (requirements && typeof requirements === 'object' && requirements.Valid) {
+                return requirements.String;
+            }
+            // In case it's already a string (from generate response or future API changes)
+            if (typeof requirements === 'string') {
+                return requirements;
+            }
+            return "";
+        }
         
         const fetchAndPrepareNotebook = async () => {
             if (!notebookId) return;
@@ -118,9 +129,9 @@ export default function useNotebookFetch(notebookId, problemId) {
                 if (res.ok) {
                     const notebookData = await res.json();
                     if (notebookData.notebook && notebookData.notebook.requirements) {
-                        setInitialRequirements(notebookData.notebook.requirements);
+                        setInitialRequirements(getRequirementsAsString(notebookData.notebook.requirements));
                     } else if (notebookData.requirements) {
-                        setInitialRequirements(notebookData.requirements);
+                        setInitialRequirements(getRequirementsAsString(notebookData.requirements));
                     }
                     const currentCells = notebookData?.cells ?? [];
 
