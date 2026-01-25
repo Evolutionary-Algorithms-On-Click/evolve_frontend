@@ -2,9 +2,8 @@ import localFont from "next/font/local";
 import "./globals.css";
 import "./print.css";
 import { PublicEnvScript } from "next-runtime-env";
-import VideoAcademy from "./_components/VideoAcademy";
+import GlobalLayoutComponents from "./components/GlobalLayoutComponents";
 import ClientLayout from "./components/ClientLayout";
-import HelpDocsButton from "./_components/HelpDocsButton";
 
 const geistSans = localFont({
     src: "./fonts/GeistVF.woff",
@@ -56,9 +55,8 @@ export default function RootLayout({ children }) {
             <body
                 className={`${geistSans.variable} ${geistMono.variable} antialiased`}
             >
-                <VideoAcademy />
+                <GlobalLayoutComponents />
                 {children}
-                <HelpDocsButton />
                 <ClientLayout />
             </body>
         </html>
