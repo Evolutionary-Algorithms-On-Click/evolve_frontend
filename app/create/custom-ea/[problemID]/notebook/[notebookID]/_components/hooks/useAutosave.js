@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { mapToApiFormat } from '../utils/notebook-mapper';
 import isEqual from 'lodash.isequal'; // Using a library for deep equality check is more robust
-import { authenticatedFetch } from '../../../../../../../utils/api';
+import { authenticatedFetchV2 } from '../../../../../../../utils/api';
 
 const AUTOSAVE_INTERVAL = 30 * 1000; // 30 seconds
 
@@ -109,7 +109,7 @@ export default function useAutosave(notebookId, cells, deletedCellIds, clearDele
         }
         
         try {
-            await authenticatedFetch(`/api/v1/notebooks/${notebookId}/cells`, {
+            await authenticatedFetchV2(`/api/v1/notebooks/${notebookId}/cells`, {
                 method: "PATCH",
                 body: JSON.stringify(payload),
             });

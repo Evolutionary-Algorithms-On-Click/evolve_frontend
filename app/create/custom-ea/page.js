@@ -8,7 +8,7 @@ import { LogOut } from "lucide-react";
 import CreateNewAction from "./_components/non-functional/newPSActionButton";
 import ProblemStatementForm from "./_components/non-functional/PSform";
 import StatementsList from "./_components/feature/PSList";
-import { authenticatedFetch } from "@/app/utils/api";
+import { authenticatedFetchV2 } from "@/app/utils/api";
 
 // Parent Component
 export default function CustomEA() {
@@ -44,7 +44,7 @@ export default function CustomEA() {
             setLoadingStatements(true);
             setStatementsError(null);
             try {
-                const data = await authenticatedFetch("/api/v1/problems", {
+                const data = await authenticatedFetchV2("/api/v1/problems", {
                     method: "GET",
                     signal: controller.signal,
                 });
@@ -114,7 +114,7 @@ export default function CustomEA() {
                 description_json: newStatement,
             };
 
-            const createdProblem = await authenticatedFetch("/api/v1/problems", {
+            const createdProblem = await authenticatedFetchV2("/api/v1/problems", {
                 method: "POST",
                 body: JSON.stringify(payload),
             });
