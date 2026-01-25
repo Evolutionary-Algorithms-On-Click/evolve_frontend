@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { authenticatedFetch } from "@/app/utils/api";
+import { authenticatedFetchV2 } from "@/app/utils/api";
 
 export default function useNotebookLLM(notebookId) {
     const [loading, setLoading] = useState(false);
@@ -11,7 +11,7 @@ export default function useNotebookLLM(notebookId) {
         setLoading(true);
         setError(null);
         try {
-            const data = await authenticatedFetch(`/api/v1/llm/generate`, {
+            const data = await authenticatedFetchV2(`/api/v1/llm/generate`, {
                 method: "POST",
                 body: JSON.stringify({
                     problem_id: problemId,
@@ -35,7 +35,7 @@ export default function useNotebookLLM(notebookId) {
         setLoading(true);
         setError(null);
         try {
-            const data = await authenticatedFetch(`/api/v1/llm/fix`, {
+            const data = await authenticatedFetchV2(`/api/v1/llm/fix`, {
                 method: "POST",
                 body: JSON.stringify({
                     notebook,
@@ -54,7 +54,8 @@ export default function useNotebookLLM(notebookId) {
             if (error.message.includes("401")) {
                 window.location.href = "/auth";
             }
-        } finally {
+        }
+        finally {
             setLoading(false);
         }
     }
@@ -63,7 +64,7 @@ export default function useNotebookLLM(notebookId) {
         setLoading(true);
         setError(null);
         try {
-            const data = await authenticatedFetch(`/api/v1/llm/modify`, {
+            const data = await authenticatedFetchV2(`/api/v1/llm/modify`, {
                 method: "POST",
                 body: JSON.stringify({
                     notebook,

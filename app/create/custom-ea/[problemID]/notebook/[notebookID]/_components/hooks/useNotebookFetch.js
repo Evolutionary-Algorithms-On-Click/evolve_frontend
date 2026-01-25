@@ -1,64 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { env } from "next-runtime-env";
+import { authenticatedFetchV2 } from "../../../../../../../utils/api";
 import useNotebookLLM from "./useNotebookLLM";
 
-// Lightweight decoder copied from previous implementation
-const tryDecodePayload = (p) => {
-    if (p === null || p === undefined) return p;
-    if (typeof p === "object") return p;
-    if (typeof p !== "string") return p;
-    const s = p.trim();
-    if (s.startsWith("{") || s.startsWith("[")) {
-        try {
-            return JSON.parse(s);
-        } catch (e) {}
-    }
-    try {
-        let b64 = s.replace(/-/g, "+").replace(/_/g, "/");
-        while (b64.length % 4 !== 0) b64 += "=";
-        const decoded = atob(b64);
-        try {
-            return JSON.parse(decoded);
-        } catch (e) {
-            try {
-                const utf8 = decodeURIComponent(
-                    Array.prototype.map
-                        .call(
-                            decoded,
-                            (c) =>
-                                "%" +
-                                ("00" + c.charCodeAt(0).toString(16)).slice(-2),
-                        )
-                        .join(""),
-                );
-                try {
-                    return JSON.parse(utf8);
-                } catch (e2) {
-                    return utf8;
-                }
-            } catch (e3) {
-                return decoded;
-            }
-        }
-    } catch (err) {
-        return s;
-    }
-};
-
-const removeEmpty = (obj) => {
-    if (obj === null || obj === undefined) return null;
-    if (Array.isArray(obj))
-        return obj.map(removeEmpty).filter((i) => i !== null);
-    if (typeof obj === "object") {
-        return Object.entries(obj)
-            .map(([k, v]) => [k, removeEmpty(v)])
-            .filter(([, v]) => v !== null && v !== "" && v !== undefined)
-            .reduce((acc, [k, v]) => ({ ...acc, [k]: v }), {});
-    }
-    return obj;
-};
+// ... (helper functions remain the same)
 
 export default function useNotebookFetch(notebookId, problemId) {
     const [loading, setLoading] = useState(true);
@@ -113,67 +59,54 @@ export default function useNotebookFetch(notebookId, problemId) {
             setError(null);
 
             try {
-                const base = env("NEXT_PUBLIC_BACKEND_BASE_URL") ?? "http://localhost:8080";
-                const token = localStorage.getItem("token");
-                const headers = {
-                    "Content-Type": "application/json",
-                };
-                if (token) {
-                    headers["Authorization"] = `Bearer ${token}`;
-                }
-
-                const res = await fetch(`${base}/api/v1/notebooks/${notebookId}`, {
-                    method: "GET",
-                    headers: headers,
+                const notebookData = await authenticatedFetchV2(`/api/v1/notebooks/${notebookId}`, {
                     signal: controller.signal,
                 });
 
+                if (notebookData.notebook && notebookData.notebook.requirements) {
+                    setInitialRequirements(getRequirementsAsString(notebookData.notebook.requirements));
+                } else if (notebookData.requirements) {
+                    setInitialRequirements(getRequirementsAsString(notebookData.requirements));
+                }
+                const currentCells = notebookData?.cells ?? [];
 
-                if (res.status === 401) {
-                    window.location.href = "/auth";
+                if (currentCells.length > 0) {
+                    console.log("Notebook found with cells, loading content.");
+                    const mappedCells = currentCells.map((c, i) => ({
+                        ...c,
+                        id: c.id, // Use frontend ID
+                        idx: i,
+                        cell_name: getCellNameAsString(c.cell_name), // Correctly parse cell_name
+                        source: c.source || "",
+                        execution_count: c.execution_count || 0,
+                    }));
+                    setInitialCells(mappedCells);
+                    setLoading(false);
+                    return; // Done
+                }
+                console.log("Notebook found, but it is empty. Generating content.");
+
+            } catch (err) {
+                if (err.message.includes("404")) {
+                    console.log("Notebook not found. Creating and generating a new one.");
+                } else if (controller.signal.aborted) {
+                    return;
+                } else {
+                    console.error("Failed to fetch notebook:", err);
+                    setError(`Failed to fetch notebook: ${err.message}`);
+                    setLoading(false);
                     return;
                 }
+            }
+            
+            // Scenario B: Notebook is new or empty, so we generate it.
+            if (!problemId) {
+                setError("Cannot generate notebook: Missing Problem ID.");
+                setLoading(false);
+                return;
+            }
 
-                // Scenario A: Notebook exists
-                if (res.ok) {
-                    const notebookData = await res.json();
-                    if (notebookData.notebook && notebookData.notebook.requirements) {
-                        setInitialRequirements(getRequirementsAsString(notebookData.notebook.requirements));
-                    } else if (notebookData.requirements) {
-                        setInitialRequirements(getRequirementsAsString(notebookData.requirements));
-                    }
-                    const currentCells = notebookData?.cells ?? [];
-
-                    if (currentCells.length > 0) {
-                        console.log("Notebook found with cells, loading content.");
-                        const mappedCells = currentCells.map((c, i) => ({
-                            ...c,
-                            id: c.id, // Use frontend ID
-                            idx: i,
-                            cell_name: getCellNameAsString(c.cell_name), // Correctly parse cell_name
-                            source: c.source || "",
-                            execution_count: c.execution_count || 0,
-                        }));
-                        setInitialCells(mappedCells);
-                        return; // Done
-                    }
-                    // If notebook exists but is empty, fall through to generation
-                    console.log("Notebook found, but it is empty. Generating content.");
-                } else if (res.status !== 404) {
-                    // Handle errors other than "Not Found"
-                    const errorText = await res.text();
-                    throw new Error(`Failed to fetch notebook: ${res.status} ${errorText}`);
-                } else {
-                    console.log("Notebook not found. Creating and generating a new one.");
-                    // This is a new notebook, we need to create the DB entry first
-                    // The backend should handle creating the notebook entry on generate
-                }
-                
-                // Scenario B: Notebook is new or empty, so we generate it.
-                if (!problemId) {
-                    throw new Error("Cannot generate notebook: Missing Problem ID.");
-                }
-
+            try {
                 const llmResult = await generateNotebook(problemId);
 
                 if (!llmResult || !llmResult.notebook || !llmResult.notebook.cells) {
@@ -182,7 +115,8 @@ export default function useNotebookFetch(notebookId, problemId) {
                 
                 if (llmResult.notebook && llmResult.notebook.requirements) {
                     setInitialRequirements(llmResult.notebook.requirements);
-                } else if (llmResult.requirements) {
+                }
+                else if (llmResult.requirements) {
                     setInitialRequirements(llmResult.requirements);
                 }
                 
@@ -200,8 +134,8 @@ export default function useNotebookFetch(notebookId, problemId) {
 
             } catch (err) {
                 if (controller.signal.aborted) return;
-                console.error("Error during notebook fetch/generation:", err);
-                setError(err.message || "An unknown error occurred.");
+                console.error("Error during notebook generation:", err);
+                setError(err.message || "An unknown error occurred during generation.");
                 setInitialCells([]);
             } finally {
                 if (mounted) setLoading(false);

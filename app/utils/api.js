@@ -2,6 +2,7 @@
 import { env } from "next-runtime-env";
 
 const base = env("NEXT_PUBLIC_BACKEND_BASE_URL") ?? "http://localhost:8080";
+const baseV2 = env("NEXT_PUBLIC_V2_BACKEND_BASE_URL") ?? "http://localhost:5003";
 
 export const authenticatedFetch = async (url, options = {}) => {
     const headers = {
@@ -10,6 +11,38 @@ export const authenticatedFetch = async (url, options = {}) => {
     };
 
     const response = await fetch(`${base}${url}`, {
+        ...options,
+        credentials: "include",
+        headers,
+    });
+
+    if (!response.ok) {
+        const errorData = {
+            message: `Request failed with status: ${response.status}`,
+        };
+        try {
+            const errorJson = await response.json();
+            errorData.message = errorJson.message || errorData.message;
+        } catch (parseError) {
+            console.error("Could not parse error response:", parseError);
+        }
+        throw new Error(errorData.message);
+    }
+
+    if (response.status === 204) {
+        return;
+    }
+
+    return response.json();
+};
+
+export const authenticatedFetchV2 = async (url, options = {}) => {
+    const headers = {
+        ...options.headers,
+        "Content-Type": "application/json",
+    };
+
+    const response = await fetch(`${baseV2}${url}`, {
         ...options,
         credentials: "include",
         headers,
