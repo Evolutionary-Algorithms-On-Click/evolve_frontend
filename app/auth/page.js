@@ -42,9 +42,6 @@ export default function Auth() {
             if (response.ok) {
                 let data = await response.json();
 
-                localStorage.setItem("email", data.data.email);
-                localStorage.setItem("userName", data.data.userName);
-                localStorage.setItem("fullName", data.data.fullName);
                 localStorage.setItem("id", data.data.id);
 
                 setIsLoading(false);

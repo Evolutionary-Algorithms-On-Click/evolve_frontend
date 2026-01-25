@@ -1,0 +1,480 @@
+"use client";
+
+import React, { useEffect, useState } from "react";
+import Link from "next/link";
+import { useParams, useRouter } from "next/navigation";
+import { LogOut, Plus, PlayCircle, BookOpen } from "lucide-react";
+import formatDate from "@/app/utils/formatDate";
+import Loader from "@/app/_components/Loader";
+import { authenticatedFetch } from "@/app/utils/api";
+import { Card, CreateCard, PSDetails } from "./_components";
+
+// Main App
+export default function NotebookDashboard() {
+    const [userData, setUserData] = useState({});
+    useEffect(() => {
+        if (!localStorage.getItem("id")) {
+            window.location.href = "/auth";
+            return;
+        } else {
+            setUserData({
+                email: localStorage.getItem("email"),
+                userName: localStorage.getItem("userName"),
+                fullName: localStorage.getItem("fullName"),
+                id: localStorage.getItem("id"),
+            });
+        }
+    }, []);
+
+    const [notebooksState, setNotebooksState] = useState(null); // null = loading
+    const [loadingNotebooks, setLoadingNotebooks] = useState(true);
+    const [notebooksError, setNotebooksError] = useState(null);
+    const [creating, setCreating] = useState(false);
+    const [showCreateModal, setShowCreateModal] = useState(false);
+    const [newNotebookName, setNewNotebookName] = useState("");
+    const [notebookToDelete, setNotebookToDelete] = useState(null);
+    const [notebookToRename, setNotebookToRename] = useState(null);
+    const [updatedName, setUpdatedName] = useState("");
+    const router = useRouter();
+
+    // route params (client) - preferred source for problem id
+    const params = useParams();
+    const routeProblemId = params?.problemID ?? null;
+
+    const [problemStatement, setProblemStatement] = useState(null);
+    const [loadingProblem, setLoadingProblem] = useState(false);
+    const [problemError, setProblemError] = useState(null);
+
+    // notebooksState will be populated from the backend; fallback to empty array
+    const notebooks = notebooksState ?? [];
+
+    useEffect(() => {
+        let mounted = true;
+        const controller = new AbortController();
+
+        const fetchNotebooks = async () => {
+            setLoadingNotebooks(true);
+            setNotebooksError(null);
+            try {
+                const data = await authenticatedFetch("/api/v1/notebooks", {
+                    method: "GET",
+                    signal: controller.signal,
+                });
+
+                if (!mounted) return;
+
+                if (Array.isArray(data)) {
+                    setNotebooksState(data);
+                } else if (data && Array.isArray(data.data)) {
+                    setNotebooksState(data.data);
+                } else {
+                    setNotebooksState([]);
+                }
+            } catch (err) {
+                if (controller.signal.aborted) return;
+                console.error("Failed to fetch notebooks:", err);
+                if (err.message.includes("401")) {
+                    window.location.href = "/auth";
+                    return;
+                }
+                setNotebooksError(err.message ?? "Failed to load notebooks.");
+                setNotebooksState([]);
+            } finally {
+                if (mounted) setLoadingNotebooks(false);
+            }
+        };
+
+        fetchNotebooks();
+
+        // fetch problem statement details (if routeProblemId present)
+        const fetchProblem = async () => {
+            if (!routeProblemId) return;
+            setLoadingProblem(true);
+            setProblemError(null);
+            try {
+                const data = await authenticatedFetch(
+                    `/api/v1/problems/${routeProblemId}`,
+                    {
+                        method: "GET",
+                        signal: controller.signal,
+                    },
+                );
+
+                if (!mounted) return;
+
+                const stmt = data && data.data ? data.data : data;
+                setProblemStatement(stmt);
+            } catch (err) {
+                if (controller.signal.aborted) return;
+                console.error("Failed to fetch problem statement:", err);
+                if (err.message.includes("401")) {
+                    window.location.href = "/auth";
+                    return;
+                }
+                setProblemError(err.message ?? "Failed to load problem.");
+                setProblemStatement(null);
+            } finally {
+                if (mounted) setLoadingProblem(false);
+            }
+        };
+
+        fetchProblem();
+
+        return () => {
+            mounted = false;
+            controller.abort();
+        };
+    }, [routeProblemId]);
+
+    const handleCreateNotebook = async () => {
+        const name =
+            newNotebookName || window.prompt("Notebook name:", "My Notebook");
+        if (!name || name.trim() === "") return;
+        // Prefer problem id from route
+        const problemId = routeProblemId ?? null;
+
+        setCreating(true);
+        try {
+            const payload = {
+                title: name.trim(),
+                problem_statement_id:
+                    problemId && problemId.trim() !== ""
+                        ? problemId.trim()
+                        : null,
+            };
+
+            const created = await authenticatedFetch("/api/v1/notebooks", {
+                method: "POST",
+                body: JSON.stringify(payload),
+            });
+
+            const added = created && created.data ? created.data : created;
+
+            setNotebooksState((prev) => [added, ...(prev || [])]);
+            // close modal
+            setShowCreateModal(false);
+            setNewNotebookName("");
+            // navigate to notebook view if id present
+            const nbId = added.id ?? added._id ?? null;
+            if (nbId) {
+                const encodedNbId = encodeURIComponent(nbId);
+                if (routeProblemId && routeProblemId.trim() !== "") {
+                    const pid = encodeURIComponent(routeProblemId.trim());
+                    // navigate to /create/custom-ea/[problemID]/notebook/[notebookID]
+                    router.push(
+                        `/create/custom-ea/${pid}/notebook/${encodedNbId}`,
+                    );
+                    return;
+                }
+                // fallback
+                router.push(`/notebooks/${encodedNbId}`);
+                return;
+            }
+            alert(`Created notebook "${added.name || added.id}"`);
+        } catch (err) {
+            console.error("Failed to create notebook:", err);
+            if (err.message.includes("401")) {
+                window.location.href = "/auth";
+                return;
+            }
+            alert(`Failed to create notebook: ${err.message}`);
+        } finally {
+            setCreating(false);
+        }
+    };
+
+    const handleRenameNotebook = async (notebook, newName) => {
+        const notebookId = notebook.id ?? notebook._id;
+        if (!notebookId) {
+            alert("Cannot rename: notebook ID not found.");
+            return;
+        }
+
+        try {
+            await authenticatedFetch(`/api/v1/notebooks/${notebookId}`, {
+                method: "PUT",
+                body: JSON.stringify({ title: newName }),
+            });
+
+            // update state
+            setNotebooksState(prev =>
+                prev.map(nb =>
+                    (nb.id ?? nb._id) === notebookId ? { ...nb, title: newName } : nb
+                )
+            );
+        } catch (err) {
+            console.error("Failed to rename notebook:", err);
+            if (err.message.includes("401")) {
+                window.location.href = "/auth";
+                return;
+            }
+            alert(`Failed to rename notebook: ${err.message}`);
+        }
+    };
+
+    const handleDeleteNotebook = async (notebook) => {
+        const notebookId = notebook.id ?? notebook._id;
+        if (!notebookId) {
+            alert("Cannot delete: notebook ID not found.");
+            return;
+        }
+
+        try {
+            await authenticatedFetch(`/api/v1/notebooks/${notebookId}`, {
+                method: "DELETE",
+            });
+
+            // update state
+            setNotebooksState(prev =>
+                prev.filter(nb => (nb.id ?? nb._id) !== notebookId)
+            );
+        } catch (err) {
+            console.error("Failed to delete notebook:", err);
+            if (err.message.includes("401")) {
+                window.location.href = "/auth";
+                return;
+            }
+            alert(`Failed to delete notebook: ${err.message}`);
+        }
+    };
+
+    return (
+        <main className="flex flex-col justify-center items-center min-h-screen font-[family-name:var(--font-geist-mono)] p-8">
+            <div className="text-center">
+                <h1 className="text-3xl sm:text-4xl font-bold">
+                    Evolve OnClick
+                </h1>
+                <p>Run and Visualize algorithms with just a click.</p>
+            </div>
+
+            <div className="flex flex-row gap-4 mt-4">
+                <Link
+                    href="/create"
+                    className="rounded-full border border-solid border-black/[.08] transition-colors flex items-center justify-center bg-background text-foreground hover:bg-[#000000] hover:text-background text-sm sm:text-base px-4 py-2 mt-2"
+                >
+                    ← Go Back
+                </Link>
+            </div>
+
+            <div className="w-full max-w-8xl mt-8 bg-gray-50 rounded-2xl overflow-hidden shadow-md">
+                <div className="p-8">
+                    {/* Problem Statement preview (compact) */}
+                    {routeProblemId && (
+                        <div className="mb-6">
+                            <h2 className="text-2xl font-bold text-gray-800 mb-4">
+                                Problem Statement
+                            </h2>
+                            {loadingProblem ? (
+                                <div className="text-sm text-gray-500">
+                                    Loading problem...
+                                </div>
+                            ) : problemError ? (
+                                <div className="text-sm text-red-500">
+                                    {problemError}
+                                </div>
+                            ) : problemStatement ? (
+                                <div className="mb-6">
+                                    <PSDetails statement={problemStatement} />
+                                </div>
+                            ) : (
+                                <div className="text-sm text-gray-500">
+                                    Problem not found.
+                                </div>
+                            )}
+                        </div>
+                    )}
+
+                    <div className="grid grid-cols-1 gap-8">
+                        {/* Notebooks Section */}
+                        <div>
+                            <h2 className="text-3xl font-bold text-gray-800 mb-6">
+                                Notebooks
+                            </h2>
+                            <div className="grid grid-cols-2 gap-6">
+                                <CreateCard
+                                    onClick={() => setShowCreateModal(true)}
+                                    label={
+                                        creating
+                                            ? "Creating..."
+                                            : "Create Notebook"
+                                    }
+                                />
+                                {loadingNotebooks ? (
+                                    <div className="col-span-2">
+                                        <Loader
+                                            type={"inline"}
+                                            message={"Loading notebooks..."}
+                                        />
+                                    </div>
+                                ) : notebooks.length === 0 ? (
+                                    <div className="col-span-2 text-sm text-gray-500">
+                                        No notebooks found.
+                                    </div>
+                                ) : (
+                                    notebooks.map((notebook) => (
+                                        <Card
+                                            key={`nb-${notebook.id ?? notebook._id}`}
+                                            item={notebook}
+                                            type="notebook"
+                                            onRename={(notebook) => {
+                                                setNotebookToRename(notebook);
+                                                setUpdatedName(notebook.title || notebook.name || "");
+                                            }}
+                                            onDelete={(notebook) => setNotebookToDelete(notebook)}
+                                            onClick={() => {
+                                                const nbId =
+                                                    notebook.id ??
+                                                    notebook._id ??
+                                                    null;
+                                                if (!nbId) {
+                                                    alert(
+                                                        "Notebook id not found",
+                                                    );
+                                                    return;
+                                                }
+                                                const encodedNbId =
+                                                    encodeURIComponent(nbId);
+                                                if (
+                                                    routeProblemId &&
+                                                    routeProblemId.trim() !== ""
+                                                ) {
+                                                    const pid =
+                                                        encodeURIComponent(
+                                                            routeProblemId.trim(),
+                                                        );
+                                                    router.push(
+                                                        `/create/custom-ea/${pid}/notebook/${encodedNbId}`,
+                                                    );
+                                                    return;
+                                                }
+                                                router.push(
+                                                    `/notebooks/${encodedNbId}`,
+                                                );
+                                            }}
+                                        />
+                                    ))
+                                )}
+                            </div>
+                            {/* Create modal (simple) */}
+                            {showCreateModal && (
+                                <div className="fixed inset-0 z-50 grid place-items-center bg-black/40">
+                                    <div className="bg-white rounded-lg p-6 w-full max-w-md">
+                                        <h3 className="text-lg font-semibold mb-3">
+                                            Create Notebook
+                                        </h3>
+                                        <label className="text-sm text-gray-600">
+                                            Name
+                                        </label>
+                                        <input
+                                            value={newNotebookName}
+                                            onChange={(e) =>
+                                                setNewNotebookName(
+                                                    e.target.value,
+                                                )
+                                            }
+                                            className="w-full border rounded px-3 py-2 mt-1 mb-4"
+                                            placeholder="Notebook name"
+                                        />
+                                        <div className="flex justify-end gap-2">
+                                            <button
+                                                onClick={() => {
+                                                    setShowCreateModal(false);
+                                                    setNewNotebookName("");
+                                                }}
+                                                className="px-3 py-2 rounded bg-gray-100"
+                                            >
+                                                Cancel
+                                            </button>
+                                            <button
+                                                onClick={handleCreateNotebook}
+                                                className="px-3 py-2 rounded bg-sky-600 text-white"
+                                            >
+                                                Create
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Delete Confirmation Modal */}
+                            {notebookToDelete && (
+                                <div className="fixed inset-0 z-50 grid place-items-center bg-black/40">
+                                    <div className="bg-white rounded-lg p-6 w-full max-w-md shadow-xl">
+                                        <h3 className="text-lg font-semibold mb-2">
+                                            Delete Notebook
+                                        </h3>
+                                        <p className="text-gray-600 mb-4">
+                                            Are you sure you want to delete{" "}
+                                            <span className="font-bold">
+                                                {notebookToDelete.title || notebookToDelete.name}
+                                            </span>
+                                            ? This action cannot be undone.
+                                        </p>
+                                        <div className="flex justify-end gap-2">
+                                            <button
+                                                onClick={() => setNotebookToDelete(null)}
+                                                className="px-4 py-2 rounded bg-gray-200 text-gray-800 hover:bg-gray-300"
+                                            >
+                                                Cancel
+                                            </button>
+                                            <button
+                                                onClick={() => {
+                                                    handleDeleteNotebook(notebookToDelete);
+                                                    setNotebookToDelete(null);
+                                                }}
+                                                className="px-4 py-2 rounded bg-red-600 text-white hover:bg-red-700"
+                                            >
+                                                Delete
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Rename Notebook Modal */}
+                            {notebookToRename && (
+                                <div className="fixed inset-0 z-50 grid place-items-center bg-black/40">
+                                    <div className="bg-white rounded-lg p-6 w-full max-w-md shadow-xl">
+                                        <h3 className="text-lg font-semibold mb-3">
+                                            Rename Notebook
+                                        </h3>
+                                        <label className="text-sm text-gray-600">
+                                            New Name
+                                        </label>
+                                        <input
+                                            value={updatedName}
+                                            onChange={(e) => setUpdatedName(e.target.value)}
+                                            className="w-full border rounded px-3 py-2 mt-1 mb-4"
+                                            placeholder="Enter new notebook name"
+                                        />
+                                        <div className="flex justify-end gap-2">
+                                            <button
+                                                onClick={() => {
+                                                    setNotebookToRename(null);
+                                                    setUpdatedName("");
+                                                }}
+                                                className="px-4 py-2 rounded bg-gray-200 text-gray-800 hover:bg-gray-300"
+                                            >
+                                                Cancel
+                                            </button>
+                                            <button
+                                                onClick={() => {
+                                                    handleRenameNotebook(notebookToRename, updatedName);
+                                                    setNotebookToRename(null);
+                                                    setUpdatedName("");
+                                                }}
+                                                className="px-4 py-2 rounded bg-sky-600 text-white hover:bg-sky-700"
+                                            >
+                                                Save
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    );
+}
