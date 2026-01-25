@@ -29,7 +29,7 @@ export default function useKernelSocket(session) {
             return;
 
         const base =
-            env("NEXT_PUBLIC_BACKEND_BASE_URL") ?? "http://localhost:8080";
+            env("NEXT_PUBLIC_V2_BACKEND_BASE_URL") ?? "http://localhost:8080";
         const wsUrl = toWsUrl(base) + `/api/v1/kernels/${kernelId}/channels`;
 
         let ws;
