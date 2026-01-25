@@ -70,10 +70,7 @@ export default function NotebookEditor({ notebookId, problemId }) {
         isSaving,
         lastSaveTime,
         requirements,
-
     } = useNotebook(notebookId, problemId);
-
-    useNotebookKeybindings();
 
     const { exportToIpynb, exportToHtml, printToPdf } = useNotebookExport(
         cells,
