@@ -36,6 +36,13 @@ const SaveStatus = ({ isSaving, lastSaveTime }) => {
 
 // Main component
 export default function NotebookEditor({ notebookId, problemId }) {
+    useEffect(() => {
+        if (!localStorage.getItem("id")) {
+            window.location.href = "/auth";
+            return;
+        }
+    }, []);
+    
     const {
         cells,
         loading,
