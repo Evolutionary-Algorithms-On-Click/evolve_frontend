@@ -121,6 +121,34 @@ export default function ChooseGpOrNotGp() {
                         </div>
                     </Link>
                 </div>
+
+                <div className="text-center mt-12 mb-8">
+                    <h2 className="text-3xl font-bold text-gray-800 mb-4">
+                        Build Your Own
+                    </h2>
+                    <p className="text-md text-gray-600">
+                        Dive into advanced customization with a blank notebook.
+                    </p>
+                </div>
+                <div className="w-full max-w-2xl mx-auto">
+                    <Link
+                        href="/create/custom-ea"
+                        className="block w-full rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300"
+                    >
+                        <div className="bg-gradient-to-br from-teal-500 to-teal-700 text-white p-8 flex flex-col items-center justify-center rounded-xl overflow-hidden transform hover:-translate-y-1 transition-transform duration-300">
+                            <div className="text-6xl mb-4">🎨</div>
+                            <div className="font-bold text-2xl text-center">
+                                Custom Notebook Development
+                            </div>
+                            <div className="text-lg text-center mt-2 opacity-90">
+                                Start with a blank slate for advanced problem-solving
+                            </div>
+                            <div className="mt-4 px-6 py-3 bg-white text-teal-700 rounded-full font-semibold text-lg shadow-md hover:bg-gray-100 transition-colors duration-300">
+                                Create Custom Notebook →
+                            </div>
+                        </div>
+                    </Link>
+                </div>
             </div>
             <footer className="flex justify-center space-x-4 p-4">
                 <Link
