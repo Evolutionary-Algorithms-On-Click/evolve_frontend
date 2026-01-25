@@ -114,11 +114,20 @@ export default function useNotebookFetch(notebookId, problemId) {
 
             try {
                 const base = env("NEXT_PUBLIC_BACKEND_BASE_URL") ?? "http://localhost:8080";
+                const token = localStorage.getItem("token");
+                const headers = {
+                    "Content-Type": "application/json",
+                };
+                if (token) {
+                    headers["Authorization"] = `Bearer ${token}`;
+                }
+
                 const res = await fetch(`${base}/api/v1/notebooks/${notebookId}`, {
                     method: "GET",
-                    credentials: "include",
+                    headers: headers,
                     signal: controller.signal,
                 });
+
 
                 if (res.status === 401) {
                     window.location.href = "/auth";

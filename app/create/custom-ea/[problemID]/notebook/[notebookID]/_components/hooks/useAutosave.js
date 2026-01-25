@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { mapToApiFormat } from '../utils/notebook-mapper';
 import isEqual from 'lodash.isequal'; // Using a library for deep equality check is more robust
+import { authenticatedFetch } from '../../../../../../../utils/api';
 
 const AUTOSAVE_INTERVAL = 30 * 1000; // 30 seconds
 
@@ -108,17 +109,10 @@ export default function useAutosave(notebookId, cells, deletedCellIds, clearDele
         }
         
         try {
-            const base = process.env.NEXT_PUBLIC_BACKEND_BASE_URL ?? "http://localhost:8080";
-            const res = await fetch(`${base}/api/v1/notebooks/${notebookId}/cells`, {
+            await authenticatedFetch(`/api/v1/notebooks/${notebookId}/cells`, {
                 method: "PATCH",
-                headers: { "Content-Type": "application/json" },
-                credentials: "include",
                 body: JSON.stringify(payload),
             });
-
-            if (!res.ok) {
-                throw new Error(`Failed to save notebook: ${res.statusText}`);
-            }
 
             // On successful save, update the clean state
             setCleanCells(cells);
@@ -129,6 +123,9 @@ export default function useAutosave(notebookId, cells, deletedCellIds, clearDele
 
         } catch (error) {
             console.error("Autosave failed:", error);
+            if (error.message.includes("401")) {
+                window.location.href = "/auth";
+            }
             // Optionally, handle the error in the UI
         } finally {
             setIsSaving(false);

@@ -6,7 +6,7 @@ import { useParams, useRouter } from "next/navigation";
 import { LogOut, Plus, PlayCircle, BookOpen } from "lucide-react";
 import formatDate from "@/app/utils/formatDate";
 import Loader from "@/app/_components/Loader";
-import { env } from "next-runtime-env";
+import { authenticatedFetch } from "@/app/utils/api";
 import { Card, CreateCard, PSDetails } from "./_components";
 
 // Main App
@@ -56,28 +56,13 @@ export default function NotebookDashboard() {
             setLoadingNotebooks(true);
             setNotebooksError(null);
             try {
-                const base =
-                    env("NEXT_PUBLIC_BACKEND_BASE_URL") ??
-                    "http://localhost:8080";
-                const res = await fetch(base + "/api/v1/notebooks", {
+                const data = await authenticatedFetch("/api/v1/notebooks", {
                     method: "GET",
-                    credentials: "include",
                     signal: controller.signal,
                 });
 
                 if (!mounted) return;
 
-                if (res.status === 401) {
-                    window.location.href = "/auth";
-                    return;
-                }
-
-                if (!res.ok) {
-                    const text = await res.text();
-                    throw new Error(`Error ${res.status}: ${text}`);
-                }
-
-                const data = await res.json();
                 if (Array.isArray(data)) {
                     setNotebooksState(data);
                 } else if (data && Array.isArray(data.data)) {
@@ -88,6 +73,10 @@ export default function NotebookDashboard() {
             } catch (err) {
                 if (controller.signal.aborted) return;
                 console.error("Failed to fetch notebooks:", err);
+                if (err.message.includes("401")) {
+                    window.location.href = "/auth";
+                    return;
+                }
                 setNotebooksError(err.message ?? "Failed to load notebooks.");
                 setNotebooksState([]);
             } finally {
@@ -103,36 +92,25 @@ export default function NotebookDashboard() {
             setLoadingProblem(true);
             setProblemError(null);
             try {
-                const base =
-                    env("NEXT_PUBLIC_BACKEND_BASE_URL") ??
-                    "http://localhost:8080";
-                const res = await fetch(
-                    base + `/api/v1/problems/${routeProblemId}`,
+                const data = await authenticatedFetch(
+                    `/api/v1/problems/${routeProblemId}`,
                     {
                         method: "GET",
-                        credentials: "include",
                         signal: controller.signal,
                     },
                 );
 
                 if (!mounted) return;
 
-                if (res.status === 401) {
-                    window.location.href = "/auth";
-                    return;
-                }
-
-                if (!res.ok) {
-                    const text = await res.text();
-                    throw new Error(`Error ${res.status}: ${text}`);
-                }
-
-                const data = await res.json();
                 const stmt = data && data.data ? data.data : data;
                 setProblemStatement(stmt);
             } catch (err) {
                 if (controller.signal.aborted) return;
                 console.error("Failed to fetch problem statement:", err);
+                if (err.message.includes("401")) {
+                    window.location.href = "/auth";
+                    return;
+                }
                 setProblemError(err.message ?? "Failed to load problem.");
                 setProblemStatement(null);
             } finally {
@@ -146,7 +124,7 @@ export default function NotebookDashboard() {
             mounted = false;
             controller.abort();
         };
-    }, []);
+    }, [routeProblemId]);
 
     const handleCreateNotebook = async () => {
         const name =
@@ -157,8 +135,6 @@ export default function NotebookDashboard() {
 
         setCreating(true);
         try {
-            const base =
-                env("NEXT_PUBLIC_BACKEND_BASE_URL") ?? "http://localhost:8080";
             const payload = {
                 title: name.trim(),
                 problem_statement_id:
@@ -167,29 +143,11 @@ export default function NotebookDashboard() {
                         : null,
             };
 
-            const res = await fetch(base + "/api/v1/notebooks", {
+            const created = await authenticatedFetch("/api/v1/notebooks", {
                 method: "POST",
-                credentials: "include",
-                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(payload),
             });
 
-            if (res.status === 401) {
-                window.location.href = "/auth";
-                return;
-            }
-
-            if (res.status === 400) {
-                const txt = await res.text();
-                throw new Error(txt || "Bad Request");
-            }
-
-            if (!res.ok) {
-                const txt = await res.text();
-                throw new Error(`Error ${res.status}: ${txt}`);
-            }
-
-            const created = await res.json();
             const added = created && created.data ? created.data : created;
 
             setNotebooksState((prev) => [added, ...(prev || [])]);
@@ -215,6 +173,10 @@ export default function NotebookDashboard() {
             alert(`Created notebook "${added.name || added.id}"`);
         } catch (err) {
             console.error("Failed to create notebook:", err);
+            if (err.message.includes("401")) {
+                window.location.href = "/auth";
+                return;
+            }
             alert(`Failed to create notebook: ${err.message}`);
         } finally {
             setCreating(false);
@@ -229,27 +191,23 @@ export default function NotebookDashboard() {
         }
 
         try {
-            const base = env("NEXT_PUBLIC_BACKEND_BASE_URL") ?? "http://localhost:8080";
-            const res = await fetch(`${base}/api/v1/notebooks/${notebookId}`, {
+            await authenticatedFetch(`/api/v1/notebooks/${notebookId}`, {
                 method: "PUT",
-                credentials: "include",
-                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ title: newName }),
             });
 
-            if (!res.ok) {
-                const errorBody = await res.text();
-                throw new Error(errorBody || `Failed with status ${res.status}`);
-            }
-            
             // update state
-            setNotebooksState(prev => 
-                prev.map(nb => 
+            setNotebooksState(prev =>
+                prev.map(nb =>
                     (nb.id ?? nb._id) === notebookId ? { ...nb, title: newName } : nb
                 )
             );
         } catch (err) {
             console.error("Failed to rename notebook:", err);
+            if (err.message.includes("401")) {
+                window.location.href = "/auth";
+                return;
+            }
             alert(`Failed to rename notebook: ${err.message}`);
         }
     };
@@ -262,23 +220,20 @@ export default function NotebookDashboard() {
         }
 
         try {
-            const base = env("NEXT_PUBLIC_BACKEND_BASE_URL") ?? "http://localhost:8080";
-            const res = await fetch(`${base}/api/v1/notebooks/${notebookId}`, {
+            await authenticatedFetch(`/api/v1/notebooks/${notebookId}`, {
                 method: "DELETE",
-                credentials: "include",
             });
 
-            if (!res.ok) {
-                const errorBody = await res.text();
-                throw new Error(errorBody || `Failed with status ${res.status}`);
-            }
-
             // update state
-            setNotebooksState(prev => 
+            setNotebooksState(prev =>
                 prev.filter(nb => (nb.id ?? nb._id) !== notebookId)
             );
         } catch (err) {
             console.error("Failed to delete notebook:", err);
+            if (err.message.includes("401")) {
+                window.location.href = "/auth";
+                return;
+            }
             alert(`Failed to delete notebook: ${err.message}`);
         }
     };

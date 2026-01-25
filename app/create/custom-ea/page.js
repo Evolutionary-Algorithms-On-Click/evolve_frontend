@@ -8,7 +8,7 @@ import { LogOut } from "lucide-react";
 import CreateNewAction from "./_components/non-functional/newPSActionButton";
 import ProblemStatementForm from "./_components/non-functional/PSform";
 import StatementsList from "./_components/feature/PSList";
-import { env } from "next-runtime-env";
+import { authenticatedFetch } from "@/app/utils/api";
 
 // Parent Component
 export default function CustomEA() {
@@ -44,29 +44,12 @@ export default function CustomEA() {
             setLoadingStatements(true);
             setStatementsError(null);
             try {
-                const base =
-                    env("NEXT_PUBLIC_BACKEND_BASE_URL") ??
-                    "http://localhost:8080";
-                const res = await fetch(base + "/api/v1/problems", {
+                const data = await authenticatedFetch("/api/v1/problems", {
                     method: "GET",
-                    credentials: "include",
                     signal: controller.signal,
                 });
 
                 if (!mounted) return;
-
-                if (res.status === 401) {
-                    // Not authenticated
-                    window.location.href = "/auth";
-                    return;
-                }
-
-                if (!res.ok) {
-                    const text = await res.text();
-                    throw new Error(`Error ${res.status}: ${text}`);
-                }
-
-                const data = await res.json();
 
                 // Expecting an array of problems per spec
                 if (Array.isArray(data)) {
@@ -80,6 +63,10 @@ export default function CustomEA() {
             } catch (err) {
                 if (controller.signal.aborted) return;
                 console.error("Failed to fetch problems:", err);
+                if (err.message.includes("401")) {
+                    window.location.href = "/auth";
+                    return;
+                }
                 setStatementsError(err.message ?? "Failed to load problems.");
                 setStatements([]);
             } finally {
@@ -117,9 +104,6 @@ export default function CustomEA() {
 
         setIsLoading(true);
         try {
-            const base =
-                env("NEXT_PUBLIC_BACKEND_BASE_URL") ?? "http://localhost:8080";
-
             // build payload according to API: title + description_json
             const payload = {
                 title:
@@ -130,26 +114,10 @@ export default function CustomEA() {
                 description_json: newStatement,
             };
 
-            const res = await fetch(base + "/api/v1/problems", {
+            const createdProblem = await authenticatedFetch("/api/v1/problems", {
                 method: "POST",
-                credentials: "include",
-                headers: {
-                    "Content-Type": "application/json",
-                },
                 body: JSON.stringify(payload),
             });
-
-            if (res.status === 401) {
-                window.location.href = "/auth";
-                return;
-            }
-
-            if (!res.ok) {
-                const text = await res.text();
-                throw new Error(`Error ${res.status}: ${text}`);
-            }
-
-            const createdProblem = await res.json();
 
             // Normalize response (accept { data: obj } or obj)
             const added =
@@ -176,6 +144,10 @@ export default function CustomEA() {
             setSubmitError(null);
         } catch (err) {
             console.error("Failed to create problem:", err);
+            if (err.message.includes("401")) {
+                window.location.href = "/auth";
+                return;
+            }
             alert(`Failed to create problem: ${err.message}`);
             setSubmitError(err.message ?? "Failed to create problem.");
         } finally {

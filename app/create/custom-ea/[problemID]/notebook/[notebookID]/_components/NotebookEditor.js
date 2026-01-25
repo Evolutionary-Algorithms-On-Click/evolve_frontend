@@ -13,7 +13,7 @@ import ChatWindow from "./ChatWindow";
 import useNotebookKeybindings from "./hooks/useNotebookKeybindings";
 import LLMInfoPopup from "./LLMInfoPopup";
 import { Info, Save } from "lucide-react";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const SaveStatus = ({ isSaving, lastSaveTime }) => {
     if (isSaving) {
