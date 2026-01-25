@@ -6,7 +6,7 @@ import { useParams, useRouter } from "next/navigation";
 import { LogOut, Plus, PlayCircle, BookOpen } from "lucide-react";
 import formatDate from "@/app/utils/formatDate";
 import Loader from "@/app/_components/Loader";
-import { authenticatedFetch } from "@/app/utils/api";
+import { authenticatedFetchV2 } from "@/app/utils/api";
 import { Card, CreateCard, PSDetails } from "./_components";
 
 // Main App
@@ -56,7 +56,7 @@ export default function NotebookDashboard() {
             setLoadingNotebooks(true);
             setNotebooksError(null);
             try {
-                const data = await authenticatedFetch("/api/v1/notebooks", {
+                const data = await authenticatedFetchV2("/api/v1/notebooks", {
                     method: "GET",
                     signal: controller.signal,
                 });
@@ -92,7 +92,7 @@ export default function NotebookDashboard() {
             setLoadingProblem(true);
             setProblemError(null);
             try {
-                const data = await authenticatedFetch(
+                const data = await authenticatedFetchV2(
                     `/api/v1/problems/${routeProblemId}`,
                     {
                         method: "GET",
@@ -143,7 +143,7 @@ export default function NotebookDashboard() {
                         : null,
             };
 
-            const created = await authenticatedFetch("/api/v1/notebooks", {
+            const created = await authenticatedFetchV2("/api/v1/notebooks", {
                 method: "POST",
                 body: JSON.stringify(payload),
             });
@@ -191,7 +191,7 @@ export default function NotebookDashboard() {
         }
 
         try {
-            await authenticatedFetch(`/api/v1/notebooks/${notebookId}`, {
+            await authenticatedFetchV2(`/api/v1/notebooks/${notebookId}`, {
                 method: "PUT",
                 body: JSON.stringify({ title: newName }),
             });
@@ -220,7 +220,7 @@ export default function NotebookDashboard() {
         }
 
         try {
-            await authenticatedFetch(`/api/v1/notebooks/${notebookId}`, {
+            await authenticatedFetchV2(`/api/v1/notebooks/${notebookId}`, {
                 method: "DELETE",
             });
 

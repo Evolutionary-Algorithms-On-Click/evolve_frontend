@@ -20,12 +20,18 @@ export default function KernelControls({
         try {
             const base =
                 env("NEXT_PUBLIC_V2_BACKEND_BASE_URL") ?? "http://localhost:8080";
-            const data = await authenticatedFetchV2(`/api/v1/sessions`, {
+            const res = await fetch(`${base}/api/v1/sessions`, {
                 method: "POST",
                 credentials: "include",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ notebook_id: notebookId, language }),
             });
+            if (!res.ok) {
+                throw new Error(
+                    `Failed to start session: ${res.status} ${res.statusText}`
+                );
+            }
+            const data = await res.json();
             setSession(data);
             onSessionCreated && onSessionCreated(data);
             return data;
@@ -47,7 +53,7 @@ export default function KernelControls({
         setError(null);
         try {
             const base =
-                env("NEXT_PUBLIC_BACKEND_BASE_URL") ?? "http://localhost:8080";
+                env("NEXT_PUBLIC_V2_BACKEND_BASE_URL") ?? "http://localhost:8080";
             await fetch(`${base}/api/v1/sessions/${session.id}`, {
                 method: "DELETE",
                 credentials: "include",
