@@ -11,6 +11,21 @@ import { Card, CreateCard, PSDetails } from "./_components";
 
 // Main App
 export default function NotebookDashboard() {
+    const [userData, setUserData] = useState({});
+    useEffect(() => {
+        if (!localStorage.getItem("id")) {
+            window.location.href = "/auth";
+            return;
+        } else {
+            setUserData({
+                email: localStorage.getItem("email"),
+                userName: localStorage.getItem("userName"),
+                fullName: localStorage.getItem("fullName"),
+                id: localStorage.getItem("id"),
+            });
+        }
+    }, []);
+
     const [notebooksState, setNotebooksState] = useState(null); // null = loading
     const [loadingNotebooks, setLoadingNotebooks] = useState(true);
     const [notebooksError, setNotebooksError] = useState(null);
