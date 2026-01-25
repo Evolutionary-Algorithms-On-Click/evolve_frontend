@@ -14,19 +14,19 @@ import { env } from "next-runtime-env";
 export default function CustomEA() {
     const router = useRouter();
     const [userData, setUserData] = useState({});
-    // useEffect(() => {
-    //     if (!localStorage.getItem("id")) {
-    //         window.location.href = "/auth";
-    //         return;
-    //     } else {
-    //         setUserData({
-    //             email: localStorage.getItem("email"),
-    //             userName: localStorage.getItem("userName"),
-    //             fullName: localStorage.getItem("fullName"),
-    //             id: localStorage.getItem("id"),
-    //         });
-    //     }
-    // }, []);
+    useEffect(() => {
+        if (!localStorage.getItem("id")) {
+            window.location.href = "/auth";
+            return;
+        } else {
+            setUserData({
+                email: localStorage.getItem("email"),
+                userName: localStorage.getItem("userName"),
+                fullName: localStorage.getItem("fullName"),
+                id: localStorage.getItem("id"),
+            });
+        }
+    }, []);
 
     const [isCreating, setIsCreating] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
