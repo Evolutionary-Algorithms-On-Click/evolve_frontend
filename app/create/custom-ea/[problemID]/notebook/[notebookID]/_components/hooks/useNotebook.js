@@ -28,6 +28,7 @@ export default function useNotebook(notebookId, problemId) {
     const [messages, setMessages] = useState([]);
     const [hasUnreadMessages, setHasUnreadMessages] = useState(false);
     const [requirements, setRequirements] = useState("");
+    const [notebookName, setNotebookName] = useState("");
 
     // fetch/generate initial cells
     const {
@@ -36,6 +37,7 @@ export default function useNotebook(notebookId, problemId) {
         initialCells,
         setInitialCells,
         initialRequirements,
+        initialName,
     } = useNotebookFetch(notebookId, problemId, session);
 
     // cells management
@@ -62,7 +64,10 @@ export default function useNotebook(notebookId, problemId) {
         if (initialRequirements !== null && initialRequirements !== undefined) {
             setRequirements(initialRequirements);
         }
-    }, [initialCells, initialRequirements]);
+        if (initialName) {
+            setNotebookName(initialName);
+        }
+    }, [initialCells, initialRequirements, initialName]);
 
     // persistence - OLD
     const { saveNotebook } = useNotebookPersistence();
@@ -223,5 +228,6 @@ export default function useNotebook(notebookId, problemId) {
         isSaving,
         lastSaveTime,
         requirements,
+        notebookName,
     };
 }

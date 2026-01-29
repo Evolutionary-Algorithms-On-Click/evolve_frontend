@@ -8,6 +8,7 @@ export default function ActionsToolbarModern({
     onExportIpynb,
     onExportHtml,
     onPrintPdf,
+    onOpenFiles,
 }) {
     const [open, setOpen] = useState(false);
     const menuRef = useRef(null);
@@ -90,6 +91,26 @@ export default function ActionsToolbarModern({
 
     return (
         <div className="flex items-center gap-3">
+            <button
+                onClick={onOpenFiles}
+                title="Manage Files"
+                className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white border border-slate-200 text-slate-600 shadow-sm hover:shadow-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-100 transition-all duration-200"
+            >
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                >
+                    <path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z" />
+                </svg>
+            </button>
+
             <button
                 onClick={onRunAll}
                 title="Run all code cells"
