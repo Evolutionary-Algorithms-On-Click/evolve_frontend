@@ -1,8 +1,8 @@
 "use client";
 import React, { useRef } from "react";
-import { X, Upload, RefreshCw, FileText } from "lucide-react";
+import { X, Upload, RefreshCw, FileText, Trash2 } from "lucide-react";
 
-export default function FileManager({ isOpen, onClose, files, loading, error, onUpload, onRefresh }) {
+export default function FileManager({ isOpen, onClose, files, loading, error, onUpload, onRefresh, onDelete }) {
     const fileInputRef = useRef(null);
 
     if (!isOpen) return null;
@@ -44,6 +44,13 @@ export default function FileManager({ isOpen, onClose, files, loading, error, on
                              <div className="min-w-0 flex-1">
                                  <p className="text-sm font-medium text-gray-700 truncate" title={fileName}>{fileName}</p>
                              </div>
+                             <button
+                                 onClick={() => onDelete(fileName)}
+                                 className="text-gray-400 hover:text-red-500 p-1.5 rounded-md hover:bg-red-50 opacity-0 group-hover:opacity-100 transition-all duration-200"
+                                 title="Delete file"
+                             >
+                                 <Trash2 size={16} />
+                             </button>
                         </div>
                     );
                 })}

@@ -68,11 +68,37 @@ export default function useNotebookFiles(notebookId) {
         }
     }, [notebookId, fetchFiles]);
 
+    const deleteFile = useCallback(async (filename) => {
+        if (!notebookId || !filename) return;
+        setLoading(true);
+        setError(null);
+        try {
+            const url = `${base}/api/v1/sessions/${notebookId}/files/${filename}`;
+            const res = await fetch(url, {
+                method: "DELETE",
+                credentials: "include",
+            });
+
+            if (!res.ok) {
+                 const errorText = await res.text();
+                 throw new Error(errorText || "Failed to delete file");
+            }
+
+            await fetchFiles();
+        } catch (err) {
+             console.error("Delete error:", err);
+             setError(err.message);
+        } finally {
+             setLoading(false);
+        }
+    }, [notebookId, fetchFiles]);
+
     return {
         files,
         loading,
         error,
         fetchFiles,
-        uploadFile
+        uploadFile,
+        deleteFile
     };
 }

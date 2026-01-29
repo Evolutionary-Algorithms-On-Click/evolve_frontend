@@ -90,7 +90,8 @@ export default function NotebookEditor({ notebookId, problemId }) {
         loading: filesLoading, 
         error: filesError, 
         fetchFiles, 
-        uploadFile 
+        uploadFile,
+        deleteFile
     } = useNotebookFiles(notebookId);
 
     // init fetch when notebookId is available and file manager is up
@@ -238,6 +239,7 @@ export default function NotebookEditor({ notebookId, problemId }) {
                     error={filesError}
                     onUpload={uploadFile}
                     onRefresh={fetchFiles}
+                    onDelete={deleteFile}
                 />
                 <ChatWindow
                     onModify={modifyCell}
