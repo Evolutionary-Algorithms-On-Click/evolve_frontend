@@ -11,6 +11,8 @@ import useNotebook from "./hooks/useNotebook";
 import useNotebookExport from "./hooks/useNotebookExport";
 import ChatWindow from "./ChatWindow";
 import useNotebookKeybindings from "./hooks/useNotebookKeybindings";
+import useNotebookFiles from "./hooks/useNotebookFiles";
+import FileManager from "./FileManager";
 import LLMInfoPopup from "./LLMInfoPopup";
 import { Info, Save } from "lucide-react";
 import React, { useState, useEffect } from "react";
@@ -81,6 +83,22 @@ export default function NotebookEditor({ notebookId, problemId }) {
     );
 
     const [showLLMInfo, setShowLLMInfo] = useState(false);
+    const [isFileManagerOpen, setIsFileManagerOpen] = useState(false);
+
+    const { 
+        files, 
+        loading: filesLoading, 
+        error: filesError, 
+        fetchFiles, 
+        uploadFile 
+    } = useNotebookFiles(notebookId);
+
+    // init fetch when notebookId is available and file manager is up
+    useEffect(() => {
+        if (notebookId && isFileManagerOpen) {
+            fetchFiles();
+        }
+    }, [notebookId, isFileManagerOpen, fetchFiles]);
 
     useNotebookKeybindings();
 
@@ -168,6 +186,7 @@ export default function NotebookEditor({ notebookId, problemId }) {
                                     onExportIpynb={exportToIpynb}
                                     onExportHtml={exportToHtml}
                                     onPrintPdf={printToPdf}
+                                    onOpenFiles={() => setIsFileManagerOpen(true)}
                                 />
                             </div>
                         </div>
@@ -211,6 +230,15 @@ export default function NotebookEditor({ notebookId, problemId }) {
                         </div>
                     ))}
                 </div>
+                <FileManager
+                    isOpen={isFileManagerOpen}
+                    onClose={() => setIsFileManagerOpen(false)}
+                    files={files}
+                    loading={filesLoading}
+                    error={filesError}
+                    onUpload={uploadFile}
+                    onRefresh={fetchFiles}
+                />
                 <ChatWindow
                     onModify={modifyCell}
                     messages={messages}
