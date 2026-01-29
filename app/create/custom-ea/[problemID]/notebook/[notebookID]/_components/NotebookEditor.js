@@ -72,6 +72,7 @@ export default function NotebookEditor({ notebookId, problemId }) {
         isSaving,
         lastSaveTime,
         requirements,
+        notebookName,
 
     } = useNotebook(notebookId, problemId);
 
@@ -114,87 +115,80 @@ export default function NotebookEditor({ notebookId, problemId }) {
         );
     }
 
+    const isSessionStarted = Boolean(session?.id);
+
+
     return (
         <NotebookProvider>
             <NotebookLayout>
-                <div className="mb-6">
-                    <div className="mb-2">
-                        <div className="flex items-center justify-between gap-4">
-                            <div className="min-w-0">
-                                <div
-                                    className="text-2xl font-extrabold text-gray-900 truncate max-w-[60vw]"
-                                    title={
-                                        cells &&
-                                        cells[0]?.cell_type === "markdown" &&
-                                        cells[0].source
-                                            ? cells[0].source
-                                                  .split("\n")[0]
-                                                  .replace(/^#+\s*/, "")
-                                            : `Notebook ${notebookId || ""}`
-                                    }
-                                >
-                                    {cells &&
-                                    cells[0]?.cell_type === "markdown" &&
-                                    cells[0].source
-                                        ? cells[0].source
-                                              .split("\n")[0]
-                                              .replace(/^#+\s*/, "")
-                                        : `Notebook ${notebookId || ""}`}
+                <header className="sticky top-0 z-50 bg-white">
+                    <div className="mb-6">
+                        <div className="mb-2">
+                            <div className="flex items-center justify-between gap-4">
+                                <div className="min-w-0">
+                                    <div
+                                        className="text-2xl font-extrabold text-gray-900 truncate max-w-[60vw]"
+                                        title={`Notebook ${notebookName}` || `Notebook ${notebookId || ""}`}
+                                    >
+                                        {`Notebook -> ${notebookName}` || `Notebook ${notebookId || ""}`}
+                                    </div>
+                                    <div className="text-sm text-gray-500 mt-1 flex items-center gap-2">
+                                        <SaveStatus
+                                            isSaving={isSaving}
+                                            lastSaveTime={lastSaveTime}
+                                        />
+                                    </div>
                                 </div>
-                                <div className="text-sm text-gray-500 mt-1 flex items-center gap-2">
-                                    <SaveStatus
-                                        isSaving={isSaving}
-                                        lastSaveTime={lastSaveTime}
-                                    />
-                                </div>
-                            </div>
 
-                            <div className="flex items-center gap-3">
-                                <KernelControls
+                                <div className="flex items-center gap-3">
+                                    <KernelControls
                                     notebookId={notebookId}
                                     language="python3"
                                     onSessionCreated={setSession}
                                     onStartAvailable={(fn) =>
                                         (startSessionRef.current = fn)
                                     }
-                                />
-                            </div>
-                        </div>
-
-                        <div className="mt-3 flex items-center justify-between">
-                            <div>
-                                <div className="hidden sm:block">
-                                    <Toolbar
-                                        mode="add"
-                                        onAddCode={addCodeCell}
-                                        onAddMarkdown={addMarkdownCell}
-                                    />
-                                </div>
-                                <div className="sm:hidden">
-                                    <Toolbar
-                                        mode="add"
-                                        onAddCode={addCodeCell}
-                                        onAddMarkdown={addMarkdownCell}
                                     />
                                 </div>
                             </div>
+                            {isSessionStarted && (    
+                                <div className="mt-3 flex items-center justify-between">
+                                    <div>
+                                        <div className="hidden sm:block">
+                                            <Toolbar
+                                                mode="add"
+                                                onAddCode={addCodeCell}
+                                                onAddMarkdown={addMarkdownCell}
+                                            />
+                                        </div>
+                                        <div className="sm:hidden">
+                                            <Toolbar
+                                                mode="add"
+                                                onAddCode={addCodeCell}
+                                                onAddMarkdown={addMarkdownCell}
+                                            />
+                                        </div>
+                                    </div>
 
-                            <div className="flex items-center gap-3">
-                                <Toolbar
-                                    mode="actions"
-                                    onRunAll={runAll}
-                                    onSave={handleSave}
-                                    onExportIpynb={exportToIpynb}
-                                    onExportHtml={exportToHtml}
-                                    onPrintPdf={printToPdf}
-                                    onOpenFiles={() => setIsFileManagerOpen(true)}
-                                />
-                            </div>
+                                    <div className="flex items-center gap-3">
+                                        <Toolbar
+                                            mode="actions"
+                                            onRunAll={runAll}
+                                            onSave={handleSave}
+                                            onExportIpynb={exportToIpynb}
+                                            onExportHtml={exportToHtml}
+                                            onPrintPdf={printToPdf}
+                                            onOpenFiles={() => setIsFileManagerOpen(true)}
+                                        />
+                                    </div>
+                                </div>
+                            )}
+
                         </div>
                     </div>
-                </div>
+                </header>
 
-                <div className="printable-area">
+                <div className="printable-area max-w-5xl mx-auto">
                     {(cells || []).map((cell) => (
                         <div
                             key={`${cell.id}-${cell.idx}`}
