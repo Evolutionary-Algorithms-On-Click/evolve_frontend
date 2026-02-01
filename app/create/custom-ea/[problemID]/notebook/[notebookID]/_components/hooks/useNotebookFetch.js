@@ -11,6 +11,7 @@ export default function useNotebookFetch(notebookId, problemId) {
     const [error, setError] = useState(null);
     const [initialCells, setInitialCells] = useState(null);
     const [initialRequirements, setInitialRequirements] = useState('');
+    const [initialName, setInitialName] = useState('');
     const { generateNotebook, loading: llmLoading } = useNotebookLLM(notebookId);
 
     useEffect(() => {
@@ -62,11 +63,15 @@ export default function useNotebookFetch(notebookId, problemId) {
                 const notebookData = await authenticatedFetchV2(`/api/v1/notebooks/${notebookId}`, {
                     signal: controller.signal,
                 });
-
-                if (notebookData.notebook && notebookData.notebook.requirements) {
+                 console.log("Fetched notebook data:", notebookData.requirements.String);
+               if (notebookData.notebook && notebookData.notebook.requirements) {
                     setInitialRequirements(getRequirementsAsString(notebookData.notebook.requirements));
                 } else if (notebookData.requirements) {
                     setInitialRequirements(getRequirementsAsString(notebookData.requirements));
+                }
+
+                if (notebookData.title) {
+                    setInitialName(notebookData.title);
                 }
                 const currentCells = notebookData?.cells ?? [];
 
@@ -153,5 +158,5 @@ export default function useNotebookFetch(notebookId, problemId) {
     // Expose a combined loading state
     const isProcessing = loading || llmLoading;
 
-    return { loading: isProcessing, error, initialCells, setInitialCells, initialRequirements };
+    return { loading: isProcessing, error, initialCells, setInitialCells, initialRequirements, initialName };
 }
