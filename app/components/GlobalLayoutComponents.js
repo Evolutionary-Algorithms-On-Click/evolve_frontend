@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import VideoAcademy from "../_components/VideoAcademy.js";
 import HelpDocsButton from "../_components/HelpDocsButton.js";
 
-const notebookPathRegex = /^\/create\/custom-ea\/[^/]+\/notebook\/[^/]+$/;
+const notebookPathRegex = /^\/create\/custom-ea\/[^/]+\/notebook\/[^/]+(\/volpe)?$/;
 
 export default function GlobalLayoutComponents() {
     const pathname = usePathname();
