@@ -1,12 +1,19 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import CodeMirror from "@uiw/react-codemirror";
 import { json } from "@codemirror/lang-json";
 import { env } from "next-runtime-env";
 
 export default function UploadPage() {
+    useEffect(() => {
+        if (!localStorage.getItem("id")) {
+            window.location.href = "/auth";
+            return;
+        }
+    }, []);
+
     const [file, setFile] = useState(null);
     const [response, setResponse] = useState(null);
 

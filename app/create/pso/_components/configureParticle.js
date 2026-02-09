@@ -1,3 +1,5 @@
+import TheoryTooltip from "@/app/_components/TheoryTooltip";
+
 export function ConfigureParticle({
     minPos,
     maxPos,
@@ -13,8 +15,9 @@ export function ConfigureParticle({
 }) {
     return (
         <div className="mt-16">
-            <h4 className="text-lg font-bold mb-4">
+            <h4 className="flex items-center text-lg font-bold mb-4">
                 Step 4: Configure particle parameters.
+                <TheoryTooltip id="minMaxBoundaries" />
             </h4>
 
             {/* Min Position Input */}

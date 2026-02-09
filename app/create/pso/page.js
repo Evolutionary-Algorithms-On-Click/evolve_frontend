@@ -243,6 +243,7 @@ export default function ConfigurePSO() {
                                 nextStep={2}
                                 setCurrentStep={setCurrentStep}
                                 algoData={algorithmData}
+                                theoryId="psoStrategy"
                             />
                         )}
 
@@ -303,6 +304,7 @@ export default function ConfigurePSO() {
                                 nextStep={7}
                                 setCurrentStep={setCurrentStep}
                                 algoData={benchmarkData}
+                                theoryId="benchmarkFunction"
                             />
                         )}
 

@@ -1,3 +1,5 @@
+import TheoryTooltip from "@/app/_components/TheoryTooltip";
+
 export function GetDimensions({
     dimensions,
     setDimensions,
@@ -7,8 +9,9 @@ export function GetDimensions({
 }) {
     return (
         <div className="mt-16">
-            <h4 className="text-lg font-bold mb-4">
+            <h4 className="flex items-center text-lg font-bold mb-4">
                 Step 3: Enter the number of dimensions of the particle.
+                <TheoryTooltip id="dimensions" />
             </h4>
             <input
                 type="number"

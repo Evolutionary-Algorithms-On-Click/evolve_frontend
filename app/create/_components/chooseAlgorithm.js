@@ -1,3 +1,4 @@
+import TheoryTooltip from "../../_components/TheoryTooltip";
 import { algorithmData } from "@/app/_data/algorithms";
 
 export const ChooseAlgo = ({
@@ -12,10 +13,14 @@ export const ChooseAlgo = ({
     setMu,
     lambda,
     setLambda,
+    theoryId = "algorithmStrategy",
 }) => {
     return (
         <div className="my-4">
-            <h4 className="text-lg font-bold mb-4">{title}</h4>
+            <h4 className="flex items-center text-lg font-bold mb-4">
+                {title}
+                <TheoryTooltip id={theoryId} />
+            </h4>
             <div className="grid grid-cols-2 gap-4 align-top">
                 {algoData.map((algorithm, index) => (
                     <button
@@ -77,7 +82,10 @@ export const ChooseAlgo = ({
                     )}
                     <div className="grid grid-cols-2 gap-4 mt-4">
                         <div>
-                            <h6 className="text-lg font-bold mb-4">Mu</h6>
+                            <h6 className="flex items-center text-lg font-bold mb-4">
+                                Mu
+                                <TheoryTooltip id="mu" />
+                            </h6>
                             <input
                                 type="number"
                                 value={mu.toString()}
@@ -108,7 +116,10 @@ export const ChooseAlgo = ({
                             />
                         </div>
                         <div>
-                            <h6 className="text-lg font-bold mb-4">Lambda</h6>
+                            <h6 className="flex items-center text-lg font-bold mb-4">
+                                Lambda
+                                <TheoryTooltip id="lambda" />
+                            </h6>
                             <input
                                 type="number"
                                 value={lambda.toString()}

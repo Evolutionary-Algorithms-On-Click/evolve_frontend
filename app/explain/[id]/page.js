@@ -3,11 +3,18 @@
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState, useRef } from "react";
 import { useChat } from "ai/react";
-import { Bot, Loader2, Send, User, Code, FileJson } from "lucide-react";
+import { Bot, Loader2, Send, User, Code, FileJson, BadgeX } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { env } from "next-runtime-env";
 
 export default function ExplainPage() {
+    useEffect(() => {
+        if (!localStorage.getItem("id")) {
+            window.location.href = "/auth";
+            return;
+        }
+    }, []);
+
     const [codeContent, setCodeContent] = useState(null);
     const [configContent, setConfigContent] = useState(null);
     const [isLoadingData, setIsLoadingData] = useState(true);

@@ -1,3 +1,5 @@
+import TheoryTooltip from "@/app/_components/TheoryTooltip";
+
 export function GetIndividualSize({
     indSize,
     setIndSize,
@@ -7,8 +9,9 @@ export function GetIndividualSize({
 }) {
     return (
         <div className="mt-16">
-            <h4 className="text-lg font-bold mb-4">
+            <h4 className="flex items-center text-lg font-bold mb-4">
                 Step 4: Number of dimensions for the problem? (Individual Size)
+                <TheoryTooltip id="individualSize" />
             </h4>
             <input
                 type="number"

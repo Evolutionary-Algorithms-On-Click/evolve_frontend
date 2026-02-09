@@ -1,3 +1,5 @@
+import TheoryTooltip from "@/app/_components/TheoryTooltip";
+
 export default function ConfigureBloatLimits({
     mateHeight,
     setMateHeight,
@@ -9,8 +11,9 @@ export default function ConfigureBloatLimits({
 }) {
     return (
         <div className="mt-16">
-            <h4 className="text-lg font-bold mb-4">
+            <h4 className="flex items-center text-lg font-bold mb-4">
                 {`Step ${nextStep - 1}: Configure Bloat Limits`}
+                <TheoryTooltip id="bloatLimits" />
             </h4>
 
             <div className="grid grid-cols-2 gap-4 align-top">

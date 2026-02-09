@@ -13,9 +13,9 @@ import { mateData } from "@/app/_data/mate";
 import ConfigureAlgoParams from "../_components/configureAlgoParams";
 import { useRouter } from "next/navigation";
 import { LogOut } from "lucide-react";
-import { algorithmData } from "@/app/_data/algorithms";
 import PreviewML from "@/app/_components/ml/preview";
 import { env } from "next-runtime-env";
+import TheoryTooltip from "@/app/_components/TheoryTooltip";
 
 export default function OptimizeMLModelWithEA() {
     const [userData, setUserData] = useState({});
@@ -208,8 +208,9 @@ export default function OptimizeMLModelWithEA() {
                         <hr className="my-4" />
 
                         <div className="mt-4">
-                            <h4 className="text-lg font-bold">
+                            <h4 className="flex items-center text-lg font-bold">
                                 Step 1: Enter dataset Google Drive URL
+                                <TheoryTooltip id="datasetUrl" />
                             </h4>
                             <p className="text-sm text-gray-500 mb-4">
                                 Upload your preprocessed model-ready dataset to
@@ -229,8 +230,9 @@ export default function OptimizeMLModelWithEA() {
                         </div>
 
                         <div className="mt-16">
-                            <h4 className="text-lg font-bold">
+                            <h4 className="flex items-center text-lg font-bold">
                                 Step 2: Enter target column name
+                                <TheoryTooltip id="targetColumn" />
                             </h4>
                             <p className="text-sm text-gray-500 mb-4">
                                 Enter the target column name to predict.
@@ -283,8 +285,9 @@ export default function OptimizeMLModelWithEA() {
                         </div>
 
                         <div className="mt-16 mb-8">
-                            <h4 className="text-lg font-bold">
+                            <h4 className="flex items-center text-lg font-bold">
                                 Step 5: Enter ML Evaluation Function Code
+                                <TheoryTooltip id="mlEvalFunction" />
                             </h4>
                             <p className="text-sm text-gray-500 mb-4">
                                 Enter the evaluation function code for the ML

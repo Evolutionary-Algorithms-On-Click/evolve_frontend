@@ -1,3 +1,5 @@
+import TheoryTooltip from "@/app/_components/TheoryTooltip";
+
 export default function ChooseMatingFunction({
     title = "Step 6: Choose a mating function.",
     mateData,
@@ -12,7 +14,10 @@ export default function ChooseMatingFunction({
 }) {
     return (
         <div className="mt-8">
-            <h4 className="text-lg font-bold mb-4">{title}</h4>
+            <h4 className="flex items-center text-lg font-bold mb-4">
+                {title}
+                <TheoryTooltip id="matingFunction" />
+            </h4>
             {/* grid: each element has a name and description */}
             <div className="grid grid-cols-2 gap-4 align-top">
                 {mateData.map((mate, index) => (
