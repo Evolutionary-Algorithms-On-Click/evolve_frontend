@@ -4,6 +4,7 @@ import React, { useState, useRef, useEffect } from "react";
 
 export default function ActionsToolbarModern({
     onRunAll,
+    onRunVolpe,
     onSave,
     onExportIpynb,
     onExportHtml,
@@ -48,6 +49,7 @@ export default function ActionsToolbarModern({
             strokeLinejoin="round"
         >
             <path d="M19 21H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h4l2 3h6a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2z" />
+
         </svg>
     );
 
@@ -91,10 +93,12 @@ export default function ActionsToolbarModern({
 
     return (
         <div className="flex items-center gap-3">
+            
             <button
                 onClick={onOpenFiles}
                 title="Manage Files"
-                className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white border border-slate-200 text-slate-600 shadow-sm hover:shadow-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-100 transition-all duration-200"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-yellow-400 text-black shadow-lg hover:bg-yellow-500 active:scale-[0.995] transition-transform duration-150 font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-yellow-300"
+
             >
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -109,6 +113,35 @@ export default function ActionsToolbarModern({
                 >
                     <path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z" />
                 </svg>
+                <span>File Manager</span>
+            </button>
+
+            <button
+                onClick={onRunVolpe}
+                title="Run using VolPE"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-600 text-white shadow-lg hover:bg-indigo-700 active:scale-[0.995] transition-transform duration-150 font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300"
+            >
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                >
+                    <path d="M12 2v4" />
+                    <path d="m16.2 7.8 2.9-2.9" />
+                    <path d="M18 12h4" />
+                    <path d="m16.2 16.2 2.9 2.9" />
+                    <path d="M12 18v4" />
+                    <path d="m4.9 19.1 2.9-2.9" />
+                    <path d="M2 12h4" />
+                    <path d="m4.9 4.9 2.9 2.9" />
+                </svg>
+                <span>Run VolPE</span>
             </button>
 
             <button

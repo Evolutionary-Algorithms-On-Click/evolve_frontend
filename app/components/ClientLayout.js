@@ -3,7 +3,7 @@
 import { usePathname } from "next/navigation";
 import Header from "./Header";
 
-const notebookPathRegex = /^\/create\/custom-ea\/[^/]+\/notebook\/[^/]+$/;
+const notebookPathRegex = /^\/create\/custom-ea\/[^/]+\/notebook\/[^/]+(\/volpe)?$/;
 
 export default function ClientLayout({ children }) {
     const pathname = usePathname();

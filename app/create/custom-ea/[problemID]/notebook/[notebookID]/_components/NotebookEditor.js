@@ -16,6 +16,7 @@ import FileManager from "./FileManager";
 import LLMInfoPopup from "./LLMInfoPopup";
 import { Info, Save } from "lucide-react";
 import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 const SaveStatus = ({ isSaving, lastSaveTime }) => {
     if (isSaving) {
@@ -38,6 +39,8 @@ const SaveStatus = ({ isSaving, lastSaveTime }) => {
 
 // Main component
 export default function NotebookEditor({ notebookId, problemId }) {
+    const router = useRouter();
+
     useEffect(() => {
         if (!localStorage.getItem("id")) {
             window.location.href = "/auth";
@@ -174,6 +177,10 @@ export default function NotebookEditor({ notebookId, problemId }) {
                                         <Toolbar
                                             mode="actions"
                                             onRunAll={runAll}
+                                            onRunVolpe={async () => {
+                                                await handleSave();
+                                                router.push(`/create/custom-ea/${problemId}/notebook/${notebookId}/volpe`);
+                                            }}
                                             onSave={handleSave}
                                             onExportIpynb={exportToIpynb}
                                             onExportHtml={exportToHtml}

@@ -68,13 +68,7 @@ export default function useAutosave(notebookId, cells, deletedCellIds, clearDele
         const currentOrder = cells.map(c => c.id);
         const cleanOrder = cleanCells.map(c => c.id);
 
-        // 1. Find updated order
-        const updated_order = !isEqual(currentOrder, cleanOrder) ? currentOrder : undefined;
-
-        // 2. Find cells to delete
-        const cells_to_delete = deletedCellIds.size > 0 ? Array.from(deletedCellIds) : undefined;
-        
-        // 3. Find cells to upsert (new or modified)
+        // 1. Find cells to upsert (new or modified)
         const cells_to_upsert_map = {};
         for (const cell of cells) {
             const cleanCell = cleanCellMap.get(cell.id);
@@ -88,10 +82,20 @@ export default function useAutosave(notebookId, cells, deletedCellIds, clearDele
             }
         }
 
+        const hasUpserts = Object.keys(cells_to_upsert_map).length > 0;
+
+        // 2. Find updated order
+        // We MUST send updated_order if we have upserts, because the backend uses this list 
+        // to assign cell_index. If missing, it defaults to 0, causing shuffling.
+        const updated_order = (!isEqual(currentOrder, cleanOrder) || hasUpserts) ? currentOrder : undefined;
+
+        // 3. Find cells to delete
+        const cells_to_delete = deletedCellIds.size > 0 ? Array.from(deletedCellIds) : undefined;
+        
         const payload = {
             updated_order,
             cells_to_delete,
-            cells_to_upsert: Object.keys(cells_to_upsert_map).length > 0 ? cells_to_upsert_map : undefined,
+            cells_to_upsert: hasUpserts ? cells_to_upsert_map : undefined,
             requirements: requirements || undefined, // Add requirements if present
         };
 
