@@ -1,14 +1,15 @@
 "use client";
 
-import PreviewBO from "@/app/_components/bo/preview";
 import { BadgeX, Share2, Sparkles } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { env } from "next-runtime-env";
+import PreviewMOBO from "@/app/_components/bo/previewMOBO";
 
-export default function BOExecResult() {
+
+export default function MOBOExecResult() {
     // --- State Variables ---
     const [data, setData] = useState(null);
     const [inputParams, setInputParams] = useState(null);
@@ -33,7 +34,7 @@ export default function BOExecResult() {
     const fetchData = () => {
         const backendBaseUrl =
             env("NEXT_PUBLIC_BACKEND_BASE_URL") ?? "http://localhost:5002";
-        console.log("Fetching execution status for BO Run ID:", id);
+        console.log("Fetching execution status for MOBO Run ID:", id);
 
         fetch(`${backendBaseUrl}/api/runs/run`, {
             method: "POST",
@@ -116,7 +117,7 @@ export default function BOExecResult() {
         }
         setLiveLogs("");
         setSseStatus("connecting");
-        console.log("Attempting to connect to SSE for BO Run ID:", runId);
+        console.log("Attempting to connect to SSE for MOBO Run ID:", runId);
 
         sseAbortControllerRef.current = new AbortController();
         const signal = sseAbortControllerRef.current.signal;
@@ -243,7 +244,7 @@ export default function BOExecResult() {
 
     // --- Fetch final results (logs + best) ---
     const fetchFinalResults = () => {
-        console.log("Fetching final BO results.");
+        console.log("Fetching final MOBO results.");
         fetchLogsContent();
         fetchBestContent();
     };
@@ -255,11 +256,12 @@ export default function BOExecResult() {
 
         const fetchInputParams = () => {
             fetch(`${minioBaseUrl}/code/${id}/input.json`)
-                .then((response) =>
-                    response.ok
-                        ? response.json()
-                        : Promise.reject("Failed fetch input params"),
-                )
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error(`Failed to fetch input params: ${response.status} ${response.statusText}`);
+                    }
+                    return response.json();
+                })
                 .then((data) => setInputParams(data))
                 .catch((error) =>
                     console.error("Error fetching input params:", error),
@@ -267,21 +269,22 @@ export default function BOExecResult() {
         };
 
         const fetchCodeContent = () => {
-            fetch(`${minioBaseUrl}/code/${id}/code.py`)
-                .then((response) =>
-                    response.ok
-                        ? response.text()
-                        : Promise.reject("Failed fetch code"),
-                )
-                .then((text) => setCodeContent(text))
-                .catch((error) =>
-                    console.error("Error fetching code content:", error),
-                );
+        fetch(`${minioBaseUrl}/code/${id}/mobo.py`)
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch code: ${response.status} ${response.statusText}`);
+                }
+                return response.text();
+            })
+            .then((text) => setCodeContent(text))
+            .catch((error) =>
+            console.error("Error fetching code content:", error),
+            );
         };
 
         if (id) {
             console.log(
-                "BO Component Mounted / ID changed. Fetching static data and initial status.",
+                "MOBO Component Mounted / ID changed. Fetching static data and initial status.",
             );
             fetchInputParams();
             fetchCodeContent();
@@ -290,7 +293,7 @@ export default function BOExecResult() {
 
         return () => {
             console.log(
-                "BO Execution component cleanup: Stopping SSE stream.",
+                "MOBO Execution component cleanup: Stopping SSE stream.",
             );
             stopLogStreaming();
         };
@@ -302,11 +305,12 @@ export default function BOExecResult() {
         const minioBaseUrl =
             env("NEXT_PUBLIC_MINIO_BASE_URL") ?? "http://localhost:9000";
         fetch(`${minioBaseUrl}/code/${id}/logbook.txt`)
-            .then((response) =>
-                response.ok
-                    ? response.text()
-                    : Promise.reject("Failed fetch logbook"),
-            )
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch logbook: ${response.status} ${response.statusText}`);
+                }
+                return response.text();
+            })
             .then((text) => setLogsContent(text))
             .catch((error) => {
                 console.error("Error fetching final logs content:", error);
@@ -319,11 +323,12 @@ export default function BOExecResult() {
         const minioBaseUrl =
             env("NEXT_PUBLIC_MINIO_BASE_URL") ?? "http://localhost:9000";
         fetch(`${minioBaseUrl}/code/${id}/best.txt`)
-            .then((response) =>
-                response.ok
-                    ? response.text()
-                    : Promise.reject("Failed fetch best content"),
-            )
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch best content: ${response.status} ${response.statusText}`);
+                }
+                return response.text();
+            })
             .then((text) => setBestContent(text))
             .catch((error) => {
                 console.error("Error fetching best content:", error);
@@ -417,10 +422,10 @@ export default function BOExecResult() {
             {/* Header */}
             <div className="text-center mb-6">
                 <h1 className="text-3xl sm:text-4xl font-bold text-gray-800">
-                    Evolve OnClick - Bayesian Optimization Run
+                    Evolve OnClick - Multi-Objective Bayesian Optimization Run
                 </h1>
                 <p className="text-gray-600">
-                    Visualize Bayesian Optimization convergence and results.
+                    Visualize Multi-Objective Bayesian Optimization convergence and results.
                 </p>
             </div>
 
@@ -545,23 +550,22 @@ export default function BOExecResult() {
 
             {/* Main Content */}
             <div className="flex flex-col lg:flex-row mt-6 gap-4 w-full max-w-7xl">
-                {/* BO Config Preview */}
+                {/* MOBO Config Preview */}
                 {inputParams && (
                     <div className="border border-gray-300 rounded-xl bg-white bg-opacity-90 shadow-sm p-0 overflow-hidden w-full lg:w-[350px] lg:max-w-[350px] flex-shrink-0 h-fit">
-                        <PreviewBO
+                        <PreviewMOBO
                             currentStep={11}
-                            algorithmType={
-                                inputParams.algorithm_type ?? "standard_bo"
-                            }
-                            objective={inputParams.objective ?? "—"}
-                            direction={inputParams.direction ?? "—"}
-                            surrogate={inputParams.surrogate ?? "—"}
-                            acquisition={inputParams.acquisition ?? "—"}
-                            kernel={inputParams.kernel ?? "—"}
+                            algorithmType="mobo"
+                            problem={inputParams.problem}
+                            problemConfig={inputParams.problem_config}
                             bounds={inputParams.bounds ?? []}
-                            design={inputParams.initial_design ?? {}}
-                            params={inputParams.params ?? {}}
-                        />
+                            modelConfig={inputParams.model_config}
+                            acquisition={inputParams.acquisition}
+                            design={inputParams.initial_design}
+                            mcSampler={inputParams.mc_sampler}
+                            refPoint={inputParams.ref_point}
+                            params={inputParams.params}
+                            />
                     </div>
                 )}
 
@@ -664,9 +668,16 @@ export default function BOExecResult() {
                             </pre>
                         </div>
                     ) : executionStatus === "completed" ||
-                      executionStatus === "timed_out" ? (
+                      executionStatus === "timed_out" ||
+                    executionStatus === "failed" ? (
                         <div className="w-full">
-                            {/* Best result for BO */}
+
+                            {/* Convergence GIF */}
+                            <div className="mt-4 w-full">
+                                <h3 className="text-lg sm:text-xl font-bold text-gray-800 mb-2">
+                                    MOBO Results
+                                </h3>
+                                {/* Best result for BO */}
                             {bestContent && (
                                 <div className="mb-4">
                                     <h3 className="text-lg sm:text-xl font-bold text-gray-800">
@@ -677,15 +688,14 @@ export default function BOExecResult() {
                                     </pre>
                                 </div>
                             )}
-
                             {/* Convergence GIF */}
                             <div className="mt-4 w-full">
                                 <h3 className="text-lg sm:text-xl font-bold text-gray-800 mb-2">
-                                    BO Convergence
+                                    MOBO Convergence
                                 </h3>
                                 <Image
-                                    src={`${minioBaseUrl}/code/${id}/convergence.png`}
-                                    alt="Bayesian Optimization Convergence"
+                                    src={`${minioBaseUrl}/code/${id}/hypervolume_convergence.png`}
+                                    alt="MOBO Hypervolume"
                                     width={800}
                                     height={600}
                                     className="rounded-lg shadow-md object-contain border border-gray-200 w-full h-auto max-w-full"
@@ -698,7 +708,29 @@ export default function BOExecResult() {
                                             const errorMsg =
                                                 document.createElement("p");
                                             errorMsg.textContent =
-                                                "Convergence visualization failed to load.";
+                                                "Hypervolume visualization failed to load.";
+                                            errorMsg.className =
+                                                "text-red-500 text-sm mt-2";
+                                            parent.appendChild(errorMsg);
+                                        }
+                                    }}
+                                />
+                                <Image
+                                    src={`${minioBaseUrl}/code/${id}/pareto_front.png`}
+                                    alt="MOBO Pareto Front"
+                                    width={800}
+                                    height={600}
+                                    className="rounded-lg shadow-md object-contain border border-gray-200 w-full h-auto max-w-full"
+                                    unoptimized
+                                    onError={(e) => {
+                                        e.currentTarget.style.display = "none";
+                                        const parent =
+                                            e.currentTarget.parentElement;
+                                        if (parent) {
+                                            const errorMsg =
+                                                document.createElement("p");
+                                            errorMsg.textContent =
+                                                "Pareto Front visualization failed to load.";
                                             errorMsg.className =
                                                 "text-red-500 text-sm mt-2";
                                             parent.appendChild(errorMsg);
@@ -706,6 +738,7 @@ export default function BOExecResult() {
                                     }}
                                 />
                             </div>
+                        </div>
                         </div>
                     ) : executionStatus === "running" ? (
                         <div className="flex items-center justify-center w-full h-full min-h-[200px]">
