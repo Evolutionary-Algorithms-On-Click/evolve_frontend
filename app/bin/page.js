@@ -169,6 +169,12 @@ export default function Results() {
                                 Particle Swarm Optimization
                             </button>
                             <button
+                                className={`rounded-full border border-solid transition-colors flex items-center justify-center gap-2 text-sm sm:text-base px-6 py-2 sm:px-8 shadow-md ${activeTab === "bo" ? "bg-foreground text-background" : "bg-background text-foreground"}`}
+                                onClick={() => setActiveTab("bo")}
+                            >
+                                Bayesian Optimization
+                            </button>
+                            <button
                                 className={`rounded-full border border-solid transition-colors flex items-center justify-center gap-2 text-sm sm:text-base px-6 py-2 sm:px-8 shadow-md ${activeTab === "ml" ? "bg-foreground text-background" : "bg-background text-foreground"}`}
                                 onClick={() => setActiveTab("ml")}
                             >
@@ -186,9 +192,11 @@ export default function Results() {
                                                   ? "Without Genetic Programming"
                                                   : runType === "pso"
                                                     ? "Particle Swarm Optimization"
-                                                    : runType === "ml"
-                                                      ? "Optimized ML Models with EA"
-                                                      : "Unknown Run Type"}
+                                                    : runType === "bo"
+                                                       ? "Bayesian Optimization"
+                                                        : runType === "ml"
+                                                            ? "Optimized ML Models with EA"
+                                                            : "Unknown Run Type"}
                                         </h2>
                                         <div className="flex flex-wrap justify-center gap-8">
                                             {runData[runType].map((run) => (
@@ -209,7 +217,12 @@ export default function Results() {
                                                                       : runType ===
                                                                           "pso"
                                                                         ? "pso_animation.gif"
-                                                                        : "fitness_plot.png")
+                                                                        : runType === 
+                                                                            "bo"
+                                                                        ? "convergence.gif"
+                                                                        : "fitness_plot.png"
+                                                                    )
+                                                                        
                                                             }
                                                             alt={runType}
                                                             width={300}

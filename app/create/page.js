@@ -64,11 +64,12 @@ export default function ChooseGpOrNotGp() {
                             <p className="text-sm text-gray-500">Explore different evolutionary algorithms to optimize your solutions.</p>
                         </div>
                     </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-4">
                         {[
                             { href: "/create/non-gp", emoji: "🚀", title: "Evolutionary Algorithm", desc: "DE & Non-GP Approach", color: "from-green-50 to-green-100" },
                             { href: "/create/gp", emoji: "🧬", title: "Genetic Programming", desc: "Evolve Programs", color: "from-blue-50 to-blue-100" },
                             { href: "/create/pso", emoji: "🕊️", title: "Particle Swarm", desc: "Swarm Intelligence", color: "from-purple-50 to-purple-100" },
+                            { href: "/create/bo", emoji: "🔍", title: "Bayesian Optimization", desc: "Guided Exploration", color: "from-rose-50 to-rose-100"},
                             { href: "/create/ml", emoji: "🤖", title: "ML Model Tuning", desc: "Fine-tune ML models with EA", color: "from-yellow-50 to-yellow-100" },
                         ].map((item, idx) => (
                             <Link key={idx} href={item.href} className="block group">
