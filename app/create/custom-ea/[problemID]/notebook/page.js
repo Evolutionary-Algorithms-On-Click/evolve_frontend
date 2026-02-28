@@ -56,10 +56,13 @@ export default function NotebookDashboard() {
             setLoadingNotebooks(true);
             setNotebooksError(null);
             try {
-                const data = await authenticatedFetchV2("/api/v1/notebooks", {
-                    method: "GET",
-                    signal: controller.signal,
-                });
+                const data = await authenticatedFetchV2(
+                    `/api/v1/notebooks?problem_statement_id=${routeProblemId}`,
+                    {
+                        method: "GET",
+                        signal: controller.signal,
+                    },
+                );
 
                 if (!mounted) return;
 
@@ -197,10 +200,12 @@ export default function NotebookDashboard() {
             });
 
             // update state
-            setNotebooksState(prev =>
-                prev.map(nb =>
-                    (nb.id ?? nb._id) === notebookId ? { ...nb, title: newName } : nb
-                )
+            setNotebooksState((prev) =>
+                prev.map((nb) =>
+                    (nb.id ?? nb._id) === notebookId
+                        ? { ...nb, title: newName }
+                        : nb,
+                ),
             );
         } catch (err) {
             console.error("Failed to rename notebook:", err);
@@ -225,8 +230,8 @@ export default function NotebookDashboard() {
             });
 
             // update state
-            setNotebooksState(prev =>
-                prev.filter(nb => (nb.id ?? nb._id) !== notebookId)
+            setNotebooksState((prev) =>
+                prev.filter((nb) => (nb.id ?? nb._id) !== notebookId),
             );
         } catch (err) {
             console.error("Failed to delete notebook:", err);
@@ -318,9 +323,15 @@ export default function NotebookDashboard() {
                                             type="notebook"
                                             onRename={(notebook) => {
                                                 setNotebookToRename(notebook);
-                                                setUpdatedName(notebook.title || notebook.name || "");
+                                                setUpdatedName(
+                                                    notebook.title ||
+                                                        notebook.name ||
+                                                        "",
+                                                );
                                             }}
-                                            onDelete={(notebook) => setNotebookToDelete(notebook)}
+                                            onDelete={(notebook) =>
+                                                setNotebookToDelete(notebook)
+                                            }
                                             onClick={() => {
                                                 const nbId =
                                                     notebook.id ??
@@ -406,20 +417,25 @@ export default function NotebookDashboard() {
                                         <p className="text-gray-600 mb-4">
                                             Are you sure you want to delete{" "}
                                             <span className="font-bold">
-                                                {notebookToDelete.title || notebookToDelete.name}
+                                                {notebookToDelete.title ||
+                                                    notebookToDelete.name}
                                             </span>
                                             ? This action cannot be undone.
                                         </p>
                                         <div className="flex justify-end gap-2">
                                             <button
-                                                onClick={() => setNotebookToDelete(null)}
+                                                onClick={() =>
+                                                    setNotebookToDelete(null)
+                                                }
                                                 className="px-4 py-2 rounded bg-gray-200 text-gray-800 hover:bg-gray-300"
                                             >
                                                 Cancel
                                             </button>
                                             <button
                                                 onClick={() => {
-                                                    handleDeleteNotebook(notebookToDelete);
+                                                    handleDeleteNotebook(
+                                                        notebookToDelete,
+                                                    );
                                                     setNotebookToDelete(null);
                                                 }}
                                                 className="px-4 py-2 rounded bg-red-600 text-white hover:bg-red-700"
@@ -443,7 +459,9 @@ export default function NotebookDashboard() {
                                         </label>
                                         <input
                                             value={updatedName}
-                                            onChange={(e) => setUpdatedName(e.target.value)}
+                                            onChange={(e) =>
+                                                setUpdatedName(e.target.value)
+                                            }
                                             className="w-full border rounded px-3 py-2 mt-1 mb-4"
                                             placeholder="Enter new notebook name"
                                         />
@@ -459,7 +477,10 @@ export default function NotebookDashboard() {
                                             </button>
                                             <button
                                                 onClick={() => {
-                                                    handleRenameNotebook(notebookToRename, updatedName);
+                                                    handleRenameNotebook(
+                                                        notebookToRename,
+                                                        updatedName,
+                                                    );
                                                     setNotebookToRename(null);
                                                     setUpdatedName("");
                                                 }}
