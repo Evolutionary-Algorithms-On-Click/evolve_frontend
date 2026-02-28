@@ -64,11 +64,12 @@ export default function ChooseGpOrNotGp() {
                             <p className="text-sm text-gray-500">Explore different evolutionary algorithms to optimize your solutions.</p>
                         </div>
                     </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-4">
                         {[
                             { href: "/create/non-gp", emoji: "🚀", title: "Evolutionary Algorithm", desc: "DE & Non-GP Approach", color: "from-green-50 to-green-100" },
                             { href: "/create/gp", emoji: "🧬", title: "Genetic Programming", desc: "Evolve Programs", color: "from-blue-50 to-blue-100" },
                             { href: "/create/pso", emoji: "🕊️", title: "Particle Swarm", desc: "Swarm Intelligence", color: "from-purple-50 to-purple-100" },
+                            { href: "/create/bo", emoji: "🔍", title: "Bayesian Optimization", desc: "Guided Exploration", color: "from-rose-50 to-rose-100"},
                             { href: "/create/ml", emoji: "🤖", title: "ML Model Tuning", desc: "Fine-tune ML models with EA", color: "from-yellow-50 to-yellow-100" },
                         ].map((item, idx) => (
                             <Link key={idx} href={item.href} className="block group">
@@ -102,32 +103,6 @@ export default function ChooseGpOrNotGp() {
                                 Create Notebook
                             </Link>
                         </div>
-                    </Link>
-                    <Link
-                        href="/create/bo"
-                        className="block h-full rounded-xl   shadow-md hover:shadow-lg transition-shadow duration-300"
-                    >
-                        <div className="bg-gradient-to-br h-full rounded-xl overflow-hidden from-rose-50 to-rose-100 p-6 flex flex-col items-center justify-center">
-                            <div className="text-5xl mb-3">🔍</div>
-                            <div className="font-bold text-lg text-center text-gray-700">
-                                Bayesian Optimization (BO)
-                            </div>
-                            <div className="text-sm text-gray-500 text-center mt-2">
-                                Guided Exploration
-                            </div>
-                        </div>
-                    </Link>
-                    <Link
-                        href="/create/ml"
-                        className="block h-full rounded-xl   shadow-md hover:shadow-lg transition-shadow duration-300"
-                    >
-                        <div className="bg-gradient-to-br h-full rounded-xl overflow-hidden from-yellow-50 to-yellow-100 p-6 flex flex-col items-center justify-center">
-                            <div className="text-5xl mb-3">🤖</div>
-                            <div className="font-bold text-lg text-center text-gray-700">
-                                EA for ML Model Tuning
-                            </div>
-                            <div className="text-sm text-gray-500 text-center mt-2">
-                                Fine-tune ML models with EA
                     </section>
                     <section>
                         <div className="mb-6">
