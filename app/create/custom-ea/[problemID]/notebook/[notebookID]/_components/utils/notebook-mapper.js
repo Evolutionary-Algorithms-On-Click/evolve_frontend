@@ -6,14 +6,14 @@ export function mapToApiFormat(notebook) {
 
     const mappedCells = notebook.cells.map(cell => ({
         cell_type: cell.cell_type,
-        cell_name: cell.cell_name, 
+        cell_name: cell.cell_name || "", 
         source: cell.source,
         execution_count: cell.execution_count || 0,
         metadata: cell.metadata || {},
     }));
 
     const apiNotebook = { cells: mappedCells };
-    if (notebook.requirements) {
+    if (typeof notebook.requirements === "string") {
         apiNotebook.requirements = notebook.requirements;
     }
 
