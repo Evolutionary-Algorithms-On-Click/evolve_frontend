@@ -2,7 +2,7 @@ import React from "react";
 import StatementCard from "../non-functional/PSCard";
 
 // Statements List Component (Right side)
-const StatementsList = ({ statements, loading = false, error = null }) => {
+const StatementsList = ({ statements, loading = false, error = null, onDelete }) => {
     return (
         <div className="h-full overflow-y-auto bg-gray-50 p-8">
             <div className="mb-6">
@@ -39,6 +39,7 @@ const StatementsList = ({ statements, loading = false, error = null }) => {
                         <StatementCard
                             key={statement.id}
                             statement={statement}
+                            onDelete={onDelete}
                         />
                     ))}
                 </div>
