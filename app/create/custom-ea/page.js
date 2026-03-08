@@ -175,11 +175,12 @@ export default function CustomEA() {
             <Loader type={"full"} message={"Creating Problem Statement..."} />
         ) : (
             <main className="flex flex-col justify-center items-center justify-items-center min-h-screen font-[family-name:var(--font-geist-mono)] p-8">
-                <div className="text-center">
-                    <h1 className="text-3xl sm:text-4xl font-bold">
-                        Evolve OnClick
-                    </h1>
-                    <p>Run and Visualize algorithms with just a click.</p>
+                <div className="flex flex-col items-center mb-8">
+                    <div className="flex items-center gap-3 mb-2">
+                        <div className="w-10 h-10 bg-gray-900 rounded-xl flex items-center justify-center text-white font-black text-xl shadow-lg rotate-3">E</div>
+                        <h1 className="text-4xl font-black text-gray-900 tracking-tighter uppercase italic">EvoLab</h1>
+                    </div>
+                    <p className="text-[8px] font-bold text-gray-400 uppercase tracking-[0.3em] ml-10">The Evolutionary Ecosystem</p>
                 </div>
     
                 {userData.fullName && (
@@ -203,7 +204,7 @@ export default function CustomEA() {
     
                 <div className="flex flex-row gap-4">
                     <Link
-                        href="/create"
+                        href="/"
                         className="rounded-full border border-solid border-black/[.08] transition-colors flex items-center justify-center bg-background text-foreground hover:bg-[#000000] hover:text-background text-sm sm:text-base px-4 py-2 mt-8"
                     >
                         ← Go Back

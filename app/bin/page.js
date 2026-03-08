@@ -78,13 +78,12 @@ export default function Results() {
 
     return (
         <main className="flex flex-col font-[family-name:var(--font-geist-mono)] p-8">
-            <div className="text-center mb-8">
-                <h1 className="text-3xl sm:text-4xl font-bold text-gray-800">
-                    Evolve OnClick
-                </h1>
-                <p className="text-gray-600">
-                    Run and Visualize algorithms with just a click.
-                </p>
+            <div className="flex flex-col items-center mb-8">
+                <div className="flex items-center gap-3 mb-2">
+                    <div className="w-10 h-10 bg-gray-900 rounded-xl flex items-center justify-center text-white font-black text-xl shadow-lg rotate-3">E</div>
+                    <h1 className="text-4xl font-black text-gray-900 tracking-tighter uppercase italic">EvoLearn</h1>
+                </div>
+                <p className="text-[8px] font-bold text-gray-400 uppercase tracking-[0.3em] ml-10">The Evolutionary Ecosystem</p>
             </div>
 
             {userData.fullName && (
@@ -108,13 +107,13 @@ export default function Results() {
 
             <div className="flex flex-row gap-4 mt-4 mb-8 ml-auto mr-auto">
                 <Link
-                    href="/create"
+                    href="/"
                     className="rounded-full border border-solid border-black/[.08] transition-colors flex items-center justify-center bg-background text-foreground hover:bg-[#000000] hover:text-background text-sm sm:text-base px-4 py-2 mt-8"
                 >
                     ← Go Back
                 </Link>
                 <Link
-                    href="/create"
+                    href="/"
                     className="rounded-full border border-solid border-black/[.08] transition-colors flex items-center justify-center bg-background text-foreground hover:bg-[#000000] hover:text-background text-sm sm:text-base px-4 py-2 mt-8"
                 >
                     {"Create ->"}
