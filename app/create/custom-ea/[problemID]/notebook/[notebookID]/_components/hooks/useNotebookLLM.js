@@ -7,7 +7,7 @@ export default function useNotebookLLM(notebookId) {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
-    async function generateNotebook(problemId) {
+    async function generateNotebook(problemId, problemDescription = null) {
         setLoading(true);
         setError(null);
         try {
@@ -16,6 +16,7 @@ export default function useNotebookLLM(notebookId) {
                 body: JSON.stringify({
                     problem_id: problemId,
                     notebook_id: notebookId,
+                    ...problemDescription // Spread the fields to the top level
                 }),
             });
             return data;

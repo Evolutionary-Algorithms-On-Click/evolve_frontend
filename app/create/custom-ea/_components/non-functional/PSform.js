@@ -35,6 +35,34 @@ const eaConfig = {
 
 const selectionMethods = ["Tournament", "Roulette Wheel", "Rank"];
 
+const operatorMapping = {
+    selection: {
+        "Tournament": "selTournament",
+        "Roulette Wheel": "selRoulette",
+        "Rank": "selBest",
+    },
+    crossover: {
+        "Single-Point Crossover": "cxOnePoint",
+        "Two-Point Crossover": "cxTwoPoint",
+        "Uniform Crossover": "cxUniform",
+        "Simulated Binary Crossover (SBX)": "cxSimulatedBinary",
+        "BLX-alpha": "cxBlend",
+        "Partially Mapped Crossover (PMX)": "cxPartialyMatched",
+        "Order Crossover (OX)": "cxOrdered",
+        "Cycle Crossover (CX)": "cxCycle",
+        "Subtree Crossover": "cxSubtree",
+    },
+    mutation: {
+        "Bit-Flip Mutation": "mutFlipBit",
+        "Gaussian Mutation": "mutGaussian",
+        "Polynomial Mutation": "mutPolynomialBounded",
+        "Swap Mutation": "mutShuffleIndexes",
+        "Inversion Mutation": "mutInversion",
+        "Scramble Mutation": "mutScramble",
+        "Subtree Mutation": "mutSubtree",
+    }
+};
+
 // Problem Statement Form Component (Left side form state)
 const ProblemStatementForm = ({ onCancel, onSubmit }) => {
     const [formData, setFormData] = useState({
@@ -65,20 +93,42 @@ const ProblemStatementForm = ({ onCancel, onSubmit }) => {
 
         // Evolutionary Operators
         selectionMethod: "",
+        selectionMethodTechnical: "",
         selectionMethodCustomName: "",
+        tournsize: "3",
+
         crossoverOperator: "",
+        crossoverOperatorTechnical: "",
         crossoverOperatorCustomName: "",
         crossoverProbability: "80",
+        cxAlpha: "0.5",
+
         mutationOperator: "",
+        mutationOperatorTechnical: "",
         mutationOperatorCustomName: "",
         mutationProbability: "10",
+        mutMu: "0.0",
+        mutSigma: "1.0",
+        mutIndpb: "0.05",
 
         // Algorithm Parameters
+        algorithmType: "simple",
         populationSize: "100",
         numGenerations: "1000",
+        mu: "50",
+        lambda_: "100",
         elitism: "yes, 1",
         terminationCondition: "maxGenerations",
         terminationOther: "",
+
+        // Framework Features
+        hallOfFame: true,
+        hofSize: "10",
+        statistics: true,
+        plotting: true,
+        checkpoint: false,
+        parallel: false,
+        verbose: true,
 
         // Execution Setup
         executionMode: "local",
@@ -99,11 +149,24 @@ const ProblemStatementForm = ({ onCancel, onSubmit }) => {
     
         let newFormData = { ...formData, [name]: finalValue };
     
+        // Map technical names
+        if (name === "selectionMethod") {
+            newFormData.selectionMethodTechnical = operatorMapping.selection[value] || "";
+        }
+        if (name === "crossoverOperator") {
+            newFormData.crossoverOperatorTechnical = operatorMapping.crossover[value] || "";
+        }
+        if (name === "mutationOperator") {
+            newFormData.mutationOperatorTechnical = operatorMapping.mutation[value] || "";
+        }
+
         // When representation changes, reset ALL representation-specific fields
         if (name === "solutionRepresentation") {
             // Reset common fields
             newFormData.crossoverOperator = "";
             newFormData.mutationOperator = "";
+            newFormData.crossoverOperatorTechnical = "";
+            newFormData.mutationOperatorTechnical = "";
             newFormData.crossoverOperatorCustomName = "";
             newFormData.mutationOperatorCustomName = "";
             
@@ -143,7 +206,84 @@ const ProblemStatementForm = ({ onCancel, onSubmit }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        onSubmit(formData);
+        
+        // Helper to parse bounds from string like "[0, 1]" or "0-100"
+        const parseBounds = (str) => {
+            const dims = parseInt(formData.solutionSize) || 1;
+            const defaultLower = new Array(dims).fill(0);
+            const defaultUpper = new Array(dims).fill(1);
+            
+            try {
+                // Try simple range like 0-1
+                const dashMatch = str.match(/^(-?\d+\.?\d*)\s*-\s*(-?\d+\.?\d*)$/);
+                if (dashMatch) {
+                    return {
+                        lower: new Array(dims).fill(parseFloat(dashMatch[1])),
+                        upper: new Array(dims).fill(parseFloat(dashMatch[2]))
+                    };
+                }
+                // Try JSON-like [0, 1]
+                const jsonMatch = str.match(/\[\s*(-?\d+\.?\d*)\s*,\s*(-?\d+\.?\d*)\s*\]/);
+                if (jsonMatch) {
+                    return {
+                        lower: new Array(dims).fill(parseFloat(jsonMatch[1])),
+                        upper: new Array(dims).fill(parseFloat(jsonMatch[2]))
+                    };
+                }
+            } catch (e) {}
+            
+            return { lower: defaultLower, upper: defaultUpper };
+        };
+
+        const bounds = parseBounds(formData.domainOfVariables);
+
+        // Final structure check/mapping could happen here if needed
+        const submissionData = {
+            ...formData,
+            // Technical blocks for LLM code generation
+            problem: {
+                dimensions: parseInt(formData.solutionSize) || 1,
+                bounds: bounds,
+                objective: {
+                    type: "custom", // or "builtin" if we can detect
+                    name: formData.problemName,
+                    code: formData.objectiveFunction,
+                    minimize: formData.objectiveType === "minimization"
+                }
+            },
+            algorithm: {
+                type: formData.algorithmType,
+                population_size: parseInt(formData.populationSize) || 100,
+                generations: parseInt(formData.numGenerations) || 50,
+                cx_prob: parseFloat(formData.crossoverProbability) / 100 || 0.8,
+                mut_prob: parseFloat(formData.mutationProbability) / 100 || 0.1,
+                mu: parseInt(formData.mu) || 0,
+                lambda_: parseInt(formData.lambda_) || 0
+            },
+            operators: {
+                selection: formData.selectionMethodTechnical,
+                selection_params: { tournsize: parseInt(formData.tournsize) || 3 },
+                crossover: formData.crossoverOperatorTechnical,
+                crossover_params: { alpha: parseFloat(formData.cxAlpha) || 0.5 },
+                mutation: formData.mutationOperatorTechnical,
+                mutation_params: { 
+                    mu: parseFloat(formData.mutMu) || 0.0, 
+                    sigma: parseFloat(formData.mutSigma) || 1.0, 
+                    indpb: parseFloat(formData.mutIndpb) || 0.05 
+                }
+            },
+            features: {
+                hall_of_fame: formData.hallOfFame,
+                hof_size: parseInt(formData.hofSize) || 10,
+                statistics: formData.statistics,
+                plotting: formData.plotting,
+                checkpoint: formData.checkpoint,
+                parallel: formData.parallel,
+                verbose: formData.verbose
+            }
+        };
+
+        onSubmit(submissionData);
     };
 
     const getLabel = (key, defaultLabel) => {
@@ -547,6 +687,21 @@ const ProblemStatementForm = ({ onCancel, onSubmit }) => {
                                             placeholder="Describe your custom selection logic in natural language..."
                                         />
                                     )}
+                                    {formData.selectionMethod === 'Tournament' && (
+                                        <div className="mt-2">
+                                            <label className="block text-xs font-medium text-gray-500 mb-1">
+                                                Tournament Size
+                                            </label>
+                                            <input
+                                                type="number"
+                                                name="tournsize"
+                                                value={formData.tournsize}
+                                                onChange={handleChange}
+                                                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                                                min="1"
+                                            />
+                                        </div>
+                                    )}
                                 </div>
 
                                 <div className="grid grid-cols-2 gap-4">
@@ -574,6 +729,21 @@ const ProblemStatementForm = ({ onCancel, onSubmit }) => {
                                                 className="mt-2 w-full px-4 py-3 border border-gray-300 rounded-lg"
                                                 placeholder="Describe your custom crossover logic in natural language..."
                                             />
+                                        )}
+                                        {formData.crossoverOperator === 'BLX-alpha' && (
+                                            <div className="mt-2">
+                                                <label className="block text-xs font-medium text-gray-500 mb-1">
+                                                    Alpha Parameter
+                                                </label>
+                                                <input
+                                                    type="number"
+                                                    name="cxAlpha"
+                                                    step="0.1"
+                                                    value={formData.cxAlpha}
+                                                    onChange={handleChange}
+                                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                                                />
+                                            </div>
                                         )}
                                     </div>
 
@@ -620,6 +790,18 @@ const ProblemStatementForm = ({ onCancel, onSubmit }) => {
                                                 placeholder="Describe your custom mutation logic in natural language..."
                                             />
                                         )}
+                                        {formData.mutationOperator === 'Gaussian Mutation' && (
+                                            <div className="mt-2 grid grid-cols-2 gap-2">
+                                                <div>
+                                                    <label className="block text-xs font-medium text-gray-500 mb-1">Mu</label>
+                                                    <input type="number" name="mutMu" step="0.1" value={formData.mutMu} onChange={handleChange} className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" />
+                                                </div>
+                                                <div>
+                                                    <label className="block text-xs font-medium text-gray-500 mb-1">Sigma</label>
+                                                    <input type="number" name="mutSigma" step="0.1" value={formData.mutSigma} onChange={handleChange} className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" />
+                                                </div>
+                                            </div>
+                                        )}
                                     </div>
 
                                     <div>
@@ -645,6 +827,22 @@ const ProblemStatementForm = ({ onCancel, onSubmit }) => {
                                 <h3 className="text-lg font-semibold text-gray-900 border-b pb-2">
                                     5. Algorithm Parameters
                                 </h3>
+
+                                <div className="mb-4">
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        Algorithm Strategy *
+                                    </label>
+                                    <select
+                                        name="algorithmType"
+                                        value={formData.algorithmType}
+                                        onChange={handleChange}
+                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    >
+                                        <option value="simple">Simple Genetic Algorithm (eaSimple)</option>
+                                        <option value="eaMuPlusLambda">(μ + λ) Evolutionary Algorithm</option>
+                                        <option value="eaMuCommaLambda">(μ, λ) Evolutionary Algorithm</option>
+                                    </select>
+                                </div>
 
                                 <div className="grid grid-cols-2 gap-4">
                                     <div>
@@ -677,6 +875,19 @@ const ProblemStatementForm = ({ onCancel, onSubmit }) => {
                                         />
                                     </div>
                                 </div>
+
+                                {formData.algorithmType !== 'simple' && (
+                                    <div className="grid grid-cols-2 gap-4 mt-2">
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-2">μ (Mu)</label>
+                                            <input type="number" name="mu" value={formData.mu} onChange={handleChange} className="w-full px-4 py-3 border border-gray-300 rounded-lg" />
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-2">λ (Lambda)</label>
+                                            <input type="number" name="lambda_" value={formData.lambda_} onChange={handleChange} className="w-full px-4 py-3 border border-gray-300 rounded-lg" />
+                                        </div>
+                                    </div>
+                                )}
 
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -770,10 +981,52 @@ const ProblemStatementForm = ({ onCancel, onSubmit }) => {
                                 </div>
                             </div>
 
+                            {/* Framework Features */}
+                            <div className="space-y-4">
+                                <h3 className="text-lg font-semibold text-gray-900 border-b pb-2">
+                                    6. Framework Features (DEAP Specific)
+                                </h3>
+
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div className="flex flex-col gap-2">
+                                        <label className="flex items-center cursor-pointer text-sm">
+                                            <input type="checkbox" name="hallOfFame" checked={formData.hallOfFame} onChange={handleChange} className="mr-2" />
+                                            <span>Hall of Fame</span>
+                                        </label>
+                                        {formData.hallOfFame && (
+                                            <div className="ml-6">
+                                                <label className="block text-xs text-gray-500">HOF Size</label>
+                                                <input type="number" name="hofSize" value={formData.hofSize} onChange={handleChange} className="w-full px-2 py-1 border border-gray-300 rounded text-sm" />
+                                            </div>
+                                        )}
+                                    </div>
+                                    <label className="flex items-center cursor-pointer text-sm">
+                                        <input type="checkbox" name="statistics" checked={formData.statistics} onChange={handleChange} className="mr-2" />
+                                        <span>Evolution Statistics</span>
+                                    </label>
+                                    <label className="flex items-center cursor-pointer text-sm">
+                                        <input type="checkbox" name="plotting" checked={formData.plotting} onChange={handleChange} className="mr-2" />
+                                        <span>Auto-Plotting</span>
+                                    </label>
+                                    <label className="flex items-center cursor-pointer text-sm">
+                                        <input type="checkbox" name="checkpoint" checked={formData.checkpoint} onChange={handleChange} className="mr-2" />
+                                        <span>Check-pointing</span>
+                                    </label>
+                                    <label className="flex items-center cursor-pointer text-sm">
+                                        <input type="checkbox" name="parallel" checked={formData.parallel} onChange={handleChange} className="mr-2" />
+                                        <span>Parallelization</span>
+                                    </label>
+                                    <label className="flex items-center cursor-pointer text-sm">
+                                        <input type="checkbox" name="verbose" checked={formData.verbose} onChange={handleChange} className="mr-2" />
+                                        <span>Verbose Logging</span>
+                                    </label>
+                                </div>
+                            </div>
+
                             {/* Execution Setup */}
                             <div className="space-y-4">
                                 <h3 className="text-lg font-semibold text-gray-900 border-b pb-2">
-                                    6. Execution Setup
+                                    7. Execution Setup
                                 </h3>
 
                                 <div>
@@ -878,7 +1131,7 @@ const ProblemStatementForm = ({ onCancel, onSubmit }) => {
                             {/* Customization / Domain Knowledge */}
                             <div className="space-y-4">
                                 <h3 className="text-lg font-semibold text-gray-900 border-b pb-2">
-                                    7. Customization / Domain Knowledge
+                                    8. Customization / Domain Knowledge
                                     (Optional)
                                 </h3>
 

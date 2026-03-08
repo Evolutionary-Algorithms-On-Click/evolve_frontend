@@ -6,6 +6,33 @@ import useNotebookLLM from "./useNotebookLLM";
 
 // ... (helper functions remain the same)
 
+// Helper to decode problem payload (handling JSON and Base64)
+const tryDecodePayload = (p) => {
+    if (!p) return p;
+    if (typeof p === "object") return p;
+    if (typeof p !== "string") return p;
+
+    const s = p.trim();
+    if (s.startsWith("{") || s.startsWith("[")) {
+        try {
+            return JSON.parse(s);
+        } catch (e) {}
+    }
+
+    try {
+        let b64 = s.replace(/-/g, "+").replace(/_/g, "/");
+        while (b64.length % 4 !== 0) b64 += "=";
+        const decoded = atob(b64);
+        try {
+            return JSON.parse(decoded);
+        } catch (e) {
+            return decoded;
+        }
+    } catch (err) {
+        return s;
+    }
+};
+
 export default function useNotebookFetch(notebookId, problemId) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -112,7 +139,15 @@ export default function useNotebookFetch(notebookId, problemId) {
             }
 
             try {
-                const llmResult = await generateNotebook(problemId);
+                // Fetch problem details to get the structured description_json for the LLM
+                const problemData = await authenticatedFetchV2(`/api/v1/problems/${problemId}`, {
+                    signal: controller.signal,
+                });
+                
+                const rawDescription = problemData?.description_json || null;
+                const problemDescription = tryDecodePayload(rawDescription);
+
+                const llmResult = await generateNotebook(problemId, problemDescription);
 
                 if (!llmResult || !llmResult.notebook || !llmResult.notebook.cells) {
                     throw new Error("Failed to generate notebook content from LLM.");
